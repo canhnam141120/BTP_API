@@ -1854,11 +1854,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\BTP_API\\BTP_API\\BTP_API\\BTP_API.csproj",
+      "projectUniqueName": "F:\\BTP_API\\BTP_API\\BTP_API.csproj",
       "projectName": "BTP_API",
-      "projectPath": "E:\\BTP_API\\BTP_API\\BTP_API\\BTP_API.csproj",
+      "projectPath": "F:\\BTP_API\\BTP_API\\BTP_API.csproj",
       "packagesPath": "C:\\Users\\canhn\\.nuget\\packages\\",
-      "outputPath": "E:\\BTP_API\\BTP_API\\BTP_API\\obj\\",
+      "outputPath": "F:\\BTP_API\\BTP_API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\canhn\\AppData\\Roaming\\NuGet\\NuGet.Config",

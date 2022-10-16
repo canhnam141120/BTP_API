@@ -40,7 +40,7 @@ if (builder.Environment.EnvironmentName == "Development")
 else
 {
     // Use connection string provided at runtime by Heroku.
-    var connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    var connectionUrl = "postgres://dymvwldhthbehf:cf51b527315125360bd7d4605bcc74f50f82259315bd664e392cc966b731be8c@ec2-54-82-205-3.compute-1.amazonaws.com:5432/d794tktmr5s9i8";
 
     connectionUrl = connectionUrl.Replace("postgres://", string.Empty);
     var userPassSide = connectionUrl.Split("@")[0];

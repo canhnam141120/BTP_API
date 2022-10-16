@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "vnilS/qZVXSbpV/4LXnqA13yM0TxHJSA49emFMetLlg=",
+  "Hash": "Sv5TIxcpBFZlu5Ao7SMaf42SYDQrYoBM53o+WNchAyA=",
   "Source": "BTP_API",
   "BasePath": "_content/BTP_API",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "BTP_API\\wwwroot",
       "Source": "BTP_API",
-      "ContentRoot": "E:\\BTP_API\\BTP_API\\BTP_API\\wwwroot\\",
+      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
       "BasePath": "_content/BTP_API",
       "Pattern": "**"
     }
