@@ -16,26 +16,6 @@ var configurationBuilder = new ConfigurationBuilder()
 builder.Configuration.AddConfiguration(configurationBuilder.Build());
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(
-    opt =>
-    {
-        opt.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-        {
-            Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
-            In = ParameterLocation.Header,
-            Name = "Authorization",
-            Type = SecuritySchemeType.ApiKey
-        });
-        opt.OperationFilter<SecurityRequirementsOperationFilter>();
-    }
-);
-
-
-// Add services to the container.
-
 var defaultConnectionString = string.Empty;
 
 if (builder.Environment.EnvironmentName == "Development")
@@ -59,7 +39,22 @@ else
     defaultConnectionString = $"Host={host};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=true";
 }
 
-
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(
+    opt =>
+    {
+        opt.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+        {
+            Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+            In = ParameterLocation.Header,
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey
+        });
+        opt.OperationFilter<SecurityRequirementsOperationFilter>();
+    }
+);
 
 builder.Services.AddDbContext<BTPContext>(option =>
 {
