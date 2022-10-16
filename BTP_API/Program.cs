@@ -13,7 +13,7 @@ var configurationBuilder = new ConfigurationBuilder()
                             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
                             .AddEnvironmentVariables();
-
+builder.Configuration.AddConfiguration(configurationBuilder.Build());
 // Add services to the container.
 
 builder.Services.AddControllers();
