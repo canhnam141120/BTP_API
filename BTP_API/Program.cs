@@ -44,17 +44,6 @@ builder.Services.AddDbContext<BTPContext>(option =>
     option.UseNpgsql(defaultConnectionString);
 });
 
-var serviceProvider = builder.Services.BuildServiceProvider();
-
-try
-{
-    var dbContext = serviceProvider.GetRequiredService<BTPContext>();
-    dbContext.Database.Migrate();
-}
-catch
-{
-}
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
