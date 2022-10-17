@@ -39,6 +39,22 @@ else
     defaultConnectionString = $"Host={host};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=true";
 }
 
+builder.Services.AddDbContext<BTPContext>(option =>
+{
+    option.UseNpgsql(defaultConnectionString);
+});
+
+var serviceProvider = builder.Services.BuildServiceProvider();
+
+try
+{
+    var dbContext = serviceProvider.GetRequiredService<BTPContext>();
+    dbContext.Database.Migrate();
+}
+catch
+{
+}
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -55,22 +71,6 @@ builder.Services.AddSwaggerGen(
         opt.OperationFilter<SecurityRequirementsOperationFilter>();
     }
 );
-
-builder.Services.AddDbContext<BTPContext>(option =>
-{
-    option.UseNpgsql(defaultConnectionString);
-});
-
-var serviceProvider = builder.Services.BuildServiceProvider();
-
-try
-{
-    var dbContext = serviceProvider.GetRequiredService<BTPContext>();
-    dbContext.Database.Migrate();
-}
-catch
-{
-}
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
