@@ -47,7 +47,7 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpGet("exchange/{id}")]
+        [HttpGet("exchange-detail/{id}")]
         public IActionResult GetTransactionExDetail(int id)
         {
             try

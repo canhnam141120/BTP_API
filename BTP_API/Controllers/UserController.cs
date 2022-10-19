@@ -160,6 +160,31 @@ namespace BookTradingPlatform.Controllers
                     _context.SaveChanges();
                 }
 
+                var mail = new MimeMessage();
+                mail.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUserName").Value));
+                mail.To.Add(MailboxAddress.Parse(registerVM.Email.Trim()));
+                mail.Subject = "[Trạm Sách] - Vui lòng xác thực tài khoản";
+                mail.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+                {
+                    Text = "<h3>Xin chào " + registerVM.Fullname + "!</h3>" +
+                    "<p>Nhấn vào đây để xác thực: " + "https://localhost:7006/api/User/verify-email?token="+ newUser.VerificationToken + "</p>" +
+                    "<p>Nếu có vấn đề phát sinh xảy ra, hãy liên hệ chúng tôi qua hotline: 0961284654</p>" +
+                    "<p>Trân trọng!</p>" +
+                    "<p>Hỗ trợ từ Trạm Sách!</p>"
+                };
+
+                using var smtp = new SmtpClient();
+                smtp.Connect(_config.GetSection("EmailHost").Value, 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate(_config.GetSection("EmailUserName").Value, _config.GetSection("EmailPassword").Value);
+                smtp.Send(mail);
+                smtp.Disconnect(true);
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Đã gửi code đổi lại mật khẩu qua email của bạn!"
+                });
+
                 return Ok(new ApiResponse
                 {
                     Success = true,
@@ -173,7 +198,7 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpPost("verify-email")]
+        [HttpPut("verify-email")]
         public IActionResult Verify(string token)
         {
             try

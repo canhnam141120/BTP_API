@@ -68,7 +68,6 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-
         [HttpGet("my-book-list")]
         public IActionResult GetAllBook()
         {
@@ -215,11 +214,6 @@ namespace BookTradingPlatform.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
-
-
-
-
 
         [HttpGet("my-post-list")]
         public IActionResult GetAllPost()
@@ -978,7 +972,7 @@ namespace BookTradingPlatform.Controllers
 
 
         [HttpGet("my-transaction-exchange-all")]
-        public IActionResult MyTransaction()
+        public IActionResult MyTransactionExchange()
         {
             try
             {
@@ -1107,6 +1101,158 @@ namespace BookTradingPlatform.Controllers
                 }
 
                 var transactionBills = _context.ExchangeBills.Where(b => b.UserId == userId);
+                if (transactionBills.Count() != 0)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Trống!"
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Get thành công!",
+                    Data = transactionBills
+                });
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("my-transaction-rent-all")]
+        public IActionResult MyTransactionRent()
+        {
+            try
+            {
+                int userId = GetUserId();
+                if (userId == 0)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Vui lòng đăng nhập!"
+                    });
+                }
+
+                var transaction = _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).ToList();
+                if (transaction.Count == 0)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy giao dịch của bạn!"
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Get thành công!",
+                    Data = transaction
+                });
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("my-transaction-rent-detail")]
+        public IActionResult MyTransactionRentDetail(int id)
+        {
+            try
+            {
+                int userId = GetUserId();
+                if (userId == 0)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Vui lòng đăng nhập!"
+                    });
+                }
+
+                var transactionDetails = _context.RentDetails.Where(b => b.RentId == id).ToList();
+                if (transactionDetails.Count == 0)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy giao dịch của bạn!"
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Danh sách trống!",
+                    Data = transactionDetails
+                });
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("my-transaction-rent-bill")]
+        public IActionResult MyTransactionRentBill(int id)
+        {
+            try
+            {
+                int userId = GetUserId();
+                if (userId == 0)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Vui lòng đăng nhập!"
+                    });
+                }
+
+                var transactionBills = _context.RentBills.SingleOrDefault(b => b.RentId == id && b.UserId == userId);
+                if (transactionBills == null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy giao dịch của bạn!"
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Danh sách trống!",
+                    Data = transactionBills
+                });
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("my-rent-bill-all")]
+        public IActionResult MyRentBillAll()
+        {
+            try
+            {
+                int userId = GetUserId();
+                if (userId == 0)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Vui lòng đăng nhập!"
+                    });
+                }
+
+                var transactionBills = _context.RentBills.Where(b => b.UserId == userId);
                 if (transactionBills.Count() != 0)
                 {
                     return Ok(new ApiResponse

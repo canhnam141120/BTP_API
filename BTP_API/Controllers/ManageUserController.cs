@@ -18,7 +18,7 @@ namespace BookTradingPlatform.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public IActionResult GetAllUser()
         {
             try
@@ -127,7 +127,7 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpGet("search/{search}")]
+        [HttpPost("search/{search}")]
         public IActionResult SearchUser(string search)
         {
             try
@@ -182,8 +182,8 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpPut("unban/{id}")]
-        public IActionResult UnbanAcc(int id)
+        [HttpPut("active/{id}")]
+        public IActionResult ActiveAcc(int id)
         {
             try
             {

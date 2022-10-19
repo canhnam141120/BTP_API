@@ -44,12 +44,12 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpGet("denied")]
-        public IActionResult GetAllBookDenied()
+        [HttpGet("approved")]
+        public IActionResult GetAllBookApproved()
         {
             try
             {
-                var books = _context.Books.Where(b => b.Status == StatusRequest.Denied.ToString());
+                var books = _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString());
                 if (books.Count() != 0)
                 {
                     return Ok(new ApiResponse
@@ -71,12 +71,12 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpGet("approved")]
-        public IActionResult GetAllBookApproved()
+        [HttpGet("denied")]
+        public IActionResult GetAllBookDenied()
         {
             try
             {
-                var books = _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString());
+                var books = _context.Books.Where(b => b.Status == StatusRequest.Denied.ToString());
                 if (books.Count() != 0)
                 {
                     return Ok(new ApiResponse
