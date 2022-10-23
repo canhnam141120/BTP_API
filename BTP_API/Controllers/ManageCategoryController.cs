@@ -1,10 +1,5 @@
 ﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Cmp;
 
 namespace BookTradingPlatform.Controllers
 {
@@ -12,151 +7,96 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class ManageCategoryController : ControllerBase
     {
-        private readonly BTPContext _context;
+        private readonly IManageCategoryRepository _manageCategoryRepository;
 
-        public ManageCategoryController(BTPContext context)
+        public ManageCategoryController(IManageCategoryRepository manageCategoryRepository)
         {
-            _context = context;
+            _manageCategoryRepository = manageCategoryRepository;
         }
 
         [HttpGet("all")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> getAllCategory()
         {
             try
             {
-                var categories = _context.Categories;
-                if (categories.Count() != 0)
+                var apiResponse = await _manageCategoryRepository.getAllCategoryAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "GetAll successfull!",
-                        Data = categories
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Danh sách trống"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> getCategoryById(int id)
         {
             try
             {
-                var category = _context.Categories.SingleOrDefault(c => c.Id == id);
-                if (category != null)
+                var apiResponse = await _manageCategoryRepository.getCategoryByIdAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = category
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return NotFound(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Not found!",
-                        Data = null
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPost("create")]
-        public IActionResult Create(CategoryVM categoryVM)
+        public async Task<IActionResult> createCategory(CategoryVM categoryVM)
         {
             try
             {
-                var category = new Category
-                {
-                    Name = categoryVM.Name
-                };
-                _context.Add(category);
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Create successfull!",
-                    Data = category
-                });
+                var apiResponse = await _manageCategoryRepository.createCategoryAsync(categoryVM);
+                return Ok(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
             }
         }
 
         [HttpPut("edit/{id}")]
-        public IActionResult UpdateLoaiById(int id, CategoryVM categoryVM)
+        public async Task<IActionResult> updateCategory(int id, CategoryVM categoryVM)
         {
             try
             {
-                var _category = _context.Categories.SingleOrDefault(c => c.Id == id);
-                if (_category != null)
+                var apiMessage = await _manageCategoryRepository.updateCategoryAsync(id, categoryVM);
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    _category.Name = categoryVM.Name;
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Update successfull!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Update failed!",
-                    Data = null
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> deleteCategory(int id)
         {
             try
             {
-                var category = _context.Categories.SingleOrDefault(c => c.Id == id);
-                if (category != null)
+                var apiMessage = await _manageCategoryRepository.deleteCategoryAsync(id);
+                if (apiMessage.Message == Message.DELETE_SUCCESS.ToString())
                 {
-                    _context.Remove(category);
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Delete successfull!",
-                        Data = null
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Delete failed!",
-                    Data = null
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.DELETE_FAILED.ToString() });
             }
         }
     }

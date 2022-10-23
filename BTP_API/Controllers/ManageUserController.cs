@@ -1,9 +1,6 @@
 ﻿using BTP_API.Helpers;
 using BTP_API.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Asn1.Cmp;
 
 namespace BookTradingPlatform.Controllers
 {
@@ -11,238 +8,155 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class ManageUserController : ControllerBase
     {
-        private readonly BTPContext _context;
+        private readonly IManageUserRepository _manageUserRepository;
 
-        public ManageUserController(BTPContext context)
+        public ManageUserController(IManageUserRepository manageUserRepository)
         {
-            _context = context;
+            _manageUserRepository = manageUserRepository;
         }
 
         [HttpGet("all")]
-        public IActionResult GetAllUser()
+        public async Task<IActionResult> getAllUser()
         {
             try
             {
-                var users = _context.Users.Where(b => b.RoleId == 3);
-                if (users.Count() != 0)
+                var apiResponse = await _manageUserRepository.getAllUserAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = users
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("ban-list")]
-        public IActionResult GetAllUserBan()
+        public async Task<IActionResult> getAllUserBan()
         {
             try
             {
-                var users = _context.Users.Where(b => b.RoleId == 3 && b.IsActive == false);
-                if (users.Count() != 0)
+                var apiResponse = await _manageUserRepository.getAllUserBanAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = users
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("active-list")]
-        public IActionResult GetAllUserActive()
+        public async Task<IActionResult> getAllUserActive()
         {
 
             try
             {
-                var users = _context.Users.Where(b => b.RoleId == 3 && b.IsActive == true);
-                if (users.Count() != 0)
+                var apiResponse = await _manageUserRepository.getAllUserActiveAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = users
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserByID(int id)
+        public async Task<IActionResult> getUserById(int id)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(b => b.Id == id && b.RoleId == 3);
-                if (user != null)
+                var apiResponse = await _manageUserRepository.getUserByIdAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = user
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPost("search/{search}")]
-        public IActionResult SearchUser(string search)
+        public async Task<IActionResult> searchUser(string search)
         {
             try
             {
-                var user = _context.Users.Where(b => b.RoleId == 3 && b.Email.Contains(search) || b.RoleId == 3 && b.Phone.Contains(search));
-                if (user.Count() != 0)
+                var apiResponse = await _manageUserRepository.searchUserAsync(search);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = user
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.SEARCH_FAILED.ToString() });
             }
         }
 
         [HttpPut("ban/{id}")]
-        public IActionResult BanAcc(int id)
+        public async Task<IActionResult> banAcc(int id)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(x => x.Id == id && x.IsActive == true);
-                if (user == null)
+                var apiMessage = await _manageUserRepository.banAccAsync(id);
+                if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy người dùng!"
-                    });
+                    return Ok(apiMessage);
                 }
-                user.IsActive = false;
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Khóa tài khoản thành công!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
             }
         }
 
         [HttpPut("active/{id}")]
-        public IActionResult ActiveAcc(int id)
+        public async Task<IActionResult> activeAcc(int id)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(x => x.Id == id && x.IsActive == false);
-                if (user == null)
+                var apiMessage = await _manageUserRepository.activeAccAsync(id);
+                if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy người dùng!"
-                    });
+                    return Ok(apiMessage);
                 }
-                user.IsActive = true;
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Kích hoạt tài khoản thành công!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
             }
         }
 
         [HttpPut("authority/{id}")]
-        public IActionResult AuthorityAdmin(int id)
+        public async Task<IActionResult> authorityAdmin(int id)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(x => x.Id == id && x.IsActive == true);
-                if (user == null)
+                var apiMessage = await _manageUserRepository.authorityAdminAsync(id);
+                if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy người dùng!"
-                    });
+                    return Ok(apiMessage);
                 }
-                if (user.RoleId == 3)
-                {
-                    user.RoleId = 2;
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Ủy quyền admin thành công!"
-                    });
-                }
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Ủy quyền admin không thành công!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
             }
         }
     }

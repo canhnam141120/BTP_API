@@ -1,8 +1,5 @@
 ﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using static BTP_API.Helpers.EnumVariable;
+using Org.BouncyCastle.Asn1.Cmp;
 
 namespace BookTradingPlatform.Controllers
 {
@@ -10,201 +7,144 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class ManageBookController : ControllerBase
     {
-        private readonly BTPContext _context;
+        private readonly IManageBookRepository _manageBookRepository;
 
-        public ManageBookController(BTPContext context)
+        public ManageBookController(IManageBookRepository manageBookRepository)
         {
-            _context = context;
+            _manageBookRepository = manageBookRepository;
         }
 
         [HttpGet("all")]
-        public IActionResult GetAllBook()
+        public async Task<IActionResult> getAllBook()
         {
             try
             {
-                var books = _context.Books.ToList();
-                if (books.Count() != 0)
+                var apiResponse = await _manageBookRepository.getAllBookAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get thành công!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("approved")]
-        public IActionResult GetAllBookApproved()
+        public async Task<IActionResult> getAllBookApproved()
         {
             try
             {
-                var books = _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString());
-                if (books.Count() != 0)
+                var apiResponse = await _manageBookRepository.getAllBookApprovedAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get thành công!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("denied")]
-        public IActionResult GetAllBookDenied()
+        public async Task<IActionResult> getAllBookDenied()
         {
             try
             {
-                var books = _context.Books.Where(b => b.Status == StatusRequest.Denied.ToString());
-                if (books.Count() != 0)
+                var apiResponse = await _manageBookRepository.getAllBookDeniedAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get thành công!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("waiting")]
-        public IActionResult GetAllBookWaiting()
+        public async Task<IActionResult> getAllBookWaiting()
         {
             try
             {
-                var books = _context.Books.Where(b => b.Status == StatusRequest.Waiting.ToString());
-                if (books.Count() != 0)
+                var apiResponse = await _manageBookRepository.getAllBookWaitingAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get thành công!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetBookByID(int id)
+        public async Task<IActionResult> getBookById(int id)
         {
             try
             {
-                var book = _context.Books.SingleOrDefault(b => b.Id == id);
-                if (book != null)
+                var apiResponse = await _manageBookRepository.getBookByIdAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = book
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPut("approved/{id}")]
-        public IActionResult ApprovedBook(int id)
+        public async Task<IActionResult> approvedBook(int id)
         {
             try
             {
-                var book = _context.Books.SingleOrDefault(b => b.Id == id && b.Status == StatusRequest.Waiting.ToString());
-                if (book != null)
+                var apiMessage = await _manageBookRepository.approvedBookAsync(id);
+                if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    book.Status = StatusRequest.Approved.ToString();
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Duyệt thành công!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
+                if(apiMessage.Message == Message.APPROVED.ToString())
                 {
-                    Success = false,
-                    Message = "Không tìm thấy!"
-                });
+                    return BadRequest(apiMessage);
+                }
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
             }
         }
 
         [HttpPut("denied/{id}")]
-        public IActionResult DeniedBook(int id)
+        public async Task<IActionResult> deniedBook(int id)
         {
             try
             {
-                var book = _context.Books.SingleOrDefault(b => b.Id == id && b.Status == StatusRequest.Waiting.ToString());
-                if (book != null)
+                var apiMessage = await _manageBookRepository.deniedBookAsync(id);
+                if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    book.Status = StatusRequest.Denied.ToString();
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Duyệt thành công!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
+                if (apiMessage.Message == Message.DENIED.ToString())
                 {
-                    Success = false,
-                    Message = "Không tìm thấy!"
-                });
+                    return BadRequest(apiMessage);
+                }
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
             }
         }
 

@@ -1,8 +1,5 @@
-﻿using BTP_API.ViewModels;
-using BTP_API.Helpers;
-using BTP_API.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using BTP_API.Helpers;
+using Org.BouncyCastle.Asn1.Cmp;
 
 namespace BookTradingPlatform.Controllers
 {
@@ -10,187 +7,119 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class ManageBillController : ControllerBase
     {
-        private readonly BTPContext _context;
+        private readonly IManageBillRepository _manageBillRepository;
 
-        public ManageBillController(BTPContext context)
+        public ManageBillController(IManageBillRepository manageBillRepository)
         {
-            _context = context;
+            _manageBillRepository = manageBillRepository;
         }
 
         [HttpGet("exchange-bill/all")]
-        public IActionResult GetAllExBill()
+        public async Task<IActionResult> getAllExBill()
         {
             try
             {
-                var transactionsBills = _context.ExchangeBills.ToList();
-                if (transactionsBills.Count() != 0)
+                var apiResponse = await _manageBillRepository.getAllExBillAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = transactionsBills
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("exchange-bill/{id}")]
-        public IActionResult GetExBillDetail(int id)
+        public async Task<IActionResult> getExBillDetail(int id)
         {
             try
             {
-                var bill = _context.ExchangeBills.SingleOrDefault(b => b.Id == id);
-                if (bill != null)
+                var apiResponse = await _manageBillRepository.getExBillDetailAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = bill
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPut("exchange-bill/update/{id}")]
-        public IActionResult UpdateStatusTransactionDetail(int id, ExchangeBillVM listOfExchangeBillVM)
+        public async Task<IActionResult> updateStatusExBillDetail(int id, ExchangeBillVM exchangeBillVM)
         {
             try
             {
-                var exchangeBill = _context.ExchangeBills.SingleOrDefault(b => b.Id == id);
-                if (exchangeBill != null)
+                var apiMessage = await _manageBillRepository.updateStatusExBillDetailAsync(id, exchangeBillVM);
+                if(apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    exchangeBill.SendDate = listOfExchangeBillVM.SendDate;
-                    exchangeBill.ReceiveDate = listOfExchangeBillVM.ReceiveDate;
-                    exchangeBill.RecallDate = listOfExchangeBillVM.RecallDate;
-                    exchangeBill.RefundDate = listOfExchangeBillVM.RefundDate;
-                    exchangeBill.PaidDate = listOfExchangeBillVM.PaidDate;
-                    exchangeBill.IsPaid = listOfExchangeBillVM.IsPaid;
-                    exchangeBill.Payments = listOfExchangeBillVM.Payments;
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Cập nhật trạng thái hóa đơn thành công!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Không tìm thấy hóa đơn!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 
 
         [HttpGet("rent-bill/all")]
-        public IActionResult GetAllRentBill()
+        public async Task<IActionResult> getAllRentBill()
         {
             try
             {
-                var transactionsBills = _context.RentBills.ToList();
-                if (transactionsBills.Count() != 0)
+                var apiResponse = await _manageBillRepository.getAllRentBillAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = transactionsBills
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("rent-bill/{id}")]
-        public IActionResult GetRentBillDetail(int id)
+        public async Task<IActionResult> getRentBillDetail(int id)
         {
             try
             {
-                var bill = _context.RentBills.SingleOrDefault(b => b.Id == id);
-                if (bill != null)
+                var apiResponse = await _manageBillRepository.getRentBillDetailAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = bill
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPut("rent-bill/update/{id}")]
-        public IActionResult UpdateStatusTransactionRentDetail(int id, RentBillVM listOfRentBillVM)
+        public async Task<IActionResult> updateStatusTransactionRentDetail(int id, RentBillVM rentBillVM)
         {
             try
             {
-                var rentBill = _context.RentBills.SingleOrDefault(b => b.Id == id);
-                if (rentBill != null)
+                var apiMessage = await _manageBillRepository.updateStatusRentBillDetailAsync(id, rentBillVM);
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    rentBill.SendDate = listOfRentBillVM.SendDate;
-                    rentBill.ReceiveDate = listOfRentBillVM.ReceiveDate;
-                    rentBill.RecallDate = listOfRentBillVM.RecallDate;
-                    rentBill.RefundDate = listOfRentBillVM.RefundDate;
-                    rentBill.PaidDate = listOfRentBillVM.PaidDate;
-                    rentBill.IsPaid = listOfRentBillVM.IsPaid;
-                    rentBill.Payment = listOfRentBillVM.Payment;
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Cập nhật trạng thái hóa đơn thành công!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Không tìm thấy hóa đơn!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.UPDATE_FAILED.ToString() });
             }
         }
     }

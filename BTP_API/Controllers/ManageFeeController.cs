@@ -1,9 +1,4 @@
 ﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 
 namespace BookTradingPlatform.Controllers
 {
@@ -11,173 +6,61 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class ManageFeeController : ControllerBase
     {
-        private readonly BTPContext _context;
+        private readonly IManageFeeRepository _manageFeeRepository;
 
-        public ManageFeeController(BTPContext context)
+        public ManageFeeController(IManageFeeRepository manageFeeRepository)
         {
-            _context = context;
+            _manageFeeRepository = manageFeeRepository;
         }
 
         [HttpGet("all")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> getAllFee()
         {
             try
             {
-                var fees = _context.Fees.Where(p => p.IsActive == true).ToList();
-                if (fees.Count() != 0)
+                var apiResponse = await _manageFeeRepository.getAllFeeAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = fees
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetFeeById(int id)
+        public async Task<IActionResult> getFeeById(int id)
         {
             try
             {
-                var fee = _context.Fees.SingleOrDefault(p => p.Id == id);
-                if (fee != null)
+                var apiResponse = await _manageFeeRepository.getFeeByIdAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = fee
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Không tìm thấy!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPost("create")]
-        public IActionResult CreateNew(FeeVM feeVM)
+        public async Task<IActionResult> createFee(FeeVM feeVM)
         {
             try
             {
-                var fee = _context.Fees.SingleOrDefault(f => f.Code == feeVM.Code);
-                if (fee != null)
-                {
-                    var feeNew = new Fee
-                    {
-                        Code = feeVM.Code,
-                        Name = feeVM.Name,
-                        Price = feeVM.Price,
-                        IsActive = true
-                    };
-                    fee.IsActive = false;
-                    _context.Add(feeNew);
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Thêm thành công!",
-                        Data = feeNew
-                    });
-                }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Không tìm thấy phí!"
-                });
+                var apiResponse = await _manageFeeRepository.createFeeAsync(feeVM);
+                return Ok(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.CREATE_FAILED.ToString() });
             }
         }
-
-        //[HttpPut("edit/{id}")]
-        //public IActionResult EditFee(int id, FeeVM feeVM)
-        //{
-        //    try
-        //    {
-        //        var fee = _context.Fees.SingleOrDefault(f => f.Id == id);
-        //        if (fee == null)
-        //        {
-        //            return Ok(new ApiResponse
-        //            {
-        //                Success = true,
-        //                Message = "Không tìm thấy!"
-        //            });
-        //        }
-
-        //        fee.Name = feeVM.Name;
-        //        fee.Price = feeVM.Price;
-        //        _context.SaveChanges();
-
-        //        return Ok(new ApiResponse
-        //        {
-        //            Success = false,
-        //            Message = "Sửa thành công!"
-        //        });
-        //    }
-        //    catch
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError);
-        //    }
-        //}
-
-        //[HttpPut("hide/{id}")]
-        //public IActionResult HideFee(int id)
-        //{
-        //    try
-        //    {
-        //        var fee = _context.Fees.SingleOrDefault(p => p.Id == id);
-        //        if (fee == null)
-        //        {
-        //            return Ok(new ApiResponse
-        //            {
-        //                Success = true,
-        //                Message = "Không tìm thấy!"
-        //            });
-        //        }
-
-        //        if(fee.Flag == false)
-        //        {
-        //            fee.Flag = true;
-        //            _context.SaveChanges();
-        //            return Ok(new ApiResponse
-        //            {
-        //                Success = false,
-        //                Message = "Hiện thành công!"
-        //            });
-        //        }
-        //        fee.Flag = false;
-        //        _context.SaveChanges();
-        //        return Ok(new ApiResponse
-        //        {
-        //            Success = false,
-        //            Message = "Ẩn thành công!"
-        //        });
-
-        //    }
-        //    catch
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError);
-        //    }
-        //}
     }
 }

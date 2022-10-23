@@ -1,16 +1,9 @@
 ﻿using BTP_API.Helpers;
 using BTP_API.Models;
 using BTP_API.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration.EnvironmentVariables;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using static BTP_API.Helpers.EnumVariable;
+using Microsoft.Extensions.Hosting;
+using Org.BouncyCastle.Asn1.Cmp;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BookTradingPlatform.Controllers
 {
@@ -20,1350 +13,725 @@ namespace BookTradingPlatform.Controllers
     {
         private readonly BTPContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly IPersonalRepository _personalRepository;
 
-        public PersonalController(BTPContext context, IWebHostEnvironment environment)
+        public PersonalController(BTPContext context, IWebHostEnvironment environment, IPersonalRepository personalRepository)
         {
             _context = context;
             _environment = environment;
+            _personalRepository = personalRepository;
         }
 
 
         [HttpGet("can-trade")]
-        public IActionResult GetBookCanTrade()
+        public async Task<IActionResult> getBookCanTrade()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getBookCanTradeAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var books = _context.Books.Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true);
-                if (books.Count() != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Not found!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-book-list")]
-        public IActionResult GetAllBook()
+        public async Task<IActionResult> getAllBook()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getAllBookAsync();
+                if(apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var books = _context.Books.Where(b => b.UserId == userId).ToList();
-                if (books.Count != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Danh sách trống!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-approved-book-list")]
-        public IActionResult GetBookApproved()
+        public async Task<IActionResult> getBookApprovedAsync()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getAllBookAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var books = _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).ToList();
-                if (books.Count != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-denied-book-list")]
-        public IActionResult GetBookDenied()
+        public async Task<IActionResult> getBookDenied()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getBookDeniedAsync();
+                if(apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var books = _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).ToList();
-                if (books.Count != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-waiting-book-list")]
-        public IActionResult GetBookWaiting()
+        public async Task<IActionResult> getBookWaiting()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getBookWaitingAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var books = _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).ToList();
-                if (books.Count != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-post-list")]
-        public IActionResult GetAllPost()
+        public async Task<IActionResult> getAllPost()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getAllPostAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var posts = _context.Posts.Where(b => b.UserId == userId).ToList();
-                if (posts.Count != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = posts
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-approved-post-list")]
-        public IActionResult GetPostApproved()
+        public async Task<IActionResult> getPostApproved()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getPostApprovedAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var posts = _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).ToList();
-                if (posts.Count != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = posts
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-denied-post-list")]
-        public IActionResult GetPostDenied()
+        public async Task<IActionResult> getPostDenied()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getPostDeniedAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var posts = _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).ToList();
-                if (posts.Count != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = posts
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-waiting-post-list")]
-        public IActionResult GetPostWaiting()
+        public async Task<IActionResult> getPostWaiting()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getPostWaitingAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var posts = _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).ToList();
-                if (posts.Count != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = posts
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
 
         [HttpGet("my-favorites-book")]
-        public IActionResult GetBookByFavorites()
+        public async Task<IActionResult> getBookByFavorites()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getBookByFavoritesAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var lists = _context.FavoriteBookLists.Include(f => f.Book).Where(f => f.UserId == userId);
-                if (lists.Count() != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = lists
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPost("my-favorites-book/add/{bookId}")]
-        public IActionResult AddBookByFavorites(int bookId)
+        public async Task<IActionResult> addBookByFavorites(int bookId)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiMessage = await _personalRepository.addBookByFavoritesAsync(bookId);
+                if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return NotFound(apiMessage);
                 }
-
-                var check = _context.FavoriteBookLists.SingleOrDefault(f => f.BookId == bookId && f.UserId == userId);
-                if (check != null)
+                if (apiMessage.Message == Message.ADD_SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Đã có trong danh sách yêu thích!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                var favoriteBook = new FavoriteBookList
-                {
-                    BookId = bookId,
-                    UserId = userId
-                };
-
-                _context.Add(favoriteBook);
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Add successfull!",
-                    Data = favoriteBook
-                });
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.ADD_FAILED.ToString() });
             }
         }
 
         [HttpDelete("un-favorites-book/{bookId}")]
-        public IActionResult DeleteBookByFavorites(int bookId)
+        public async Task<IActionResult> deleteBookByFavorites(int bookId)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiMessage = await _personalRepository.deleteBookByFavoritesAsync(bookId);
+                if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return NotFound(apiMessage);
                 }
-                var lists = _context.FavoriteBookLists.SingleOrDefault(f => f.UserId == userId && f.BookId == bookId);
-                if (lists != null)
+                if (apiMessage.Message == Message.DELETE_SUCCESS.ToString())
                 {
-                    _context.Remove(lists);
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Delete successfull!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.DELETE_FAILED.ToString() });
             }
         }
 
 
 
         [HttpGet("my-favorites-post")]
-        public IActionResult GetPostByFavorites()
+        public async Task<IActionResult> getPostByFavorites()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getPostByFavoritesAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var lists = _context.FavoritePostLists.Include(f => f.Post).Where(f => f.UserId == userId);
-                if (lists.Count() != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = lists
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Danh sách trống!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPost("my-favorites-post/add/{postId}")]
-        public IActionResult AddPostByFavorites(int postId)
+        public async Task<IActionResult> addPostByFavorites(int postId)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiMessage = await _personalRepository.addPostByFavoritesAsync(postId);
+                if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return NotFound(apiMessage);
                 }
-
-                var check = _context.FavoritePostLists.SingleOrDefault(p => p.PostId == postId && p.UserId == userId);
-                if (check != null)
+                if (apiMessage.Message == Message.ADD_SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Đã tồn tại!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                var favoritePost = new FavoritePostList
-                {
-                    PostId = postId,
-                    UserId = userId
-                };
-
-                _context.Add(favoritePost);
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Add successfull!",
-                    Data = favoritePost
-                });
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.ADD_FAILED.ToString() });
             }
         }
 
         [HttpDelete("un-favorites-post/{postId}")]
-        public IActionResult DeletePostByFavorites(int postId)
+        public async Task<IActionResult> deletePostByFavorites(int postId)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiMessage = await _personalRepository.deletePostByFavoritesAsync(postId);
+                if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return NotFound(apiMessage);
                 }
-                var post = _context.FavoritePostLists.SingleOrDefault(f => f.UserId == userId && f.PostId == postId);
-                if (post != null)
+                if (apiMessage.Message == Message.DELETE_SUCCESS.ToString())
                 {
-                    _context.Remove(post);
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Delete successfull!"
-                    });
+                    return Ok(apiMessage);
                 }
-                else
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Danh sách trống!"
-                    });
-                }
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.DELETE_FAILED.ToString() });
             }
         }
 
 
         [HttpGet("my-favorites-user")]
-        public IActionResult GetUserByFavorites()
+        public async Task<IActionResult> getUserByFavorites()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getUserByFavoritesAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var lists = _context.FavoriteUserLists.Include(f => f.FavoriteUser).Where(f => f.UserId == userId);
-                if (lists.Count() != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = lists
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Danh sách trống!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPost("my-favorites-user/add/{userId}")]
-        public IActionResult AddUserByFavorites(int userId)
+        public async Task<IActionResult> addUserByFavorites(int userId)
         {
             try
             {
-                int _userId = GetUserId();
-                if (_userId == 0)
+                var apiMessage = await _personalRepository.addUserByFavoritesAsync(userId);
+                if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return NotFound(apiMessage);
                 }
-
-                var check = _context.FavoriteUserLists.SingleOrDefault(u => u.FavoriteUserId == userId && u.UserId == _userId);
-                if (check != null)
+                if (apiMessage.Message == Message.ADD_SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Đã tồn tại!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                var favoriteUser = new FavoriteUserList
-                {
-                    FavoriteUserId = userId,
-                    UserId = _userId
-                };
-
-                _context.Add(favoriteUser);
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Add successfull!",
-                    Data = favoriteUser
-                });
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.ADD_FAILED.ToString() });
             }
         }
 
         [HttpDelete("un-favorites-user/{userId}")]
-        public IActionResult DeleteUserByFavorites(int userId)
+        public async Task<IActionResult> deleteUserByFavorites(int userId)
         {
             try
             {
-                int _userId = GetUserId();
-                if (_userId == 0)
+                var apiMessage = await _personalRepository.deleteUserByFavoritesAsync(userId);
+                if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return NotFound(apiMessage);
                 }
-                var user = _context.FavoriteUserLists.SingleOrDefault(f => f.UserId == _userId && f.FavoriteUserId == userId);
-                if (user != null)
+                if (apiMessage.Message == Message.DELETE_SUCCESS.ToString())
                 {
-                    _context.Remove(user);
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Delete successfull!"
-                    });
+                    return Ok(apiMessage);
                 }
-                else
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Danh sách trống!"
-                    });
-                }
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.DELETE_FAILED.ToString() });
             }
         }
 
 
         [HttpGet("my-profile")]
-        public IActionResult GetInfoUserId()
+        public async Task<IActionResult> getInfoUserId()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.getInfoUserIdAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-                var data = _context.Users.SingleOrDefault(u => u.Id == userId);
-                if (data != null)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = data
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Sanh sách trống!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPut("edit-profile")]
-        public IActionResult EditInfo([FromForm] UserVM userVM)
+        public async Task<IActionResult> editInfo([FromForm] UserVM userVM)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiMessage = await _personalRepository.editInfoAsync(userVM);
+                if (apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiMessage);
                 }
-                var user = _context.Users.SingleOrDefault(u => u.Id == userId);
-                if (user == null)
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không thấy dữ liệu!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                string fileImageName = UploadBookFile(userVM.Avatar);
-
-                user.Fullname = userVM.Fullname;
-                user.Age = userVM.Age;
-                user.AddressMain = userVM.AddressMain;
-                user.AddressSub1 = userVM.AddressSub1;
-                user.AddressSub2 = userVM.AddressSub2;
-                user.Avatar = fileImageName;
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Cập nhật thông tin cá nhân thành công!",
-                    Data = user
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 
         [HttpPut("edit-password")]
-        public IActionResult EditPassword(ChangePasswordVM passwordVM)
+        public async Task<IActionResult> editPassword(ChangePasswordVM changePasswordVM)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiMessage = await _personalRepository.editPasswordAsync(changePasswordVM);
+                if (apiMessage.Message == Message.USER_NOT_EXIST.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return NotFound(apiMessage);
                 }
-                var user = _context.Users.SingleOrDefault(u => u.Id == userId);
-                if (user == null)
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không thấy người dùng!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                bool isValid = BCrypt.Net.BCrypt.Verify(passwordVM.OldPassword, user.Password);
-                if (!isValid)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Mật khẩu cũ không chính xác!"
-                    });
-                }
-
-                int costParameter = 12;
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(passwordVM.NewPassword, costParameter);
-
-                user.Password = hashedPassword;
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Đổi mật khẩu thành công!",
-                    Data = user
-                });
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 
 
         [HttpGet("request-send")]
-        public IActionResult ListOfRequestSend()
+        public async Task<IActionResult> listOfRequestSend()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.listOfRequestSendAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var myBooks = _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).ToList();
-
-                List<ExchangeRequest> LoREx = new List<ExchangeRequest>();
-
-                foreach (var book in myBooks)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    var data = _context.ExchangeRequests.Where(r => r.BookOfferId == book.Id).ToList();
-                    foreach (var item in data)
-                    {
-                        LoREx.Add(item);
-                    }
+                    return Ok(apiResponse);
                 }
-
-                if (LoREx != null)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = LoREx
-                    });
-                }
-                else
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Sanh sách trống!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("request-received/{bookId}")]
-        public IActionResult ListOfRequestReceived(int bookId)
+        public async Task<IActionResult> listOfRequestReceived(int bookId)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.listOfRequestReceivedSendAsync(bookId);
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var check = _context.Books.Where(b => b.Id == bookId && b.UserId == userId).ToList();
-                if (check.Count == 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy sách của bạn!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                var data = _context.ExchangeRequests.Include(r => r.BookOffer.User).Where(r => r.BookId == bookId).ToList();
-                if (data.Count != 0)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get thành công!",
-                        Data = data
-                    });
-                }
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
 
         [HttpGet("my-transaction-exchange-all")]
-        public IActionResult MyTransactionExchange()
+        public async Task<IActionResult> myTransactionExchange()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.myTransactionExchangeAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var transaction = _context.Exchanges.Where(b => b.UserId1 == userId || b.UserId2 == userId).ToList();
-                if (transaction.Count == 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy giao dịch của bạn!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Get thành công!",
-                    Data = transaction
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
-        [HttpGet("my-transaction-exchange-detail")]
-        public IActionResult MyTransactionExDetail(int id)
+        [HttpGet("my-transaction-exchange-detail/{id}")]
+        public async Task<IActionResult> myTransactionExDetail(int id)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.myTransactionExDetailAsync(id);
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var transactionDetails = _context.ExchangeDetails.Where(b => b.ExchangeId == id).ToList();
-                if (transactionDetails.Count == 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy giao dịch của bạn!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Danh sách trống!",
-                    Data = transactionDetails
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
-        [HttpGet("my-transaction-exchange-bill")]
-        public IActionResult MyTransactionExBill(int id)
+        [HttpGet("my-transaction-exchange-bill/{id}")]
+        public async Task<IActionResult> myTransactionExBill(int id)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.myTransactionExBillAsync(id);
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var transactionBills = _context.ExchangeBills.SingleOrDefault(b => b.ExchangeId == id && b.UserId == userId);
-                if (transactionBills == null)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy giao dịch của bạn!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Danh sách trống!",
-                    Data = transactionBills
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-exchange-bill-all")]
-        public IActionResult MyExBillAll()
+        public async Task<IActionResult> myExBillAll()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.myExBillAllAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var transactionBills = _context.ExchangeBills.Where(b => b.UserId == userId);
-                if (transactionBills.Count() != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Trống!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Get thành công!",
-                    Data = transactionBills
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-transaction-rent-all")]
-        public IActionResult MyTransactionRent()
+        public async Task<IActionResult> myTransactionRent()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.myTransactionRentAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var transaction = _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).ToList();
-                if (transaction.Count == 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy giao dịch của bạn!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Get thành công!",
-                    Data = transaction
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
-        [HttpGet("my-transaction-rent-detail")]
-        public IActionResult MyTransactionRentDetail(int id)
+        [HttpGet("my-transaction-rent-detail/{id}")]
+        public async Task<IActionResult> myTransactionRentDetail(int id)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.myTransactionRentDetailAsync(id);
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var transactionDetails = _context.RentDetails.Where(b => b.RentId == id).ToList();
-                if (transactionDetails.Count == 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy giao dịch của bạn!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Danh sách trống!",
-                    Data = transactionDetails
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
-        [HttpGet("my-transaction-rent-bill")]
-        public IActionResult MyTransactionRentBill(int id)
+        [HttpGet("my-transaction-rent-bill/{id}")]
+        public async Task<IActionResult> myTransactionRentBill(int id)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.myTransactionRentBillAsync(id);
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var transactionBills = _context.RentBills.SingleOrDefault(b => b.RentId == id && b.UserId == userId);
-                if (transactionBills == null)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy giao dịch của bạn!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Danh sách trống!",
-                    Data = transactionBills
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("my-rent-bill-all")]
-        public IActionResult MyRentBillAll()
+        public async Task<IActionResult> myRentBillAll()
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiResponse = await _personalRepository.myRentBillAllAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiResponse);
                 }
-
-                var transactionBills = _context.RentBills.Where(b => b.UserId == userId);
-                if (transactionBills.Count() != 0)
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Trống!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Get thành công!",
-                    Data = transactionBills
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPut("update-info-shipping")]
-        public IActionResult UpdateInfoShipping(ShipInfoVM shippingVM)
+        public async Task<IActionResult> updateInfoShipping(ShipInfoVM shipInfoVM)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiMessage = await _personalRepository.updateInfoShippingAsync(shipInfoVM);
+                if (apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return BadRequest(apiMessage);
                 }
-                var shipInfo = _context.ShipInfos.SingleOrDefault(u => u.UserId == userId);
-                if (shipInfo == null)
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không thấy dữ liệu!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                shipInfo.SendIsMonday = shippingVM.SendIsMonday;
-                shipInfo.SendIsWednesday = shippingVM.SendIsWednesday;
-                shipInfo.SendIsFriday = shippingVM.SendIsFriday;
-                shipInfo.ReceiveIsMonday = shippingVM.ReceiveIsMonday;
-                shipInfo.ReceiveIsWednesday = shippingVM.ReceiveIsWednesday;
-                shipInfo.ReceiveIsFriday = shippingVM.ReceiveIsFriday;
-                shipInfo.RecallIsMonday = shippingVM.RecallIsMonday;
-                shipInfo.RecallIsWednesday = shippingVM.RecallIsWednesday;
-                shipInfo.RecallIsFriday = shippingVM.RecallIsFriday;
-                shipInfo.RefundIsMonday = shippingVM.RefundIsMonday;
-                shipInfo.RefundIsWednesday = shippingVM.RefundIsWednesday;
-                shipInfo.RefundIsFriday = shippingVM.RefundIsFriday;
-                shipInfo.IsUpdate = true;
-
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Cập nhật thông tin vận chuyển thành công!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
             }
-        }
-
-        private string UploadBookFile(IFormFile Avatar)
-        {
-            string fileName;
-            if (Avatar != null)
-            {
-                string uploadDir = Path.Combine(_environment.WebRootPath, "UserImage");
-                fileName = Avatar.FileName;
-                string filePath = Path.Combine(uploadDir, fileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    Avatar.CopyTo(fileStream);
-                }
-
-                byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
-                fileName = Convert.ToBase64String(imageArray);
-            }
-            else
-            {
-                fileName = "empty";
-            }
-            return fileName;
-        }
-
-        private int GetUserId()
-        {
-            var cookie = Request.Cookies["accessToken"];
-            if (cookie == null)
-            {
-                return 0;
-            }
-            var token = new JwtSecurityToken(jwtEncodedString: cookie);
-            var userId = token.Claims.FirstOrDefault();
-            if (userId == null)
-            {
-                return 0;
-            }
-            int id = Int32.Parse(userId.Value);
-            return id;
         }
     }
 }

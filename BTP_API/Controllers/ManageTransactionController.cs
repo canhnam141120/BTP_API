@@ -1,10 +1,6 @@
 ﻿using BTP_API.Helpers;
 using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Data;
+using Org.BouncyCastle.Asn1.Cmp;
 using static BTP_API.Helpers.EnumVariable;
 
 namespace BookTradingPlatform.Controllers
@@ -13,294 +9,190 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class ManageTransactionController : ControllerBase
     {
-        private readonly BTPContext _context;
+        private readonly IManageTransactionRepository _manageTransactionRepository;
 
-        public ManageTransactionController(BTPContext context)
+        public ManageTransactionController(IManageTransactionRepository manageTransactionRepository)
         {
-            _context = context;
+            _manageTransactionRepository = manageTransactionRepository;
         }
 
         [HttpGet("exchange/all")]
-        public IActionResult GetAllTransactionEx()
+        public async Task<IActionResult> getAllExchange()
         {
             try
             {
-                var exchanges = _context.Exchanges.ToList();
-                if (exchanges.Count() != 0)
+                var apiResponse = await _manageTransactionRepository.getAllExchangeAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = exchanges
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
-        [HttpGet("exchange-detail/{id}")]
-        public IActionResult GetTransactionExDetail(int id)
+        [HttpGet("exchange/{id}/detail")]
+        public async Task<IActionResult> getAllExchangeDetail(int id)
         {
             try
             {
-                var exchanges = _context.ExchangeDetails.Where(b => b.ExchangeId == id).ToList();
-                if (exchanges.Count() != 0)
+                var apiResponse = await _manageTransactionRepository.getAllExchangeDetailAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = exchanges
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("exchange/{id}/bill")]
-        public IActionResult GetTransactionExBill(int id)
+        public async Task<IActionResult> getAllExchangeBill(int id)
         {
             try
             {
-                var exchangeBills = _context.ExchangeBills.Where(b => b.ExchangeId == id).ToList();
-                if (exchangeBills.Count() != 0)
+                var apiResponse = await _manageTransactionRepository.getAllExchangeBillAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = exchangeBills
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
-        [HttpPut("exchange/update-status/{id}")]
-        public IActionResult UpdateStatusTransactionExchange(int id, Status status)
+        [HttpPut("exchange/{id}/update-status")]
+        public async Task<IActionResult> updateStatusExchange(int id, string status)
         {
             try
             {
-                var exchange = _context.Exchanges.SingleOrDefault(b => b.Id == id);
-                if (exchange != null)
+                var apiMessage = await _manageTransactionRepository.updateStatusExchangeAsync(id, status);
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    exchange.Status = status.ToString();
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Cập nhật trạng thái thành công!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Không tìm thấy giao dịch!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 
-        [HttpPut("exchange-detail/update-status/{id}")]
-        public IActionResult UpdateStatusTransactionDetail(int id, ExchangeDetailVM listOfExchangeDetailVM)
+        [HttpPut("exchange-detail/{id}/update-status")]
+        public async Task<IActionResult> updateExchangeDetail(int id, ExchangeDetailVM exchangeDetailVM)
         {
             try
             {
-                var exchange = _context.ExchangeDetails.SingleOrDefault(b => b.Id == id);
-                if (exchange != null)
+                var apiMessage = await _manageTransactionRepository.updateExchangeDetailAsync(id, exchangeDetailVM);
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    exchange.BeforeStatusBook1 = listOfExchangeDetailVM.BeforeStatusBook1;
-                    exchange.AfterStatusBook1 = listOfExchangeDetailVM.AfterStatusBook1;
-                    exchange.StorageStatusBook1 = listOfExchangeDetailVM.StorageStatusBook1;
-                    exchange.BeforeStatusBook2 = listOfExchangeDetailVM.BeforeStatusBook2;
-                    exchange.AfterStatusBook2 = listOfExchangeDetailVM.AfterStatusBook2;
-                    exchange.StorageStatusBook2 = listOfExchangeDetailVM.StorageStatusBook2;
-                    exchange.Status = listOfExchangeDetailVM.Status;
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Cập nhật trạng thái thành công!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Không tìm thấy giao dịch!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.UPDATE_FAILED.ToString() });
             }
         }
-
 
         [HttpGet("rent/all")]
-        public IActionResult GetAllTransactionRent()
+        public async Task<IActionResult> getAllRent()
         {
             try
             {
-                var rents = _context.Rents.ToList();
-                if (rents.Count() != 0)
+                var apiResponse = await _manageTransactionRepository.getAllRentAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = rents
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("rent/{id}")]
-        public IActionResult GetTransactionRentDetail(int id)
+        public async Task<IActionResult> getAllRentDetail(int id)
         {
             try
             {
-                var rents = _context.RentDetails.Where(b => b.RentId == id).ToList();
-                if (rents.Count() != 0)
+                var apiResponse = await _manageTransactionRepository.getAllRentDetailAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = rents
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("rent/{id}/bill")]
-        public IActionResult GetTransactionRentBill(int id)
+        public async Task<IActionResult> getAllRentBill(int id)
         {
             try
             {
-                var rentBills = _context.RentBills.Where(b => b.RentId == id).ToList();
-                if (rentBills.Count() != 0)
+                var apiResponse = await _manageTransactionRepository.getAllRentBillAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = rentBills
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
             }
         }
 
-        [HttpPut("rent/update-status/{id}")]
-        public IActionResult UpdateStatusTransactionRent(int id, Status status)
+        [HttpPut("rent/{id}/update-status")]
+        public async Task<IActionResult> updateStatusRent(int id, string status)
         {
             try
             {
-                var rent = _context.Rents.SingleOrDefault(b => b.Id == id);
-                if (rent != null)
+                var apiMessage = await _manageTransactionRepository.updateStatusRentAsync(id, status);
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    rent.Status = status.ToString();
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Cập nhật trạng thái thành công!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Không tìm thấy giao dịch!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 
-        [HttpPut("rent-detail/update-status/{id}")]
-        public IActionResult UpdateStatusTransactionRentDetail(int id, RentDetailVM listOfrentDetailVM)
+        [HttpPut("rent-detail/{id}/update-status")]
+        public async Task<IActionResult> updateRentDetail  (int id, RentDetailVM rentDetailVM)
         {
             try
             {
-                var rent = _context.RentDetails.SingleOrDefault(b => b.Id == id);
-                if (rent != null)
+                var apiMessage = await _manageTransactionRepository.updateRentDetailAsync(id, rentDetailVM);
+                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    rent.BeforeStatusBook = listOfrentDetailVM.BeforeStatusBook;
-                    rent.AfterStatusBook = listOfrentDetailVM.AfterStatusBook;
-                    rent.StorageStatusBook = listOfrentDetailVM.StorageStatusBook;
-                    rent.Status = listOfrentDetailVM.Status;
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Cập nhật trạng thái thành công!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Không tìm thấy giao dịch!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 

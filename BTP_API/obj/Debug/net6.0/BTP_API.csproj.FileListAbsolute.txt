@@ -102,3 +102,5 @@ F:\BTP_API\BTP_API\obj\Debug\net6.0\refint\BTP_API.dll
 F:\BTP_API\BTP_API\obj\Debug\net6.0\BTP_API.pdb
 F:\BTP_API\BTP_API\obj\Debug\net6.0\BTP_API.genruntimeconfig.cache
 F:\BTP_API\BTP_API\obj\Debug\net6.0\ref\BTP_API.dll
+F:\BTP_API\BTP_API\bin\Debug\net6.0\AutoMapper.dll
+F:\BTP_API\BTP_API\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

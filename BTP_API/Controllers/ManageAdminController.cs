@@ -1,7 +1,4 @@
 ﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookTradingPlatform.Controllers
 {
@@ -9,102 +6,66 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class ManageAdminController : ControllerBase
     {
-        private readonly BTPContext _context;
+        private readonly IManageAdminRepository _manageAdminRepository;
 
-        public ManageAdminController(BTPContext context)
+        public ManageAdminController(IManageAdminRepository manageAdminRepository)
         {
-            _context = context;
+            _manageAdminRepository = manageAdminRepository;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "1")]
-        public IActionResult GetAllAdmin()
+        [HttpGet("all")]
+        //[Authorize(Roles = "1")]
+        public async Task<IActionResult> getAllAdmin()
         {
             try
             {
-                var admins = _context.Users.Where(b => b.RoleId == 2 && b.IsActive == true);
-                if (admins.Count() != 0)
+                var apiResponse = await _manageAdminRepository.getAllAdminAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = admins
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpPut("remove/{id}")]
-        [Authorize(Roles = "1")]
-        public IActionResult RemoveAdmin(int id)
+        //[Authorize(Roles = "1")]
+        public async Task<IActionResult> removeAdmin(int id)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(x => x.Id == id);
-                if (user == null)
+                var apiMessage = await _manageAdminRepository.removeAdminAsync(id);
+                if(apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy người dùng!"
-                    });
+                    return Ok(apiMessage);
                 }
-                if (user.RoleId == 1)
-                {
-                    user.RoleId = 2;
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Hủy quyền admin thành công!"
-                    });
-                }
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Hủy quyền admin không thành công!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.FAILED.ToString() });
             }
         }
 
         [HttpGet("search/{search}")]
-        public IActionResult SearchAdmin(string search)
+        public async Task<IActionResult> searchAdmin(string search)
         {
             try
             {
-                var user = _context.Users.Where(b => b.RoleId == 2 && b.Email.Contains(search) || b.RoleId == 2 && b.Phone.Contains(search));
-                if (user.Count() != 0)
+                var apiResponse = await _manageAdminRepository.searchAdminAsync(search);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Get thành công!",
-                        Data = user
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Danh sách trống!"
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage{Message = Message.SEARCH_FAILED.ToString() });
             }
         }
     }

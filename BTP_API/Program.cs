@@ -1,8 +1,18 @@
-﻿using BTP_API.Helpers;
-using BTP_API.Models;
+﻿global using BTP_API.Context;
+global using BTP_API.Helpers;
+global using BTP_API.Services;
+global using BTP_API.ServicesImpl;
+global using BTP_API.Ultils;
+global using BTP_API.Models;
+global using BTP_API.ViewModels;
+global using Microsoft.AspNetCore.Mvc;
+global using static BTP_API.Helpers.EnumVariable;
+global using System.Data;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.IdentityModel.Tokens;
+global using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
@@ -49,7 +59,30 @@ builder.Services.AddCors(p => p.AddPolicy("BTP_CORS", build =>
     build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
-builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAutoMapper(typeof(Program));
+//Life cycle DI: AddSingleton(), AddTransient(), AddScope()
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IManageAdminRepository, ManageAdminRepository>();
+builder.Services.AddScoped<IManageBillRepository, ManageBillRepository>();
+builder.Services.AddScoped<IManageBookRepository, ManageBookRepository>();
+builder.Services.AddScoped<IManageCategoryRepository, ManageCategoryRepository>();
+builder.Services.AddScoped<IManageFeeRepository, ManageFeeRepository>();
+builder.Services.AddScoped<IManagePostRepository, ManagePostRepository>();
+builder.Services.AddScoped<IManageTransactionRepository, ManageTransactionRepository>();
+builder.Services.AddScoped<IManageUserRepository, ManageUserRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IRequestRepository, RequestRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IPersonalRepository, PersonalRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(

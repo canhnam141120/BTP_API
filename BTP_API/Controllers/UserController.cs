@@ -1,14 +1,9 @@
 ﻿using BTP_API.Helpers;
-using BTP_API.Models;
 using BTP_API.ViewModels;
 using MailKit.Net.Smtp;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using MimeKit;
-using System.IdentityModel.Tokens.Jwt;
+using Org.BouncyCastle.Asn1.Cmp;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -20,496 +15,152 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly BTPContext _context;
-        private readonly AppSettings _appSettings;
-        private readonly IConfiguration _config;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(BTPContext context, IOptionsMonitor<AppSettings> optionsMonitor, IConfiguration config)
+        public UserController(IUserRepository userRepository)
         {
-            _context = context;
-            _appSettings = optionsMonitor.CurrentValue;
-            _config = config;
+            _userRepository = userRepository;
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginVM loginVM)
+        public async Task<IActionResult> login(LoginVM loginVM)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(u => u.Email == loginVM.Email);
-                if (user == null)
+                var apiResponse = await _userRepository.loginAsync(loginVM);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy tài khoản!"
-                    });
+                    return Ok(apiResponse);
                 }
-
-                if (user.IsVerify == false)
+                else
                 {
-                    return Ok(new ApiResponse
+                    if (apiResponse.Message == Message.ACCOUNT_NOT_EXIST.ToString())
                     {
-                        Success = false,
-                        Message = "Tài khoản chưa được xác thực!"
-                    });
+                        return NotFound(apiResponse);
+                    }
+                    return BadRequest(apiResponse);
                 }
-
-                if (user.IsActive == false)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Tài khoản của bạn đã bị khóa!"
-                    });
-                }
-                bool isValid = BCrypt.Net.BCrypt.Verify(loginVM.Password, user.Password);
-                if (!isValid)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Mật khẩu không chính xác!"
-                    });
-                }
-
-                //Cấp token
-                var token = GenerateToken(user);
-                SetaccessToken(token);
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Đăng nhập thành công",
-                    Data = token
-                });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.LOGIN_FAILED.ToString() });
             }
         }
 
         [HttpPost("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> logout()
         {
             try
             {
-                CookieOptions option = new CookieOptions();
-                option.Expires = DateTime.Now.AddDays(-1);
-                option.Secure = true;
-                option.IsEssential = true;
-                Response.Cookies.Append("accessToken", string.Empty, option);
-                Response.Cookies.Append("refreshToken", string.Empty, option);
-                //Then delete the cookie
-                Response.Cookies.Delete("accessToken");
-                Response.Cookies.Delete("refreshToken");
-                return Ok(new ApiResponse
+                var apiMessage = await _userRepository.logoutAsync();
+                if(apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    Success = true,
-                    Message = "Đăng xuất thành công"
-                });
+                    return BadRequest(apiMessage);
+                }
+                return Ok(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.LOGOUT_FAILED.ToString() });
             }
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromForm] RegisterVM registerVM)
+        public async Task<IActionResult> register([FromForm] RegisterVM registerVM)
         {
             try
             {
-                var user = _context.Users.Any(u => u.Email == registerVM.Email);
-                if (user == true)
+                var apiMessage = await _userRepository.registerAsync(registerVM);
+                if (apiMessage.Message.Contains(Message.REGISTER_SUCCESS.ToString()))
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Username đã tồn tại",
-                    });
+                    return Ok(apiMessage);
                 }
-                int costParameter = 12;
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerVM.Password, costParameter);
-                //bool test = BCrypt.Net.BCrypt.Verify(registerVM.Password, hashedPassword);
-
-                var newUser = new User
-                {
-                    RoleId = 3,
-                    Email = registerVM.Email,
-                    Password = hashedPassword,
-                    VerificationToken = CreateRandomToken(),
-                    Fullname = registerVM.Fullname,
-                    Phone = registerVM.Phone,
-                    AddressMain = registerVM.AddressMain,
-                    IsActive = true
-                };
-                _context.Add(newUser);
-                _context.SaveChanges();
-
-                var getNewUser = _context.Users.SingleOrDefault(u => u.Email == registerVM.Email);
-                if (getNewUser != null)
-                {
-                    var newShippingUser = new ShipInfo
-                    {
-                        UserId = getNewUser.Id,
-                        IsUpdate = false
-                    };
-                    _context.Add(newShippingUser);
-                    _context.SaveChanges();
-                }
-
-                var mail = new MimeMessage();
-                mail.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUserName").Value));
-                mail.To.Add(MailboxAddress.Parse(registerVM.Email.Trim()));
-                mail.Subject = "[Trạm Sách] - Vui lòng xác thực tài khoản";
-                mail.Body = new TextPart(MimeKit.Text.TextFormat.Html)
-                {
-                    Text = "<h3>Xin chào " + registerVM.Fullname + "!</h3>" +
-                    "<p>Nhấn vào đây để xác thực: " + "https://localhost:7006/api/User/verify-email?token="+ newUser.VerificationToken + "</p>" +
-                    "<p>Nếu có vấn đề phát sinh xảy ra, hãy liên hệ chúng tôi qua hotline: 0961284654</p>" +
-                    "<p>Trân trọng!</p>" +
-                    "<p>Hỗ trợ từ Trạm Sách!</p>"
-                };
-
-                using var smtp = new SmtpClient();
-                smtp.Connect(_config.GetSection("EmailHost").Value, 587, MailKit.Security.SecureSocketOptions.StartTls);
-                smtp.Authenticate(_config.GetSection("EmailUserName").Value, _config.GetSection("EmailPassword").Value);
-                smtp.Send(mail);
-                smtp.Disconnect(true);
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Đã gửi code đổi lại mật khẩu qua email của bạn!"
-                });
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Đăng ký thành công",
-                    Data = newUser
-                });
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.REGISTER_FAILED.ToString() });
             }
         }
 
         [HttpPut("verify-email")]
-        public IActionResult Verify(string token)
+        public async Task<IActionResult> Verify(string verifyCode)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(u => u.VerificationToken == token);
-                if (user == null)
+                var apiMessage = await _userRepository.verifyAsync(verifyCode);
+                if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Invalid token"
-                    });
+                    return Ok(apiMessage);
                 }
-                user.IsVerify = true;
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Xác thực thành công!"
-                });
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.VERIFY_FAILED.ToString() });
             }
 
         }
 
         [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(string email)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(u => u.Email == email);
-                if (user == null)
+                var apiMessage = await _userRepository.forgotPasswordAsync(email);
+                if (apiMessage.Message.Contains(Message.SUCCESS.ToString()))
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy người dùng"
-                    });
+                    return Ok(apiMessage);
                 }
-                user.ForgotPasswordCode = CreateRandomCode();
-                _context.SaveChanges();
-
-                var mail = new MimeMessage();
-                mail.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUserName").Value));
-                mail.To.Add(MailboxAddress.Parse(user.Email.Trim()));
-                mail.Subject = "[Trạm Sách] - Cấp mã code đổi lại mật khẩu";
-                mail.Body = new TextPart(MimeKit.Text.TextFormat.Html)
-                {
-                    Text = "<h3>Xin chào " + user.Fullname + "!</h3>" +
-                    "<p>Mã code để bạn đặt lại mật khẩu là: " + user.ForgotPasswordCode + "</p>" +
-                    "<p>Hãy thực hiện thay đổi ngay lập tức trước khi mã code hết hạn rồi đăng nhập lại để kiểm tra!</p>" +
-                    "<p>Nếu có vấn đề phát sinh xảy ra, hãy liên hệ chúng tôi qua hotline: 0961284654</p>" +
-                    "<p>Trân trọng!</p>" +
-                    "<p>Hỗ trợ từ Trạm Sách!</p>"
-                };
-
-
-                using var smtp = new SmtpClient();
-                smtp.Connect(_config.GetSection("EmailHost").Value, 587, MailKit.Security.SecureSocketOptions.StartTls);
-                smtp.Authenticate(_config.GetSection("EmailUserName").Value, _config.GetSection("EmailPassword").Value);
-                smtp.Send(mail);
-                smtp.Disconnect(true);
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Đã gửi code đổi lại mật khẩu qua email của bạn!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
             }
         }
 
         [HttpPut("reset-password")]
-        public IActionResult ResetPassword(ResetPasswordVM resetPasswordVM)
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(u => u.Email == resetPasswordVM.Email && u.ForgotPasswordCode == resetPasswordVM.ForgotPasswordCode);
-                if (user == null)
+                var apiMessage = await _userRepository.resetPasswordAsync(resetPasswordVM);
+                if (apiMessage.Message == Message.ACCOUNT_NOT_EXIST.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không hợp lệ"
-                    });
+                    return NotFound(apiMessage);
                 }
-
-                int costParameter = 12;
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(resetPasswordVM.NewPassword, costParameter);
-
-                user.Password = hashedPassword;
-                _context.SaveChanges();
-                return Ok(new ApiResponse
+                if (apiMessage.Message == Message.CHANGE_PASSWORD_SUCCESS.ToString())
                 {
-                    Success = true,
-                    Message = "Rest mật khẩu thành công!"
-                });
+                    return Ok(apiMessage);
+                }
+                return BadRequest(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.CHANGE_PASSWORD_FAILED.ToString() });
             }
         }
 
         [HttpPost("new-token")]
-        public IActionResult RenewToken(TokenModel tokenModel)
+        public async Task<IActionResult> RenewToken(TokenModel tokenModel)
         {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
-            var tokenValidateParam = new TokenValidationParameters
-            {
-                //tự cấp token
-                ValidateIssuer = false,
-                ValidateAudience = false,
-
-                //ký vào token
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
-
-                ClockSkew = TimeSpan.Zero,
-
-                ValidateLifetime = false //ko kiểm tra token hết hạn
-            };
             try
             {
-                //check 1: AccessToken valid format
-                var tokenInVerification = jwtTokenHandler.ValidateToken(tokenModel.AccessToken, tokenValidateParam, out var validatedToken);
-
-                //check 2: Check alg
-                if (validatedToken is JwtSecurityToken jwtSecurityToken)
+                var apiResponse = await _userRepository.renewTokenAsync(tokenModel);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
-                    if (!result)//false
-                    {
-                        return Ok(new ApiResponse
-                        {
-                            Success = false,
-                            Message = "Invalid token"
-                        });
-                    }
+                    return Ok(apiResponse);
                 }
-
-                //check 3: Check accessToken expire?
-                var utcExpireDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
-
-                var expireDate = ConvertUnixTimeToDateTime(utcExpireDate);
-                if (expireDate > DateTime.Now)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Access token has not yet expired"
-                    });
-                }
-
-                //check 4: Check refreshtoken exist in DB
-                var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == tokenModel.RefreshToken);
-                if (storedToken == null)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Refresh token does not exist"
-                    });
-                }
-
-                //check 5: check refreshToken is used/revoked?
-                if (storedToken.IsUsed)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Refresh token has been used"
-                    });
-                }
-                if (storedToken.IsRevoked)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Refresh token has been revoked"
-                    });
-                }
-
-                //check 6: AccessToken id == JwtId in RefreshToken
-                var jti = tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
-                if (storedToken.JwtId != jti)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Token doesn't match"
-                    });
-                }
-
-                //Update token is used
-                storedToken.IsRevoked = true;
-                storedToken.IsUsed = true;
-                _context.Update(storedToken);
-                _context.SaveChanges();
-
-                //create new token
-                var user = _context.Users.SingleOrDefault(nd => nd.Id == storedToken.UserId);
-                var token = GenerateToken(user);
-                SetaccessToken(token);
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Renew token success",
-                    Data = token
-                });
+                return BadRequest(apiResponse);
             }
             catch
             {
-                return BadRequest(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Something went wrong"
-                });
+                return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
             }
+
         }
 
-        private TokenModel GenerateToken(User user)
-        {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
-            var tokenDescription = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                        new Claim("UserId", user.Id.ToString()),
-                        new Claim(ClaimTypes.Role, user.RoleId.ToString()),
-                        new Claim(ClaimTypes.Name, user.Fullname),
-                        new Claim("Phone", user.Phone),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                     //Roles
-                }),
-                Expires = DateTime.Now.AddMinutes(5),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = jwtTokenHandler.CreateToken(tokenDescription);
-            var accessToken = jwtTokenHandler.WriteToken(token);
-            var refreshToken = GenerateRefreshToken();
-
-            //lưu database
-            var refreshTokenEntity = new RefreshToken
-            {
-                JwtId = token.Id,
-                UserId = user.Id,
-                Token = refreshToken,
-                IsUsed = false,
-                IsRevoked = false,
-                IssueDate = DateTime.Now,
-                ExpiredDate = DateTime.Now.AddDays(3)
-            };
-
-            _context.Add(refreshTokenEntity);
-            _context.SaveChanges();
-
-            return new TokenModel
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
-            };
-        }
-
-        private string GenerateRefreshToken()
-        {
-            var random = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(random);
-                return Convert.ToBase64String(random);
-            }
-        }
-
-        private DateTime ConvertUnixTimeToDateTime(long utcExpireDate)
-        {
-            var dateTimeInterval = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTimeInterval.AddSeconds(utcExpireDate).ToUniversalTime();
-
-            return dateTimeInterval;
-        }
-
-        private void SetaccessToken(TokenModel token)
-        {
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.Now.AddHours(1),
-            };
-            Response.Cookies.Append("accessToken", token.AccessToken, cookieOptions);
-            Response.Cookies.Append("refreshToken", token.RefreshToken, cookieOptions);
-        }
-
-        private string CreateRandomToken()
-        {
-            return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-        }
-        private string CreateRandomCode()
-        {
-            return Convert.ToHexString(RandomNumberGenerator.GetBytes(4));
-        }
     }
 }
 

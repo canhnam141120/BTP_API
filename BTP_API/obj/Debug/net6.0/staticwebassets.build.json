@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Sv5TIxcpBFZlu5Ao7SMaf42SYDQrYoBM53o+WNchAyA=",
+  "Hash": "SXl4M3XuSkCbVDM67nP+mLLuF2joKan7I43+TfoaJPk=",
   "Source": "BTP_API",
   "BasePath": "_content/BTP_API",
   "Mode": "Default",
@@ -15,5 +15,57 @@
       "Pattern": "**"
     }
   ],
-  "Assets": []
+  "Assets": [
+    {
+      "Identity": "F:\\BTP_API\\BTP_API\\wwwroot\\BookImage\\308435868_478829087537523_5680010429294618326_n.png",
+      "SourceId": "BTP_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
+      "BasePath": "_content/BTP_API",
+      "RelativePath": "BookImage/308435868_478829087537523_5680010429294618326_n.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\BookImage\\308435868_478829087537523_5680010429294618326_n.png"
+    },
+    {
+      "Identity": "F:\\BTP_API\\BTP_API\\wwwroot\\BookImage\\banvevanminh.jpg",
+      "SourceId": "BTP_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
+      "BasePath": "_content/BTP_API",
+      "RelativePath": "BookImage/banvevanminh.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\BookImage\\banvevanminh.jpg"
+    },
+    {
+      "Identity": "F:\\BTP_API\\BTP_API\\wwwroot\\PostImage\\banvevanminh.jpg",
+      "SourceId": "BTP_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
+      "BasePath": "_content/BTP_API",
+      "RelativePath": "PostImage/banvevanminh.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PostImage\\banvevanminh.jpg"
+    }
+  ]
 }

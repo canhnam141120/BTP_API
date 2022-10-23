@@ -1,12 +1,7 @@
-﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper.Internal;
+using BTP_API.Helpers;
 using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
-using static BTP_API.Helpers.EnumVariable;
+using Org.BouncyCastle.Asn1.Cmp;
 
 namespace BookTradingPlatform.Controllers
 {
@@ -14,407 +9,219 @@ namespace BookTradingPlatform.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly BTPContext _context;
-        private readonly IWebHostEnvironment _environment;
+        private readonly IBookRepository _bookRepository;
 
-        public BookController(BTPContext context, IWebHostEnvironment environment)
+        public BookController(IBookRepository bookRepository)
         {
-            _context = context;
-            _environment = environment;
+            _bookRepository = bookRepository;
         }
 
         [HttpGet("all")]
-        public IActionResult GetAllBook()
+        public async Task<IActionResult> getAllBooks()
         {
             try
             {
-                var books = _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).ToList();
-                if (books.Count == 0)
+                var apiResponse = await _bookRepository.getAllBookAsync();
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Danh sách trống!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "GetAllBook successfull!",
-                    Data = books
-                });
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
             }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetBookById(int id)
+        public async Task<IActionResult> getBookById(int id)
         {
             try
             {
-                var book = _context.Books.Include(b => b.User).Include(b => b.Category).SingleOrDefault(b => b.Id == id && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);
-                if (book != null)
+                var apiResponse = await _bookRepository.getBookByIdAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = book
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return NotFound(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Not found!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
+        [HttpGet("{id}/feedback")]
+        public async Task<IActionResult> getFeedbackInBook(int id)
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.getFeedbackInBookAsync(id);
+                if(apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
         [HttpGet("category{id}")]
-        public IActionResult GetBookByCategory(int id)
+        public async Task<IActionResult> getBookByCategory(int id)
         {
             try
             {
-                var data = _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.CategoryId == id && b.IsReady == true && b.Status == StatusRequest.Approved.ToString());
-                if (data != null)
+                var apiResponse = await _bookRepository.getBookByCategoryAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = data
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return NotFound(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Not found!",
-                        Data = null
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
             }
         }
 
         [HttpGet("user{id}")]
-        public IActionResult GetBookByUserId(int id)
+        public async Task<IActionResult> getBookByUser(int id)
         {
             try
             {
-                var data = _context.Books.Include(b => b.User).Where(b => b.UserId == id && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);
-                if (data != null)
+                var apiResponse = await _bookRepository.getBookByUserAsync(id);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = data
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return NotFound(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Not found!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage {Message = Message.GET_FAILED.ToString()
+                });
             }
         }
 
         [HttpPost("search-by-title/{search}")]
-        public IActionResult SearchBookByTitle(string search)
+        public async Task<IActionResult> searchBookByTitle(string search)
         {
             try
             {
-                var books = _context.Books.Include(b => b.User).Where(b => b.Title.Contains(search) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString());
-                if (books.Count() != 0)
+                var apiResponse = await _bookRepository.searchBookByTitleAsync(search);
+                if (apiResponse.NumberOfRecords != 0)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Get successfull!",
-                        Data = books
-                    });
+                    return Ok(apiResponse);
                 }
-                else
-                {
-                    return NotFound(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy kết quả tương ứng!"
-                    });
-                }
+                return NotFound(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage {Message = Message.SEARCH_FAILED.ToString() });
             }
         }
 
         [HttpPost("create")]
-        public IActionResult CreateBook([FromForm] BookVM bookVM)
+        public async Task<IActionResult> createBook([FromForm] BookVM bookVM)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
-                }
-
-                string fileImageName = UploadBookFile(bookVM);
-
-                var book = new Book
-                {
-                    UserId = userId,
-                    CategoryId = bookVM.CategoryId,
-                    Title = bookVM.Title,
-                    Description = bookVM.Description,
-                    Author = bookVM.Author,
-                    Publisher = bookVM.Publisher,
-                    Year = bookVM.Year,
-                    Language = bookVM.Language,
-                    NumberOfPages = bookVM.NumberOfPages,
-                    Weight = bookVM.Weight,
-                    CoverPrice = bookVM.CoverPrice,
-                    DepositPrice = bookVM.DepositPrice,
-                    StatusBook = bookVM.StatusBook,
-                    Image = fileImageName,
-                    PostedDate = DateOnly.FromDateTime(DateTime.Today),
-                    IsExchange = bookVM.IsExchange,
-                    IsRent = bookVM.IsRent,
-                    RentFee = bookVM.RentFee,
-                    NumberOfDays = (int)(Math.Ceiling((double)bookVM.NumberOfPages / 100) * 5),
-                    IsReady = true,
-                    IsTrade = false,
-                    Status = StatusRequest.Waiting.ToString(),
-                };
-                _context.Add(book);
-                _context.SaveChanges();
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Create successfull!",
-                    Data = book
-                });
+                var apiResponse = await _bookRepository.createBookAsync(bookVM);
+                return Ok(apiResponse);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
             }
         }
 
         [HttpPost("{id}/feedback")]
-        public IActionResult Feedback(int bookId, FeedbackVM feedbackVM)
+        public async Task<IActionResult> feedbackBook(int id, FeedbackVM feedbackVM)
         {
             try
             {
-                int userId = GetUserId();
-                if (userId == 0)
+                var apiMessage = await _bookRepository.feedbackBookAsync(id, feedbackVM);
+                if(apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Vui lòng đăng nhập!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                var feedback = new Feedback
+                if(apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
                 {
-                    BookId = bookId,
-                    UserId = userId,
-                    Content = feedbackVM.Content,
-                    CreatedDate = DateTime.Now
-                };
-                _context.Add(feedback);
-                _context.SaveChanges();
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Feedback successfull!",
-                    Data = feedback
-                });
+                    return BadRequest(apiMessage);
+                }
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage {Message = Message.FAILED.ToString() });
             }
         }
 
         [HttpPut("edit/{id}")]
-        public IActionResult UpdateBookById(int id, BookVM bookVM)
+        public async Task<IActionResult> updateBook(int id, BookVM bookVM)
         {
             try
             {
-                var _book = _context.Books.SingleOrDefault(b => b.Id == id);
-                if (_book != null)
+                var apiMessage = await _bookRepository.updateBookAsync(id, bookVM);
+                if(apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
                 {
-                    _book.CategoryId = bookVM.CategoryId;
-                    _book.Title = bookVM.Title;
-                    _book.Description = bookVM.Description;
-                    _book.Author = bookVM.Author;
-                    _book.Publisher = bookVM.Publisher;
-                    _book.Year = bookVM.Year;
-                    _book.Language = bookVM.Language;
-                    _book.NumberOfPages = bookVM.NumberOfPages;
-                    _book.Weight = bookVM.Weight;
-                    _book.CoverPrice = bookVM.CoverPrice;
-                    _book.DepositPrice = bookVM.DepositPrice;
-                    _book.StatusBook = bookVM.StatusBook;
-                    _book.IsExchange = bookVM.IsExchange;
-                    _book.IsRent = bookVM.IsRent;
-                    _book.RentFee = bookVM.RentFee;
-                    _book.IsReady = true;
-                    _book.Status = StatusRequest.Waiting.ToString();
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Update successfull!"
-                    });
+                    return Ok(apiMessage);
                 }
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Update failed!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString()});
             }
         }
 
         [HttpPut("hide/{id}")]
-        public IActionResult HideBook(int id)
+        public async Task<IActionResult> hideBook(int id)
         {
             try
             {
-                var book = _context.Books.SingleOrDefault(u => u.Id == id && u.IsReady == true);
-                if (book == null)
+                var apiMessage = await _bookRepository.hideBookAsync(id);
+                if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không timg thấy!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                if (book.IsReady)
-                {
-                    book.IsReady = false;
-                    _context.SaveChanges();
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Ẩn thành công!"
-                    });
-                }
-
-                book.IsReady = true;
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Hiện sách thành công!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString()  });
             }
         }
 
         [HttpPut("show/{id}")]
-        public IActionResult ShowBook(int id)
+        public async Task<IActionResult> showBook(int id)
         {
             try
             {
-                var book = _context.Books.SingleOrDefault(u => u.Id == id && u.IsReady == false);
-                if (book == null)
+                var apiMessage = await _bookRepository.showBookAsync(id);
+                if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy!"
-                    });
+                    return Ok(apiMessage);
                 }
-
-                book.IsReady = true;
-                _context.SaveChanges();
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Hiện sách thành công!"
-                });
+                return NotFound(apiMessage);
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString()  });
             }
-        }
-
-        private string UploadBookFile(BookVM bookVM)
-        {
-            string fileName;
-            if (bookVM != null)
-            {
-                string uploadDir = Path.Combine(_environment.WebRootPath, "BookImage");
-                fileName = bookVM.Image.FileName;
-                string filePath = Path.Combine(uploadDir, fileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    bookVM.Image.CopyTo(fileStream);
-                }
-
-                byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
-                fileName = Convert.ToBase64String(imageArray);
-            }
-            else
-            {
-                fileName = "empty";
-            }
-            return fileName;
-        }
-
-        private int GetUserId()
-        {
-            var cookie = Request.Cookies["accessToken"];
-            if (cookie == null)
-            {
-                return 0;
-            }
-            var token = new JwtSecurityToken(jwtEncodedString: cookie);
-            var userId = token.Claims.FirstOrDefault();
-            int id = Int32.Parse(userId.Value);
-            return id;
         }
     }
 }

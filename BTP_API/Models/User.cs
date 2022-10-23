@@ -51,7 +51,7 @@ namespace BTP_API.Models
         /// Mã xác thực
         /// </summary>
         [Required]
-        public string VerificationToken { get; set; }
+        public string VerifyCode { get; set; }
         /// <summary>
         /// Đã xác thực?
         /// </summary>
