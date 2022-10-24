@@ -1,9 +1,4 @@
-﻿using AutoMapper.Internal;
-using BTP_API.Helpers;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Cmp;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -38,7 +33,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getBookById(int id)
+        public async Task<IActionResult> getBookById([FromRoute] int id)
         {
             try
             {
@@ -59,7 +54,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}/feedback")]
-        public async Task<IActionResult> getFeedbackInBook(int id)
+        public async Task<IActionResult> getFeedbackInBook([FromRoute] int id)
         {
             try
             {
@@ -77,7 +72,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("category{id}")]
-        public async Task<IActionResult> getBookByCategory(int id)
+        public async Task<IActionResult> getBookByCategory([FromRoute] int id)
         {
             try
             {
@@ -98,7 +93,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("user{id}")]
-        public async Task<IActionResult> getBookByUser(int id)
+        public async Task<IActionResult> getBookByUser([FromRoute] int id)
         {
             try
             {
@@ -116,8 +111,8 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpPost("search-by-title/{search}")]
-        public async Task<IActionResult> searchBookByTitle(string search)
+        [HttpPost("search-by-title")]
+        public async Task<IActionResult> searchBookByTitle([FromQuery] string search)
         {
             try
             {
@@ -149,7 +144,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("{id}/feedback")]
-        public async Task<IActionResult> feedbackBook(int id, FeedbackVM feedbackVM)
+        public async Task<IActionResult> feedbackBook([FromRoute] int id, [FromForm] FeedbackVM feedbackVM)
         {
             try
             {
@@ -171,7 +166,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("edit/{id}")]
-        public async Task<IActionResult> updateBook(int id, BookVM bookVM)
+        public async Task<IActionResult> updateBook([FromRoute] int id, [FromForm] BookVM bookVM)
         {
             try
             {
@@ -189,7 +184,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("hide/{id}")]
-        public async Task<IActionResult> hideBook(int id)
+        public async Task<IActionResult> hideBook([FromRoute] int id)
         {
             try
             {
@@ -207,7 +202,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("show/{id}")]
-        public async Task<IActionResult> showBook(int id)
+        public async Task<IActionResult> showBook([FromRoute] int id)
         {
             try
             {

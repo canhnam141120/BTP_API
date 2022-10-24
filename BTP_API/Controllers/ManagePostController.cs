@@ -1,7 +1,4 @@
-﻿using BTP_API.Helpers;
-using Org.BouncyCastle.Asn1.Cmp;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -87,7 +84,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getPostById(int id)
+        public async Task<IActionResult> getPostById([FromRoute] int id)
         {
             try
             {
@@ -105,7 +102,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("approved/{id}")]
-        public async Task<IActionResult> approvedPost(int id)
+        public async Task<IActionResult> approvedPost([FromRoute] int id)
         {
             try
             {
@@ -127,7 +124,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("denied/{id}")]
-        public async Task<IActionResult> deniedPost(int id)
+        public async Task<IActionResult> deniedPost([FromRoute] int id)
         {
             try
             {
@@ -149,7 +146,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}/comment")]
-        public async Task<IActionResult> getCommentInPost(int id)
+        public async Task<IActionResult> getCommentInPost([FromRoute] int id)
         {
             try
             {
@@ -167,7 +164,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpDelete("delete-comment/{id}")]
-        public async Task<IActionResult> deleteComment(int id)
+        public async Task<IActionResult> deleteComment([FromRoute] int id)
         {
             try
             {

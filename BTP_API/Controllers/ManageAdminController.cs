@@ -1,6 +1,4 @@
-﻿using BTP_API.Helpers;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -34,7 +32,7 @@ namespace BookTradingPlatform.Controllers
 
         [HttpPut("remove/{id}")]
         //[Authorize(Roles = "1")]
-        public async Task<IActionResult> removeAdmin(int id)
+        public async Task<IActionResult> removeAdmin([FromRoute] int id)
         {
             try
             {
@@ -51,8 +49,8 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpGet("search/{search}")]
-        public async Task<IActionResult> searchAdmin(string search)
+        [HttpGet("search")]
+        public async Task<IActionResult> searchAdmin([FromQuery] string search)
         {
             try
             {

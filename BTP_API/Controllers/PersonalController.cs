@@ -1,11 +1,4 @@
-﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.Extensions.Hosting;
-using Org.BouncyCastle.Asn1.Cmp;
-using static System.Reflection.Metadata.BlobBuilder;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -245,7 +238,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("my-favorites-book/add/{bookId}")]
-        public async Task<IActionResult> addBookByFavorites(int bookId)
+        public async Task<IActionResult> addBookByFavorites([FromRoute] int bookId)
         {
             try
             {
@@ -267,7 +260,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpDelete("un-favorites-book/{bookId}")]
-        public async Task<IActionResult> deleteBookByFavorites(int bookId)
+        public async Task<IActionResult> deleteBookByFavorites([FromRoute] int bookId)
         {
             try
             {
@@ -313,7 +306,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("my-favorites-post/add/{postId}")]
-        public async Task<IActionResult> addPostByFavorites(int postId)
+        public async Task<IActionResult> addPostByFavorites([FromRoute] int postId)
         {
             try
             {
@@ -335,7 +328,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpDelete("un-favorites-post/{postId}")]
-        public async Task<IActionResult> deletePostByFavorites(int postId)
+        public async Task<IActionResult> deletePostByFavorites([FromRoute] int postId)
         {
             try
             {
@@ -380,7 +373,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("my-favorites-user/add/{userId}")]
-        public async Task<IActionResult> addUserByFavorites(int userId)
+        public async Task<IActionResult> addUserByFavorites([FromRoute] int userId)
         {
             try
             {
@@ -402,7 +395,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpDelete("un-favorites-user/{userId}")]
-        public async Task<IActionResult> deleteUserByFavorites(int userId)
+        public async Task<IActionResult> deleteUserByFavorites([FromRoute] int userId)
         {
             try
             {
@@ -469,7 +462,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("edit-password")]
-        public async Task<IActionResult> editPassword(ChangePasswordVM changePasswordVM)
+        public async Task<IActionResult> editPassword([FromForm] ChangePasswordVM changePasswordVM)
         {
             try
             {
@@ -514,7 +507,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("request-received/{bookId}")]
-        public async Task<IActionResult> listOfRequestReceived(int bookId)
+        public async Task<IActionResult> listOfRequestReceived([FromRoute] int bookId)
         {
             try
             {
@@ -559,7 +552,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("my-transaction-exchange-detail/{id}")]
-        public async Task<IActionResult> myTransactionExDetail(int id)
+        public async Task<IActionResult> myTransactionExDetail([FromRoute] int id)
         {
             try
             {
@@ -581,7 +574,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("my-transaction-exchange-bill/{id}")]
-        public async Task<IActionResult> myTransactionExBill(int id)
+        public async Task<IActionResult> myTransactionExBill([FromRoute] int id)
         {
             try
             {
@@ -647,7 +640,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("my-transaction-rent-detail/{id}")]
-        public async Task<IActionResult> myTransactionRentDetail(int id)
+        public async Task<IActionResult> myTransactionRentDetail([FromRoute] int id)
         {
             try
             {
@@ -669,7 +662,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("my-transaction-rent-bill/{id}")]
-        public async Task<IActionResult> myTransactionRentBill(int id)
+        public async Task<IActionResult> myTransactionRentBill([FromRoute] int id)
         {
             try
             {
@@ -713,7 +706,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("update-info-shipping")]
-        public async Task<IActionResult> updateInfoShipping(ShipInfoVM shipInfoVM)
+        public async Task<IActionResult> updateInfoShipping([FromForm] ShipInfoVM shipInfoVM)
         {
             try
             {

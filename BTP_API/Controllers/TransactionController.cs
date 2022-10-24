@@ -1,14 +1,4 @@
-﻿using BTP_API.Context;
-using BTP_API.Helpers;
-using BTP_API.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Cmp;
-using System.IdentityModel.Tokens.Jwt;
-using static BTP_API.Helpers.EnumVariable;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -22,7 +12,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("exchange/{id}/cancel")]
-        public async Task<IActionResult> cancelExchange(int id)
+        public async Task<IActionResult> cancelExchange([FromRoute] int id)
         {
             try
             {
@@ -40,7 +30,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("exchange-detail/{id}/cancel")]
-        public async Task<IActionResult> cancelExchangeDetail(int id)
+        public async Task<IActionResult> cancelExchangeDetail([FromRoute] int id)
         {
             try
             {
@@ -62,7 +52,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("rent/{id}/cancel")]
-        public async Task<IActionResult> cancelRent(int id)
+        public async Task<IActionResult> cancelRent([FromRoute] int id)
         {
             try
             {
@@ -80,7 +70,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("rent-detail/{id}/cancel")]
-        public async Task<IActionResult> cancelRentDetail(int id)
+        public async Task<IActionResult> cancelRentDetail([FromRoute] int id)
         {
             try
             {

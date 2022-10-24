@@ -1,7 +1,4 @@
-﻿using BTP_API.Helpers;
-using Org.BouncyCastle.Asn1.Cmp;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -33,7 +30,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getCategoryById(int id)
+        public async Task<IActionResult> getCategoryById([FromRoute] int id)
         {
             try
             {
@@ -51,7 +48,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> createCategory(CategoryVM categoryVM)
+        public async Task<IActionResult> createCategory([FromForm] CategoryVM categoryVM)
         {
             try
             {
@@ -65,7 +62,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("edit/{id}")]
-        public async Task<IActionResult> updateCategory(int id, CategoryVM categoryVM)
+        public async Task<IActionResult> updateCategory([FromRoute] int id, [FromForm] CategoryVM categoryVM)
         {
             try
             {
@@ -83,7 +80,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> deleteCategory(int id)
+        public async Task<IActionResult> deleteCategory([FromRoute] int id)
         {
             try
             {

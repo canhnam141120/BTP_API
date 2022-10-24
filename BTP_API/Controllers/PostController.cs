@@ -1,10 +1,4 @@
-﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Cmp;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -36,7 +30,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getPostById(int id)
+        public async Task<IActionResult> getPostById([FromRoute] int id)
         {
             try
             {
@@ -54,7 +48,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}/comment")]
-        public async Task<IActionResult> getCommentInPost(int id)
+        public async Task<IActionResult> getCommentInPost([FromRoute] int id)
         {
             try
             {
@@ -71,8 +65,8 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpGet("search-by-hashtag/{search}")]
-        public async Task<IActionResult> searchPostByHashtag(string search)
+        [HttpGet("search-by-hashtag")]
+        public async Task<IActionResult> searchPostByHashtag([FromQuery] string search)
         {
             try
             {
@@ -104,7 +98,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("post{postID}/comment")]
-        public async Task<IActionResult> commentPost(int postID, CommentVM commentVM)
+        public async Task<IActionResult> commentPost([FromRoute] int postID, [FromForm] CommentVM commentVM)
         {
             try
             {
@@ -126,7 +120,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("hide/{id}")]
-        public async Task<IActionResult> hidePost(int id)
+        public async Task<IActionResult> hidePost([FromRoute] int id)
         {
             try
             {
@@ -144,7 +138,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("show/{id}")]
-        public async Task<IActionResult> showPost(int id)
+        public async Task<IActionResult> showPost([FromRoute] int id)
         {
             try
             {

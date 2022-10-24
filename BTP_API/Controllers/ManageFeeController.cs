@@ -1,6 +1,4 @@
-﻿using BTP_API.Helpers;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -32,7 +30,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getFeeById(int id)
+        public async Task<IActionResult> getFeeById([FromRoute] int id)
         {
             try
             {
@@ -50,7 +48,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> createFee(FeeVM feeVM)
+        public async Task<IActionResult> createFee([FromForm] FeeVM feeVM)
         {
             try
             {

@@ -1,7 +1,4 @@
-﻿using BTP_API.Helpers;
-using Org.BouncyCastle.Asn1.Cmp;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -87,7 +84,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getBookById(int id)
+        public async Task<IActionResult> getBookById([FromRoute] int id)
         {
             try
             {
@@ -105,7 +102,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("approved/{id}")]
-        public async Task<IActionResult> approvedBook(int id)
+        public async Task<IActionResult> approvedBook([FromRoute] int id)
         {
             try
             {
@@ -127,7 +124,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("denied/{id}")]
-        public async Task<IActionResult> deniedBook(int id)
+        public async Task<IActionResult> deniedBook([FromRoute] int id)
         {
             try
             {

@@ -1,15 +1,4 @@
-﻿using BTP_API.Helpers;
-using BTP_API.ViewModels;
-using MailKit.Net.Smtp;
-using Microsoft.Extensions.Options;
-using MimeKit;
-using Org.BouncyCastle.Asn1.Cmp;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,7 +12,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> login(LoginVM loginVM)
+        public async Task<IActionResult> login([FromForm] LoginVM loginVM)
         {
             try
             {
@@ -84,12 +73,12 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("verify-email")]
-        public async Task<IActionResult> Verify(string verifyCode)
+        public async Task<IActionResult> Verify([FromForm] string verifyCode)
         {
             try
             {
                 var apiMessage = await _userRepository.verifyAsync(verifyCode);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
+                if (apiMessage.Message == Message.VERIFY_SUCCESS.ToString())
                 {
                     return Ok(apiMessage);
                 }
@@ -103,7 +92,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword([FromForm] string email)
         {
             try
             {
@@ -121,7 +110,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("reset-password")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
+        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordVM resetPasswordVM)
         {
             try
             {
@@ -143,7 +132,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("new-token")]
-        public async Task<IActionResult> RenewToken(TokenModel tokenModel)
+        public async Task<IActionResult> RenewToken([FromHeader] TokenModel tokenModel)
         {
             try
             {

@@ -1,9 +1,4 @@
-﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using Org.BouncyCastle.Asn1.Cmp;
-using static BTP_API.Helpers.EnumVariable;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -35,7 +30,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("exchange/{id}/detail")]
-        public async Task<IActionResult> getAllExchangeDetail(int id)
+        public async Task<IActionResult> getAllExchangeDetail([FromRoute] int id)
         {
             try
             {
@@ -53,7 +48,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("exchange/{id}/bill")]
-        public async Task<IActionResult> getAllExchangeBill(int id)
+        public async Task<IActionResult> getAllExchangeBill([FromRoute] int id)
         {
             try
             {
@@ -71,7 +66,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("exchange/{id}/update-status")]
-        public async Task<IActionResult> updateStatusExchange(int id, string status)
+        public async Task<IActionResult> updateStatusExchange([FromRoute] int id, [FromForm] string status)
         {
             try
             {
@@ -89,7 +84,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("exchange-detail/{id}/update-status")]
-        public async Task<IActionResult> updateExchangeDetail(int id, ExchangeDetailVM exchangeDetailVM)
+        public async Task<IActionResult> updateExchangeDetail([FromRoute] int id, [FromForm] ExchangeDetailVM exchangeDetailVM)
         {
             try
             {
@@ -125,7 +120,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("rent/{id}")]
-        public async Task<IActionResult> getAllRentDetail(int id)
+        public async Task<IActionResult> getAllRentDetail([FromRoute] int id)
         {
             try
             {
@@ -143,7 +138,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("rent/{id}/bill")]
-        public async Task<IActionResult> getAllRentBill(int id)
+        public async Task<IActionResult> getAllRentBill([FromRoute] int id)
         {
             try
             {
@@ -161,7 +156,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("rent/{id}/update-status")]
-        public async Task<IActionResult> updateStatusRent(int id, string status)
+        public async Task<IActionResult> updateStatusRent([FromRoute] int id, [FromForm] string status)
         {
             try
             {
@@ -179,7 +174,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("rent-detail/{id}/update-status")]
-        public async Task<IActionResult> updateRentDetail  (int id, RentDetailVM rentDetailVM)
+        public async Task<IActionResult> updateRentDetail  ([FromRoute] int id, [FromForm] RentDetailVM rentDetailVM)
         {
             try
             {

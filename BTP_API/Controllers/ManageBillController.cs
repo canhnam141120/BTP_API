@@ -1,7 +1,4 @@
-﻿using BTP_API.Helpers;
-using Org.BouncyCastle.Asn1.Cmp;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -33,7 +30,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("exchange-bill/{id}")]
-        public async Task<IActionResult> getExBillDetail(int id)
+        public async Task<IActionResult> getExBillDetail([FromRoute] int id)
         {
             try
             {
@@ -51,7 +48,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("exchange-bill/update/{id}")]
-        public async Task<IActionResult> updateStatusExBillDetail(int id, ExchangeBillVM exchangeBillVM)
+        public async Task<IActionResult> updateStatusExBillDetail([FromRoute] int id, [FromForm] ExchangeBillVM exchangeBillVM)
         {
             try
             {
@@ -88,7 +85,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("rent-bill/{id}")]
-        public async Task<IActionResult> getRentBillDetail(int id)
+        public async Task<IActionResult> getRentBillDetail([FromRoute] int id)
         {
             try
             {
@@ -106,7 +103,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("rent-bill/update/{id}")]
-        public async Task<IActionResult> updateStatusTransactionRentDetail(int id, RentBillVM rentBillVM)
+        public async Task<IActionResult> updateStatusTransactionRentDetail([FromRoute] int id, [FromForm] RentBillVM rentBillVM)
         {
             try
             {

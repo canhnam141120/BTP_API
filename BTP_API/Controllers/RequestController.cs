@@ -1,8 +1,4 @@
-﻿using BTP_API.Helpers;
-using BTP_API.ViewModels;
-using Org.BouncyCastle.Asn1.Cmp;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,7 +12,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> createRequest(int bookid, List<int> bookOffer)
+        public async Task<IActionResult> createRequest([FromRoute] int bookid, [FromForm] List<int> bookOffer)
         {
             try
             {
@@ -31,7 +27,7 @@ namespace BookTradingPlatform.Controllers
 
         //Người offer tự hủy
         [HttpPut("cancel/{id}")]
-        public async Task<IActionResult> cancelRequest(int id)
+        public async Task<IActionResult> cancelRequest([FromRoute] int id)
         {
             try
             {
@@ -49,7 +45,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("accept/{id}")]
-        public async Task<IActionResult> acceptRequest(int id)
+        public async Task<IActionResult> acceptRequest([FromRoute] int id)
         {
             try
             {
@@ -67,7 +63,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("denied/{id}")]
-        public async Task<IActionResult> deniedRequest(int id)
+        public async Task<IActionResult> deniedRequest([FromRoute] int id)
         {
             try
             {
@@ -85,7 +81,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("rent/{bookId}")]
-        public async Task<IActionResult> rentBook(int bookId)
+        public async Task<IActionResult> rentBook([FromRoute] int bookId)
         {
             try
             {

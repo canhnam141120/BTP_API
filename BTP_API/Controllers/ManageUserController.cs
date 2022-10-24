@@ -1,8 +1,4 @@
-﻿using BTP_API.Helpers;
-using BTP_API.Models;
-using Org.BouncyCastle.Asn1.Cmp;
-
-namespace BookTradingPlatform.Controllers
+﻿namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -71,7 +67,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getUserById(int id)
+        public async Task<IActionResult> getUserById([FromRoute] int id)
         {
             try
             {
@@ -88,8 +84,8 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpPost("search/{search}")]
-        public async Task<IActionResult> searchUser(string search)
+        [HttpPost("search")]
+        public async Task<IActionResult> searchUser([FromQuery] string search)
         {
             try
             {
@@ -107,7 +103,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("ban/{id}")]
-        public async Task<IActionResult> banAcc(int id)
+        public async Task<IActionResult> banAcc([FromRoute] int id)
         {
             try
             {
@@ -125,7 +121,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("active/{id}")]
-        public async Task<IActionResult> activeAcc(int id)
+        public async Task<IActionResult> activeAcc([FromRoute] int id)
         {
             try
             {
@@ -143,7 +139,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("authority/{id}")]
-        public async Task<IActionResult> authorityAdmin(int id)
+        public async Task<IActionResult> authorityAdmin([FromRoute] int id)
         {
             try
             {
