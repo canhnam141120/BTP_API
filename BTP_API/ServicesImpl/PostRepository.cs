@@ -114,6 +114,14 @@ namespace BTP_API.ServicesImpl
             Cookie cookie = new Cookie(_httpContextAccessor);
             string fileImageName = uploadFile.UploadPostImage(postVM, _environment);
 
+            var userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
             var post = new Post
             {
                 UserId = cookie.GetUserId(),
@@ -124,10 +132,6 @@ namespace BTP_API.ServicesImpl
                 IsHide = false,
                 Status = Status.Waiting.ToString()
             };
-            if (post.UserId == 0)
-            {
-                return null;
-            }
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
             return new ApiResponse

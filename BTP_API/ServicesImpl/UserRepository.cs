@@ -104,6 +104,7 @@ namespace BTP_API.Services
                     Message = Message.EMAIL_IS_EXIST.ToString()
                 };
             }
+
             int costParameter = 12;
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerVM.Password, costParameter);
             //bool test = BCrypt.Net.BCrypt.Verify(registerVM.Password, hashedPassword);

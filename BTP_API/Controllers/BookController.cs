@@ -1,4 +1,6 @@
-﻿namespace BookTradingPlatform.Controllers
+﻿using BTP_API.Helpers;
+
+namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -121,7 +123,14 @@
                 {
                     return Ok(apiResponse);
                 }
-                return NotFound(apiResponse);
+                else
+                {
+                    if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
+                    {
+                        return BadRequest(apiResponse);
+                    }
+                    return NotFound(apiResponse);
+                }
             }
             catch
             {
@@ -135,7 +144,11 @@
             try
             {
                 var apiResponse = await _bookRepository.createBookAsync(bookVM);
-                return Ok(apiResponse);
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
             }
             catch
             {

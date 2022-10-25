@@ -89,7 +89,18 @@
             try
             {
                 var apiResponse = await _postRepository.createPostAsync(postVM);
-                return Ok(apiResponse);
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                else
+                {
+                    if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
+                    {
+                        return BadRequest(apiResponse);
+                    }
+                    return NotFound(apiResponse);
+                }
             }
             catch
             {

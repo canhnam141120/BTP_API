@@ -46,8 +46,8 @@ namespace BTP_API.Ultils
                 {
                     postVM.Image.CopyTo(fileStream);
                 }
-                //byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
-                //fileName = Convert.ToBase64String(imageArray);
+                byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
+                fileName = Convert.ToBase64String(imageArray);
             }
             else
             {

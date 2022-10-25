@@ -164,9 +164,18 @@ namespace BTP_API.Services
             Cookie cookie = new Cookie(_httpContextAccessor);
             string fileImageName = uploadFile.UploadBookImage(bookVM, _environment);
 
+            var userId = cookie.GetUserId();
+            if(userId == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
+
             var book = new Book
             {
-                UserId = cookie.GetUserId(),
+                UserId = userId,
                 CategoryId = bookVM.CategoryId,
                 Title = bookVM.Title,
                 Description = bookVM.Description,
