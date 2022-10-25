@@ -39,11 +39,11 @@
         }
 
         [HttpGet("my-book-list")]
-        public async Task<IActionResult> getAllBook()
+        public async Task<IActionResult> getAllBook([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getAllBookAsync();
+                var apiResponse = await _personalRepository.getAllBookAsync(page);
                 if(apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -61,11 +61,11 @@
         }
 
         [HttpGet("my-approved-book-list")]
-        public async Task<IActionResult> getBookApprovedAsync()
+        public async Task<IActionResult> getBookApprovedAsync([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getAllBookAsync();
+                var apiResponse = await _personalRepository.getAllBookAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -83,11 +83,11 @@
         }
 
         [HttpGet("my-denied-book-list")]
-        public async Task<IActionResult> getBookDenied()
+        public async Task<IActionResult> getBookDenied([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getBookDeniedAsync();
+                var apiResponse = await _personalRepository.getBookDeniedAsync(page);
                 if(apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -105,11 +105,11 @@
         }
 
         [HttpGet("my-waiting-book-list")]
-        public async Task<IActionResult> getBookWaiting()
+        public async Task<IActionResult> getBookWaiting([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getBookWaitingAsync();
+                var apiResponse = await _personalRepository.getBookWaitingAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -127,11 +127,11 @@
         }
 
         [HttpGet("my-post-list")]
-        public async Task<IActionResult> getAllPost()
+        public async Task<IActionResult> getAllPost([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getAllPostAsync();
+                var apiResponse = await _personalRepository.getAllPostAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -149,11 +149,11 @@
         }
 
         [HttpGet("my-approved-post-list")]
-        public async Task<IActionResult> getPostApproved()
+        public async Task<IActionResult> getPostApproved([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getPostApprovedAsync();
+                var apiResponse = await _personalRepository.getPostApprovedAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -171,11 +171,11 @@
         }
 
         [HttpGet("my-denied-post-list")]
-        public async Task<IActionResult> getPostDenied()
+        public async Task<IActionResult> getPostDenied([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getPostDeniedAsync();
+                var apiResponse = await _personalRepository.getPostDeniedAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -193,11 +193,11 @@
         }
 
         [HttpGet("my-waiting-post-list")]
-        public async Task<IActionResult> getPostWaiting()
+        public async Task<IActionResult> getPostWaiting([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getPostWaitingAsync();
+                var apiResponse = await _personalRepository.getPostWaitingAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -216,11 +216,11 @@
 
 
         [HttpGet("my-favorites-book")]
-        public async Task<IActionResult> getBookByFavorites()
+        public async Task<IActionResult> getBookByFavorites([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getBookByFavoritesAsync();
+                var apiResponse = await _personalRepository.getBookByFavoritesAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -284,11 +284,11 @@
 
 
         [HttpGet("my-favorites-post")]
-        public async Task<IActionResult> getPostByFavorites()
+        public async Task<IActionResult> getPostByFavorites([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getPostByFavoritesAsync();
+                var apiResponse = await _personalRepository.getPostByFavoritesAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -351,11 +351,11 @@
 
 
         [HttpGet("my-favorites-user")]
-        public async Task<IActionResult> getUserByFavorites()
+        public async Task<IActionResult> getUserByFavorites([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getUserByFavoritesAsync();
+                var apiResponse = await _personalRepository.getUserByFavoritesAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -485,11 +485,11 @@
 
 
         [HttpGet("request-send")]
-        public async Task<IActionResult> listOfRequestSend()
+        public async Task<IActionResult> listOfRequestSend([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.listOfRequestSendAsync();
+                var apiResponse = await _personalRepository.listOfRequestSendAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -507,11 +507,11 @@
         }
 
         [HttpGet("request-received/{bookId}")]
-        public async Task<IActionResult> listOfRequestReceived([FromRoute] int bookId)
+        public async Task<IActionResult> listOfRequestReceived([FromRoute] int bookId, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.listOfRequestReceivedSendAsync(bookId);
+                var apiResponse = await _personalRepository.listOfRequestReceivedSendAsync(bookId, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -530,11 +530,11 @@
 
 
         [HttpGet("my-transaction-exchange-all")]
-        public async Task<IActionResult> myTransactionExchange()
+        public async Task<IActionResult> myTransactionExchange([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.myTransactionExchangeAsync();
+                var apiResponse = await _personalRepository.myTransactionExchangeAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -596,11 +596,11 @@
         }
 
         [HttpGet("my-exchange-bill-all")]
-        public async Task<IActionResult> myExBillAll()
+        public async Task<IActionResult> myExBillAll([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.myExBillAllAsync();
+                var apiResponse = await _personalRepository.myExBillAllAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -618,11 +618,11 @@
         }
 
         [HttpGet("my-transaction-rent-all")]
-        public async Task<IActionResult> myTransactionRent()
+        public async Task<IActionResult> myTransactionRent([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.myTransactionRentAsync();
+                var apiResponse = await _personalRepository.myTransactionRentAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -684,11 +684,11 @@
         }
 
         [HttpGet("my-rent-bill-all")]
-        public async Task<IActionResult> myRentBillAll()
+        public async Task<IActionResult> myRentBillAll([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.myRentBillAllAsync();
+                var apiResponse = await _personalRepository.myRentBillAllAsync(page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);

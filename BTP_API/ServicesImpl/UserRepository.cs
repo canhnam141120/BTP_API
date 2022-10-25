@@ -117,7 +117,9 @@ namespace BTP_API.Services
                 Fullname = registerVM.Fullname,
                 Phone = registerVM.Phone,
                 AddressMain = registerVM.AddressMain,
-                IsActive = true
+                IsActive = true,
+                LikeNumber = 0,
+                NumberOfTransaction = 0
             };
             _context.Add(newUser);
             await _context.SaveChangesAsync();

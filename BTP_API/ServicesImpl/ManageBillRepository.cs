@@ -13,9 +13,9 @@ namespace BTP_API.Services
             _context = context;
             _mapper = mapper;
         }
-        public async Task<ApiResponse> getAllExBillAsync()
+        public async Task<ApiResponse> getAllExBillAsync(int page = 1)
         {
-            var exBills = await _context.ExchangeBills.ToListAsync();
+            var exBills = await _context.ExchangeBills.OrderByDescending(e => e.Id).ToListAsync();
             if (exBills.Count == 0)
             {
                 return new ApiResponse
@@ -23,11 +23,12 @@ namespace BTP_API.Services
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<ExchangeBill>.Create(exBills, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = exBills,
-                NumberOfRecords = exBills.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiResponse> getExBillDetailAsync(int exBillId)
@@ -65,9 +66,9 @@ namespace BTP_API.Services
                 Message = Message.BILL_NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getAllRentBillAsync()
+        public async Task<ApiResponse> getAllRentBillAsync(int page = 1)
         {
-            var rentBills = await _context.RentBills.ToListAsync();
+            var rentBills = await _context.RentBills.OrderByDescending(r => r.Id).ToListAsync();
             if (rentBills.Count == 0)
             {
                 return new ApiResponse
@@ -75,11 +76,12 @@ namespace BTP_API.Services
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<RentBill>.Create(rentBills, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = rentBills,
-                NumberOfRecords = rentBills.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiResponse> getRentBillDetailAsync(int rentBillId)

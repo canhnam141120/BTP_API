@@ -12,11 +12,11 @@
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> getAllPost()
+        public async Task<IActionResult> getAllPost([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _managePostRepository.getAllPostAsync();
+                var apiResponse = await _managePostRepository.getAllPostAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -30,11 +30,11 @@
         }
 
         [HttpGet("approved")]
-        public async Task<IActionResult> getPostApproved()
+        public async Task<IActionResult> getPostApproved([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _managePostRepository.getPostApprovedAsync();
+                var apiResponse = await _managePostRepository.getPostApprovedAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -48,11 +48,11 @@
         }
 
         [HttpGet("denied")]
-        public async Task<IActionResult> getPostDenied()
+        public async Task<IActionResult> getPostDenied([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _managePostRepository.getPostDeniedAsync();
+                var apiResponse = await _managePostRepository.getPostDeniedAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -66,11 +66,11 @@
         }
 
         [HttpGet("waiting")]
-        public async Task<IActionResult> getPostWaiting()
+        public async Task<IActionResult> getPostWaiting([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _managePostRepository.getPostWaitingAsync();
+                var apiResponse = await _managePostRepository.getPostWaitingAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -146,11 +146,11 @@
         }
 
         [HttpGet("{id}/comment")]
-        public async Task<IActionResult> getCommentInPost([FromRoute] int id)
+        public async Task<IActionResult> getCommentInPost([FromRoute] int id, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _managePostRepository.getCommentInPostAsync(id);
+                var apiResponse = await _managePostRepository.getCommentInPostAsync(id, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);

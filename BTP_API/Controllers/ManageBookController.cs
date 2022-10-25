@@ -12,11 +12,11 @@
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> getAllBook()
+        public async Task<IActionResult> getAllBook([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageBookRepository.getAllBookAsync();
+                var apiResponse = await _manageBookRepository.getAllBookAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -30,11 +30,11 @@
         }
 
         [HttpGet("approved")]
-        public async Task<IActionResult> getAllBookApproved()
+        public async Task<IActionResult> getAllBookApproved([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageBookRepository.getAllBookApprovedAsync();
+                var apiResponse = await _manageBookRepository.getAllBookApprovedAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -48,11 +48,11 @@
         }
 
         [HttpGet("denied")]
-        public async Task<IActionResult> getAllBookDenied()
+        public async Task<IActionResult> getAllBookDenied([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageBookRepository.getAllBookDeniedAsync();
+                var apiResponse = await _manageBookRepository.getAllBookDeniedAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -66,11 +66,11 @@
         }
 
         [HttpGet("waiting")]
-        public async Task<IActionResult> getAllBookWaiting()
+        public async Task<IActionResult> getAllBookWaiting([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageBookRepository.getAllBookWaitingAsync();
+                var apiResponse = await _manageBookRepository.getAllBookWaitingAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);

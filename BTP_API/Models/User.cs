@@ -97,6 +97,16 @@ namespace BTP_API.Models
         /// </summary>
         [Required]
         public bool IsActive { get; set; }
+        /// <summary>
+        /// Số người thích
+        /// </summary>
+        [Required]
+        public int LikeNumber { get; set; }
+        /// <summary>
+        /// Số lần giao dịch
+        /// </summary>
+        [Required]
+        public int NumberOfTransaction { get; set; }
 
         public virtual Role Role { get; set; }
         [JsonIgnore]

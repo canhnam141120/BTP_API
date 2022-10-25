@@ -12,11 +12,11 @@
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> getAllUser()
+        public async Task<IActionResult> getAllUser([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageUserRepository.getAllUserAsync();
+                var apiResponse = await _manageUserRepository.getAllUserAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -30,11 +30,11 @@
         }
 
         [HttpGet("ban-list")]
-        public async Task<IActionResult> getAllUserBan()
+        public async Task<IActionResult> getAllUserBan([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageUserRepository.getAllUserBanAsync();
+                var apiResponse = await _manageUserRepository.getAllUserBanAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -48,12 +48,31 @@
         }
 
         [HttpGet("active-list")]
-        public async Task<IActionResult> getAllUserActive()
+        public async Task<IActionResult> getAllUserActive([FromQuery] int page = 1)
         {
 
             try
             {
-                var apiResponse = await _manageUserRepository.getAllUserActiveAsync();
+                var apiResponse = await _manageUserRepository.getAllUserActiveAsync(page);
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+        [HttpGet("top")]
+        public async Task<IActionResult> getTopUserLike()
+        {
+
+            try
+            {
+                var apiResponse = await _manageUserRepository.getTopUserLikeAsync();
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -85,11 +104,11 @@
         }
 
         [HttpPost("search")]
-        public async Task<IActionResult> searchUser([FromQuery] string search)
+        public async Task<IActionResult> searchUser([FromQuery] string search, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageUserRepository.searchUserAsync(search);
+                var apiResponse = await _manageUserRepository.searchUserAsync(search, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);

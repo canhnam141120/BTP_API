@@ -13,9 +13,9 @@ namespace BTP_API.Services
             _context = context;
             _mapper = mapper;
         }
-        public async Task<ApiResponse> getAllFeeAsync()
+        public async Task<ApiResponse> getAllFeeAsync(int page = 1)
         {
-            var fees = await _context.Fees.Where(p => p.IsActive == true).ToListAsync();
+            var fees = await _context.Fees.Where(p => p.IsActive == true).OrderByDescending(f => f.Id).ToListAsync();
             if (fees.Count == 0)
             {
                 return new ApiResponse
@@ -23,11 +23,12 @@ namespace BTP_API.Services
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Fee>.Create(fees, page, 20);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = fees,
-                NumberOfRecords = fees.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
 

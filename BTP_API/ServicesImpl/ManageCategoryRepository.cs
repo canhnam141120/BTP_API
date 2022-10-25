@@ -13,9 +13,9 @@ namespace BTP_API.Services
             _context = context;
             _mapper = mapper;
         }
-        public async Task<ApiResponse> getAllCategoryAsync()
+        public async Task<ApiResponse> getAllCategoryAsync(int page = 1)
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.OrderByDescending(c => c.Id).ToListAsync();
             if (categories.Count == 0)
             {
                 return new ApiResponse
@@ -23,11 +23,12 @@ namespace BTP_API.Services
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Category>.Create(categories, page, 20);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = categories,
-                NumberOfRecords = categories.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
 

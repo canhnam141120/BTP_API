@@ -1,6 +1,7 @@
 ﻿using BTP_API.Models;
 using BTP_API.ViewModels;
 using Microsoft.Extensions.Hosting;
+using System.Xml.Linq;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BTP_API.ServicesImpl
@@ -17,7 +18,7 @@ namespace BTP_API.ServicesImpl
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResponse> getAllPostAsync()
+        public async Task<ApiResponse> getAllPostAsync(int page = 1)
         {
             var posts = await _context.Posts.Include(p => p.User).Where(p => p.Status == StatusRequest.Approved.ToString() && p.IsHide == false).ToListAsync();
             if (posts.Count == 0)
@@ -27,11 +28,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Post>.Create(posts, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = posts,
-                NumberOfRecords = posts.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
 
@@ -52,7 +54,7 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiResponse> getCommentInPostAsync(int postId)
+        public async Task<ApiResponse> getCommentInPostAsync(int postId, int page = 1)
         {
             var check = await _context.Posts.AnyAsync(p => p.Id == postId);
             if (!check)
@@ -70,16 +72,27 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Comment>.Create(comments, page, 3);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = comments,
-                NumberOfRecords = comments.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> searchPostByHashtagAsync(string search)
+        public async Task<ApiResponse> searchPostByHashtagAsync(string search, int page = 1)
         {
-            var posts = await _context.Posts.Include(b => b.User).Where(b => b.Hashtag.Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false).ToListAsync();
+            List<Post> posts;
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+                posts = await _context.Posts.Include(b => b.User).Where(b => b.Hashtag.ToLower().Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false).ToListAsync();
+            }
+            else
+            {
+                posts = await _context.Posts.Include(p => p.User).Where(p => p.Status == StatusRequest.Approved.ToString() && p.IsHide == false).ToListAsync();
+            }
+            
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -87,11 +100,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Post>.Create(posts, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = posts,
-                NumberOfRecords = posts.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiResponse> createPostAsync(PostVM postVM)

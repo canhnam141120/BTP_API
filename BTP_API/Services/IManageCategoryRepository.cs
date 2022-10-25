@@ -2,7 +2,7 @@
 {
     public interface IManageCategoryRepository
     {
-        public Task<ApiResponse> getAllCategoryAsync();
+        public Task<ApiResponse> getAllCategoryAsync(int page = 1);
         public Task<ApiResponse> getCategoryByIdAsync(int categoryId);
         public Task<ApiResponse> createCategoryAsync(CategoryVM categoryVM);
         public Task<ApiMessage> updateCategoryAsync(int categoryId, CategoryVM categoryVM);

@@ -12,6 +12,23 @@
         }
         public async Task<ApiMessage> createRequestAsync(int bookid, List<int> bookOffer)
         {
+            Cookie cookie = new Cookie(_httpContextAccessor);
+            int userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
+            var user = await _context.ShipInfos.SingleOrDefaultAsync(s => s.UserId == userId);
+            if(user.IsUpdate == false)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.SHIP_INFO_EMPTY.ToString()
+                };
+            }
 
             foreach (int i in bookOffer)
             {
@@ -324,7 +341,6 @@
 
         public async Task<ApiMessage> rentBookAsync(int bookId)
         {
-
             Cookie cookie = new Cookie(_httpContextAccessor);
             CalculateFee calculateFee = new CalculateFee(_context);
             int userId = cookie.GetUserId();
@@ -335,6 +351,16 @@
                     Message = Message.NOT_YET_LOGIN.ToString(),
                 };
             }
+
+            var user = await _context.ShipInfos.SingleOrDefaultAsync(s => s.UserId == userId);
+            if (user.IsUpdate == false)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.SHIP_INFO_EMPTY.ToString()
+                };
+            }
+
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId && b.IsRent == true && b.IsTrade == false && b.Status == StatusRequest.Approved.ToString());
             if (book == null)
             {

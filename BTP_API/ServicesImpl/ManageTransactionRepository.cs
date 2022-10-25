@@ -1,6 +1,7 @@
 ﻿using BTP_API.Models;
 using BTP_API.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace BTP_API.ServicesImpl
 {
@@ -12,9 +13,9 @@ namespace BTP_API.ServicesImpl
         {
             _context = context;
         }
-        public async Task<ApiResponse> getAllExchangeAsync()
+        public async Task<ApiResponse> getAllExchangeAsync(int page = 1)
         {
-            var exchanges = await _context.Exchanges.ToListAsync();
+            var exchanges = await _context.Exchanges.OrderByDescending(e => e.Id).ToListAsync();
             if (exchanges.Count == 0)
             {
                 return new ApiResponse
@@ -22,11 +23,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = exchanges,
-                NumberOfRecords = exchanges.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiResponse> getAllExchangeDetailAsync(int exchangeId)
@@ -85,6 +87,26 @@ namespace BTP_API.ServicesImpl
             if(exchange != null)
             {
                 exchange.Status = status.ToString();
+                if(status == Status.Trading.ToString())
+                {
+                    var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Waiting.ToString()).ToListAsync();
+                    foreach (var detail in exchangeDetails)
+                    {
+                        detail.Status = status;
+                    }
+                }
+                if(status == Status.Complete.ToString())
+                {
+                    var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Trading.ToString()).ToListAsync();
+                    foreach (var detail in exchangeDetails)
+                    {
+                        detail.Status = status;
+                    }
+                    var user1 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId1);
+                    var user2 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId2);
+                    user1.NumberOfTransaction += exchangeDetails.Count;
+                    user2.NumberOfTransaction += exchangeDetails.Count;
+                }
                 _context.Update(exchange);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
@@ -109,6 +131,7 @@ namespace BTP_API.ServicesImpl
                 exchangeDetail.AfterStatusBook2 = exchangeDetailVM.AfterStatusBook2;
                 exchangeDetail.StorageStatusBook2 = exchangeDetailVM.StorageStatusBook2;
                 exchangeDetail.Status = exchangeDetailVM.Status;
+                
                 _context.Update(exchangeDetail);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
@@ -122,9 +145,9 @@ namespace BTP_API.ServicesImpl
             };
         }
 
-        public async Task<ApiResponse> getAllRentAsync()
+        public async Task<ApiResponse> getAllRentAsync(int page = 1)
         {
-            var rents = await _context.Rents.ToListAsync();
+            var rents = await _context.Rents.OrderByDescending(r => r.Id).ToListAsync();
             if (rents.Count == 0)
             {
                 return new ApiResponse
@@ -132,11 +155,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Rent>.Create(rents, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = rents,
-                NumberOfRecords = rents.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiResponse> getAllRentDetailAsync(int rentId)
@@ -196,6 +220,24 @@ namespace BTP_API.ServicesImpl
             var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentId);
             if (rent != null)
             {
+                if (status == Status.Trading.ToString())
+                {
+                    var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId && b.Status == Status.Waiting.ToString()).ToListAsync();
+                    foreach (var detail in rentDetails)
+                    {
+                        detail.Status = status;
+                    }
+                }
+                if (status == Status.Complete.ToString())
+                {
+                    var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId && b.Status == Status.Trading.ToString()).ToListAsync();
+                    foreach (var detail in rentDetails)
+                    {
+                        detail.Status = status;
+                    }
+                    var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == rent.OwnerId);
+                    user.NumberOfTransaction += rentDetails.Count;
+                }
                 rent.Status = status.ToString();
                 _context.Update(rent);
                 await _context.SaveChangesAsync();

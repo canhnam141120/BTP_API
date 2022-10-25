@@ -12,11 +12,11 @@
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> getAllCategory()
+        public async Task<IActionResult> getAllCategory([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageCategoryRepository.getAllCategoryAsync();
+                var apiResponse = await _manageCategoryRepository.getAllCategoryAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);

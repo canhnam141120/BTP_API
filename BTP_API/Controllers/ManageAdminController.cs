@@ -13,11 +13,11 @@
 
         [HttpGet("all")]
         //[Authorize(Roles = "1")]
-        public async Task<IActionResult> getAllAdmin()
+        public async Task<IActionResult> getAllAdmin([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageAdminRepository.getAllAdminAsync();
+                var apiResponse = await _manageAdminRepository.getAllAdminAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -50,11 +50,11 @@
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> searchAdmin([FromQuery] string search)
+        public async Task<IActionResult> searchAdmin([FromQuery] string search, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageAdminRepository.searchAdminAsync(search);
+                var apiResponse = await _manageAdminRepository.searchAdminAsync(search, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);

@@ -8,9 +8,9 @@
         {
             _context = context;
         }
-        public async Task<ApiResponse> getAllAdminAsync()
+        public async Task<ApiResponse> getAllAdminAsync(int page = 1)
         {
-            var admins = await _context.Users.Where(b => b.RoleId == 2 && b.IsActive == true).ToListAsync();
+            var admins = await _context.Users.Where(b => b.RoleId == 2 && b.IsActive == true).OrderByDescending(b => b.Id).ToListAsync();
             if (admins.Count == 0)
             {
                 return new ApiResponse
@@ -18,11 +18,12 @@
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<User>.Create(admins, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = admins,
-                NumberOfRecords = admins.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
 
@@ -39,9 +40,20 @@
             return new ApiMessage { Message = Message.USER_NOT_EXIST.ToString()};
         }
 
-        public async Task<ApiResponse> searchAdminAsync(string search)
+        public async Task<ApiResponse> searchAdminAsync(string search, int page = 1)
         {
-            var admins = await _context.Users.Where(b => b.RoleId == 2 && b.Email.Contains(search) || b.RoleId == 2 && b.Phone.Contains(search)).ToListAsync();
+            List<User> admins;
+
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+                admins = await _context.Users.Where(b => b.RoleId == 2 && b.Email.ToLower().Contains(search) || b.RoleId == 2 && b.Phone.Contains(search)).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                admins = await _context.Users.Where(b => b.RoleId == 2 && b.IsActive == true).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            
             if (admins.Count == 0)
             {
                 return new ApiResponse
@@ -49,11 +61,12 @@
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<User>.Create(admins, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = admins,
-                NumberOfRecords = admins.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
     }

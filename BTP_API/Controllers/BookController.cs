@@ -12,11 +12,11 @@
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> getAllBooks()
+        public async Task<IActionResult> getAllBooks([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _bookRepository.getAllBookAsync();
+                var apiResponse = await _bookRepository.getAllBookAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -54,11 +54,11 @@
         }
 
         [HttpGet("{id}/feedback")]
-        public async Task<IActionResult> getFeedbackInBook([FromRoute] int id)
+        public async Task<IActionResult> getFeedbackInBook([FromRoute] int id, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _bookRepository.getFeedbackInBookAsync(id);
+                var apiResponse = await _bookRepository.getFeedbackInBookAsync(id, page);
                 if(apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -72,11 +72,11 @@
         }
 
         [HttpGet("category{id}")]
-        public async Task<IActionResult> getBookByCategory([FromRoute] int id)
+        public async Task<IActionResult> getBookByCategory([FromRoute] int id, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _bookRepository.getBookByCategoryAsync(id);
+                var apiResponse = await _bookRepository.getBookByCategoryAsync(id, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -93,11 +93,11 @@
         }
 
         [HttpGet("user{id}")]
-        public async Task<IActionResult> getBookByUser([FromRoute] int id)
+        public async Task<IActionResult> getBookByUser([FromRoute] int id, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _bookRepository.getBookByUserAsync(id);
+                var apiResponse = await _bookRepository.getBookByUserAsync(id, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -112,11 +112,11 @@
         }
 
         [HttpPost("search-by-title")]
-        public async Task<IActionResult> searchBookByTitle([FromQuery] string search)
+        public async Task<IActionResult> searchBookByTitle([FromQuery] string search, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _bookRepository.searchBookByTitleAsync(search);
+                var apiResponse = await _bookRepository.searchBookByTitleAsync(search, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);

@@ -11,7 +11,7 @@
             _requestRepository = requestRepository;
         }
 
-        [HttpPost("create")]
+        [HttpPost("create/{bookid}")]
         public async Task<IActionResult> createRequest([FromRoute] int bookid, [FromForm] List<int> bookOffer)
         {
             try

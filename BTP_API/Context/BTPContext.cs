@@ -922,6 +922,14 @@
                     .HasColumnName("RoleID")
                     .HasComment("Mã vai trò");
 
+                entity.Property(e => e.LikeNumber)
+                    .HasColumnName("LikeNumber")
+                    .HasComment("Số người thích");
+
+                entity.Property(e => e.NumberOfTransaction)
+                    .HasColumnName("NumberOfTransaction")
+                    .HasComment("Số lần giao dịch");
+
                 entity.Property(e => e.VerifyCode)
                     .IsRequired()
                     .HasMaxLength(10)

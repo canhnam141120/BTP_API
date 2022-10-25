@@ -1,5 +1,7 @@
 ﻿using BTP_API.Models;
 using BTP_API.ViewModels;
+using Microsoft.Extensions.Hosting;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BTP_API.ServicesImpl
 {
@@ -41,7 +43,7 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = books.Count
             };
         }
-        public async Task<ApiResponse> getAllBookAsync()
+        public async Task<ApiResponse> getAllBookAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -52,7 +54,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var books = await _context.Books.Where(b => b.UserId == userId).ToListAsync();
+            var books = await _context.Books.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -60,14 +62,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books,
-                NumberOfRecords = books.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getBookApprovedAsync()
+        public async Task<ApiResponse> getBookApprovedAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -78,7 +81,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).ToListAsync();
+            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -86,14 +89,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books,
-                NumberOfRecords = books.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getBookDeniedAsync()
+        public async Task<ApiResponse> getBookDeniedAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -104,7 +108,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).ToListAsync();
+            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -112,14 +116,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books,
-                NumberOfRecords = books.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getBookWaitingAsync()
+        public async Task<ApiResponse> getBookWaitingAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -130,7 +135,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).ToListAsync();
+            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -138,14 +143,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books,
-                NumberOfRecords = books.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getAllPostAsync()
+        public async Task<ApiResponse> getAllPostAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -156,7 +162,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var posts = await _context.Posts.Where(b => b.UserId == userId).ToListAsync();
+            var posts = await _context.Posts.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -164,14 +170,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Post>.Create(posts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = posts,
-                NumberOfRecords = posts.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getPostApprovedAsync()
+        public async Task<ApiResponse> getPostApprovedAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -182,7 +189,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).ToListAsync();
+            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -190,14 +197,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Post>.Create(posts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = posts,
-                NumberOfRecords = posts.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getPostDeniedAsync()
+        public async Task<ApiResponse> getPostDeniedAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -208,7 +216,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).ToListAsync();
+            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -216,14 +224,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Post>.Create(posts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = posts,
-                NumberOfRecords = posts.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getPostWaitingAsync()
+        public async Task<ApiResponse> getPostWaitingAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -234,7 +243,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).ToListAsync();
+            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -242,14 +251,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Post>.Create(posts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = posts,
-                NumberOfRecords = posts.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getBookByFavoritesAsync()
+        public async Task<ApiResponse> getBookByFavoritesAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -260,7 +270,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var favoriteBooks = await _context.FavoriteBookLists.Include(f => f.Book).Where(f => f.UserId == userId).ToListAsync();
+            var favoriteBooks = await _context.FavoriteBookLists.Include(f => f.Book).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (favoriteBooks.Count == 0)
             {
                 return new ApiResponse
@@ -268,11 +278,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<FavoriteBookList>.Create(favoriteBooks, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = favoriteBooks,
-                NumberOfRecords = favoriteBooks.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiMessage> addBookByFavoritesAsync(int bookId)
@@ -353,7 +364,7 @@ namespace BTP_API.ServicesImpl
                 Message = Message.NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getPostByFavoritesAsync()
+        public async Task<ApiResponse> getPostByFavoritesAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -364,7 +375,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var favoritePosts = await _context.FavoritePostLists.Include(f => f.Post).Where(f => f.UserId == userId).ToListAsync();
+            var favoritePosts = await _context.FavoritePostLists.Include(f => f.Post).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (favoritePosts.Count == 0)
             {
                 return new ApiResponse
@@ -372,11 +383,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<FavoritePostList>.Create(favoritePosts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = favoritePosts,
-                NumberOfRecords = favoritePosts.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiMessage> addPostByFavoritesAsync(int postId)
@@ -457,7 +469,7 @@ namespace BTP_API.ServicesImpl
                 Message = Message.NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getUserByFavoritesAsync()
+        public async Task<ApiResponse> getUserByFavoritesAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -468,7 +480,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var favoriteUsers = await _context.FavoriteUserLists.Include(f => f.FavoriteUser).Where(f => f.UserId == userId).ToListAsync();
+            var favoriteUsers = await _context.FavoriteUserLists.Include(f => f.FavoriteUser).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (favoriteUsers.Count == 0)
             {
                 return new ApiResponse
@@ -476,11 +488,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<FavoriteUserList>.Create(favoriteUsers, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = favoriteUsers,
-                NumberOfRecords = favoriteUsers.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiMessage> addUserByFavoritesAsync(int favoriteUserId)
@@ -495,8 +508,8 @@ namespace BTP_API.ServicesImpl
                 };
             }
 
-            var user = await _context.Users.AnyAsync(f => f.Id == userId);
-            if (!user)
+            var user = await _context.Users.SingleOrDefaultAsync(f => f.Id == favoriteUserId);
+            if (user == null)
             {
                 return new ApiMessage
                 {
@@ -517,7 +530,7 @@ namespace BTP_API.ServicesImpl
                 FavoriteUserId = favoriteUserId,
                 UserId = userId
             };
-
+            user.LikeNumber += 1;
             _context.Add(favoriteUser);
             await _context.SaveChangesAsync();
             return new ApiMessage
@@ -537,8 +550,8 @@ namespace BTP_API.ServicesImpl
                 };
             }
 
-            var user = await _context.Users.AnyAsync(f => f.Id == userId);
-            if (!user)
+            var user = await _context.Users.SingleOrDefaultAsync(f => f.Id == favoriteUserId);
+            if (user == null)
             {
                 return new ApiMessage
                 {
@@ -549,6 +562,7 @@ namespace BTP_API.ServicesImpl
             var check = await _context.FavoriteUserLists.SingleOrDefaultAsync(f => f.FavoriteUserId == favoriteUserId && f.UserId == userId);
             if (check != null)
             {
+                user.LikeNumber -= 1;
                 _context.Remove(check);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
@@ -656,7 +670,7 @@ namespace BTP_API.ServicesImpl
                 Message = Message.UPDATE_SUCCESS.ToString()
             };
         }
-        public async Task<ApiResponse> listOfRequestSendAsync()
+        public async Task<ApiResponse> listOfRequestSendAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -673,7 +687,7 @@ namespace BTP_API.ServicesImpl
 
             foreach (var book in myBooks)
             {
-                var data = await _context.ExchangeRequests.Where(r => r.BookOfferId == book.Id).ToListAsync();
+                var data = await _context.ExchangeRequests.Where(r => r.BookOfferId == book.Id).OrderBy(b => b.Id).ToListAsync();
                 foreach (var item in data)
                 {
                     exchangeRequests.Add(item);
@@ -686,14 +700,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<ExchangeRequest>.Create(exchangeRequests, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = exchangeRequests,
-                NumberOfRecords = exchangeRequests.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> listOfRequestReceivedSendAsync(int bookId)
+        public async Task<ApiResponse> listOfRequestReceivedSendAsync(int bookId, int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -714,7 +729,7 @@ namespace BTP_API.ServicesImpl
                 };
             }
 
-            var data = await _context.ExchangeRequests.Include(r => r.BookOffer.User).Where(r => r.BookId == bookId).ToListAsync();
+            var data = await _context.ExchangeRequests.Include(r => r.BookOffer.User).Where(r => r.BookId == bookId).OrderByDescending(b => b.Id).ToListAsync();
             if (data.Count == 0)
             {
                 return new ApiResponse
@@ -722,14 +737,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<ExchangeRequest>.Create(data, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = data,
-                NumberOfRecords = data.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> myTransactionExchangeAsync()
+        public async Task<ApiResponse> myTransactionExchangeAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -740,7 +756,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var exchanges = await _context.Exchanges.Where(b => b.UserId1 == userId || b.UserId2 == userId).ToListAsync();
+            var exchanges = await _context.Exchanges.Where(b => b.UserId1 == userId || b.UserId2 == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (exchanges.Count == 0)
             {
                 return new ApiResponse
@@ -748,11 +764,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = exchanges,
-                NumberOfRecords = exchanges.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiResponse> myTransactionExDetailAsync(int exchangeId)
@@ -827,7 +844,7 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiResponse> myExBillAllAsync()
+        public async Task<ApiResponse> myExBillAllAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -838,7 +855,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var exchangeBills = await _context.ExchangeBills.Where(b => b.UserId == userId).ToListAsync();
+            var exchangeBills = await _context.ExchangeBills.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (exchangeBills.Count == 0)
             {
                 return new ApiResponse
@@ -846,14 +863,15 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<ExchangeBill>.Create(exchangeBills, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = exchangeBills,
-                NumberOfRecords = exchangeBills.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> myTransactionRentAsync()
+        public async Task<ApiResponse> myTransactionRentAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -864,7 +882,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var rents = await _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).ToListAsync();
+            var rents = await _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (rents.Count == 0)
             {
                 return new ApiResponse
@@ -872,11 +890,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Rent>.Create(rents, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = rents,
-                NumberOfRecords = rents.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiResponse> myTransactionRentDetailAsync(int rentId)
@@ -951,7 +970,7 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiResponse> myRentBillAllAsync()
+        public async Task<ApiResponse> myRentBillAllAsync(int page = 1)
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
             int userId = cookie.GetUserId();
@@ -962,7 +981,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var rentBills = await _context.RentBills.Where(b => b.UserId == userId).ToListAsync();
+            var rentBills = await _context.RentBills.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             if (rentBills.Count == 0)
             {
                 return new ApiResponse
@@ -970,11 +989,12 @@ namespace BTP_API.ServicesImpl
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<RentBill>.Create(rentBills, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = rentBills,
-                NumberOfRecords = rentBills.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiMessage> updateInfoShippingAsync(ShipInfoVM shipInfoVM)

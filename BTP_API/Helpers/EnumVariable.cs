@@ -69,7 +69,8 @@
             REFRESH_TOKEN_IS_USED,
             REFRESH_TOKEN_IS_REVOKED,
             TOKEN_NOT_MATCH,
-            CODE_NOT_MATCH
+            CODE_NOT_MATCH,
+            SHIP_INFO_EMPTY
         }
 
     }

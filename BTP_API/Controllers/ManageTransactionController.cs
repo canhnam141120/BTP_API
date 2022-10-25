@@ -12,11 +12,11 @@
         }
 
         [HttpGet("exchange/all")]
-        public async Task<IActionResult> getAllExchange()
+        public async Task<IActionResult> getAllExchange([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageTransactionRepository.getAllExchangeAsync();
+                var apiResponse = await _manageTransactionRepository.getAllExchangeAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -102,11 +102,11 @@
         }
 
         [HttpGet("rent/all")]
-        public async Task<IActionResult> getAllRent()
+        public async Task<IActionResult> getAllRent([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageTransactionRepository.getAllRentAsync();
+                var apiResponse = await _manageTransactionRepository.getAllRentAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);

@@ -8,9 +8,9 @@
         {
             _context = context;
         }
-        public async Task<ApiResponse> getAllBookAsync()
+        public async Task<ApiResponse> getAllBookAsync(int page = 1)
         {
-            var books = await _context.Books.ToListAsync();
+            var books = await _context.Books.OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -18,16 +18,17 @@
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Book>.Create(books, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books,
-                NumberOfRecords = books.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getAllBookApprovedAsync()
+        public async Task<ApiResponse> getAllBookApprovedAsync(int page = 1)
         {
-            var books = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString()).ToListAsync();
+            var books = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -35,16 +36,17 @@
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Book>.Create(books, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books,
-                NumberOfRecords = books.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getAllBookDeniedAsync()
+        public async Task<ApiResponse> getAllBookDeniedAsync(int page = 1)
         {
-            var books = await _context.Books.Where(b => b.Status == StatusRequest.Denied.ToString()).ToListAsync();
+            var books = await _context.Books.Where(b => b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -52,16 +54,17 @@
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Book>.Create(books, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books,
-                NumberOfRecords = books.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getAllBookWaitingAsync()
+        public async Task<ApiResponse> getAllBookWaitingAsync(int page = 1)
         {
-            var books = await _context.Books.Where(b => b.Status == StatusRequest.Waiting.ToString()).ToListAsync();
+            var books = await _context.Books.Where(b => b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -69,11 +72,12 @@
                     Message = Message.LIST_EMPTY.ToString()
                 };
             }
+            var result = PaginatedList<Book>.Create(books, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books,
-                NumberOfRecords = books.Count
+                Data = result,
+                NumberOfRecords = result.Count
             };
         }
         public async Task<ApiResponse> getBookByIdAsync(int bookId)

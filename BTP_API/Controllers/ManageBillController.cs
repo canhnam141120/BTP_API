@@ -12,11 +12,11 @@
         }
 
         [HttpGet("exchange-bill/all")]
-        public async Task<IActionResult> getAllExBill()
+        public async Task<IActionResult> getAllExBill([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageBillRepository.getAllExBillAsync();
+                var apiResponse = await _manageBillRepository.getAllExBillAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -67,11 +67,11 @@
 
 
         [HttpGet("rent-bill/all")]
-        public async Task<IActionResult> getAllRentBill()
+        public async Task<IActionResult> getAllRentBill([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _manageBillRepository.getAllRentBillAsync();
+                var apiResponse = await _manageBillRepository.getAllRentBillAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);

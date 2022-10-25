@@ -12,11 +12,11 @@
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> getAllPost()
+        public async Task<IActionResult> getAllPost([FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _postRepository.getAllPostAsync();
+                var apiResponse = await _postRepository.getAllPostAsync(page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -48,11 +48,11 @@
         }
 
         [HttpGet("{id}/comment")]
-        public async Task<IActionResult> getCommentInPost([FromRoute] int id)
+        public async Task<IActionResult> getCommentInPost([FromRoute] int id, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _postRepository.getCommentInPostAsync(id);
+                var apiResponse = await _postRepository.getCommentInPostAsync(id, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -66,11 +66,11 @@
         }
 
         [HttpGet("search-by-hashtag")]
-        public async Task<IActionResult> searchPostByHashtag([FromQuery] string search)
+        public async Task<IActionResult> searchPostByHashtag([FromQuery] string search, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _postRepository.searchPostByHashtagAsync(search);
+                var apiResponse = await _postRepository.searchPostByHashtagAsync(search, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
