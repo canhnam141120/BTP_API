@@ -4,6 +4,9 @@ namespace BTP_API.Services
 {
     public interface IPersonalRepository
     {
+        public Task<ApiResponse> getAllNotificationAsync(int page = 1);
+        public Task<ApiResponse> get10NewNotificationAsync();
+        public Task<ApiMessage> markReadNotificationAsync(int nottificationId);
         public Task<ApiResponse> getBookCanTradeAsync();
         public Task<ApiResponse> getAllBookAsync(int page = 1);
         public Task<ApiResponse> getBookApprovedAsync(int page = 1);

@@ -40,7 +40,13 @@ namespace BTP_API.ServicesImpl
                 var bill = await _context.ExchangeBills.Where(b => b.ExchangeId == exchangeId).ToListAsync();
                 foreach (var item in bill)
                 {
-                    _context.Remove(item);
+                    item.TotalBook = 0;
+                    item.TotalAmount = 0;
+                    item.DepositFee = 0;
+                    item.FeeId1 = 0;
+                    item.FeeId2 = 0;
+                    item.FeeId3 = 0;
+                    _context.Update(item);
                 }
                 exchange.Status = Status.Cancel.ToString();
                 await _context.SaveChangesAsync();

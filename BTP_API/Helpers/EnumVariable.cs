@@ -16,6 +16,7 @@
             BOOK_NOT_EXIST,
             POST_NOT_EXIST,
             COMMENT_NOT_EXIST,
+            NOTIFICATION_NOT_EXIST,
             CATEGORY_NOT_EXIST,
             USER_NOT_EXIST,
             FEE_NOT_EXIST,

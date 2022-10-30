@@ -65,12 +65,12 @@
             }
         }
 
-        [HttpGet("search-by-hashtag")]
-        public async Task<IActionResult> searchPostByHashtag([FromQuery] string search, [FromQuery] int page = 1)
+        [HttpGet("search")]
+        public async Task<IActionResult> searchPost([FromQuery] string search, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _postRepository.searchPostByHashtagAsync(search, page);
+                var apiResponse = await _postRepository.searchPostAsync(search, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -108,12 +108,12 @@
             }
         }
 
-        [HttpPost("post{postID}/comment")]
-        public async Task<IActionResult> commentPost([FromRoute] int postID, [FromForm] CommentVM commentVM)
+        [HttpPost("post{id}/comment")]
+        public async Task<IActionResult> commentPost([FromRoute] int id, [FromForm] CommentVM commentVM)
         {
             try
             {
-                var apiMessage = await _postRepository.commentPostAsync(postID, commentVM);
+                var apiMessage = await _postRepository.commentPostAsync(id, commentVM);
                 if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
                     return Ok(apiMessage);

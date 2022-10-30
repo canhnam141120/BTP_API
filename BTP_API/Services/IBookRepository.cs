@@ -2,6 +2,7 @@
 {
     public interface IBookRepository
     {
+        public Task<ApiResponse> getAllBookFromFavoriteUserAsync(int page = 1);
         public Task<ApiResponse> getAllBookAsync(int page = 1);
         public Task<ApiResponse> getBookByIdAsync(int bookId);
         public Task<ApiResponse> getFeedbackInBookAsync(int bookId, int page = 1);

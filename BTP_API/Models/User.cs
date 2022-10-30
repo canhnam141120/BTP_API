@@ -24,6 +24,7 @@ namespace BTP_API.Models
             RentBills = new HashSet<RentBill>();
             RentOwners = new HashSet<Rent>();
             RentRenters = new HashSet<Rent>();
+            Notifications = new HashSet<Notification>();
         }
 
         /// <summary>
@@ -133,6 +134,8 @@ namespace BTP_API.Models
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         [JsonIgnore]
         public virtual ICollection<Post> Posts { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Notification> Notifications { get; set; }
         [JsonIgnore]
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
         [JsonIgnore]

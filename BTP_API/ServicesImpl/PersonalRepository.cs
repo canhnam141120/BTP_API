@@ -17,6 +17,100 @@ namespace BTP_API.ServicesImpl
             _environment = environment;
             _httpContextAccessor = httpContextAccessor;
         }
+
+        public async Task<ApiResponse> getAllNotificationAsync(int page = 1)
+        {
+            Cookie cookie = new Cookie(_httpContextAccessor);
+            int userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
+            var notifications = await _context.Notifications.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            if (notifications.Count == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.LIST_EMPTY.ToString()
+                };
+            }
+            var result = PaginatedList<Notification>.Create(notifications, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = result,
+                NumberOfRecords = result.Count
+            };
+        }
+
+        public async Task<ApiResponse> get10NewNotificationAsync()
+        {
+            Cookie cookie = new Cookie(_httpContextAccessor);
+            int userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
+            var notifications = await _context.Notifications.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Take(10).ToListAsync();
+            if (notifications.Count == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.LIST_EMPTY.ToString()
+                };
+            }
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = notifications,
+                NumberOfRecords = notifications.Count
+            };
+        }
+
+        public async Task<ApiMessage> markReadNotificationAsync(int nottificationId)
+        {
+            Cookie cookie = new Cookie(_httpContextAccessor);
+            int userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
+
+            var notification = await _context.Notifications.AnyAsync(f => f.Id == nottificationId);
+            if (!notification)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.NOTIFICATION_NOT_EXIST.ToString()
+                };
+            }
+
+            var check = await _context.Notifications.SingleOrDefaultAsync(f => f.Id == nottificationId && f.UserId == userId);
+            if (check != null)
+            {
+                check.IsRead = true;
+                _context.Update(check);
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.SUCCESS.ToString()
+                };
+            }
+            return new ApiMessage
+            {
+                Message = Message.NOT_EXIST.ToString()
+            };
+        }
+
         public async Task<ApiResponse> getBookCanTradeAsync()
         {
             Cookie cookie = new Cookie(_httpContextAccessor);
@@ -28,7 +122,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
-            var books = await _context.Books.Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true).ToListAsync();
+            var books = await _context.Books.Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -403,8 +497,10 @@ namespace BTP_API.ServicesImpl
                 };
             }
 
-            var post = await _context.Posts.AnyAsync(f => f.Id == postId);
-            if (!post)
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+
+            var post = await _context.Posts.Include(f => f.User).SingleOrDefaultAsync(f => f.Id == postId);
+            if (post == null)
             {
                 return new ApiMessage
                 {
@@ -427,6 +523,14 @@ namespace BTP_API.ServicesImpl
             };
 
             _context.Add(favoritePost);
+            var notification = new Notification
+            {
+                UserId = post.UserId,
+                Content = user.Fullname + @" đã yêu thích bài đăng """ + post.Title  + @""" của bạn!",
+                CreatedDate = DateTime.Now,
+                IsRead = false,
+            };
+            _context.Add(notification);
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
@@ -508,8 +612,10 @@ namespace BTP_API.ServicesImpl
                 };
             }
 
-            var user = await _context.Users.SingleOrDefaultAsync(f => f.Id == favoriteUserId);
-            if (user == null)
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+
+            var userFavorite = await _context.Users.SingleOrDefaultAsync(f => f.Id == favoriteUserId);
+            if (userFavorite == null)
             {
                 return new ApiMessage
                 {
@@ -530,8 +636,16 @@ namespace BTP_API.ServicesImpl
                 FavoriteUserId = favoriteUserId,
                 UserId = userId
             };
-            user.LikeNumber += 1;
+            userFavorite.LikeNumber += 1;
             _context.Add(favoriteUser);
+            var notification = new Notification
+            {
+                UserId = userFavorite.Id,
+                Content = user.Fullname + " đã yêu thích bạn!",
+                CreatedDate = DateTime.Now,
+                IsRead = false,
+            };
+            _context.Add(notification);
             await _context.SaveChangesAsync();
             return new ApiMessage
             {

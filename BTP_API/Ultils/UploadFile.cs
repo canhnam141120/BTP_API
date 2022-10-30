@@ -17,8 +17,8 @@ namespace BTP_API.Ultils
                     bookVM.Image.CopyTo(fileStream);
                 }
 
-                //byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
-                //fileName = Convert.ToBase64String(imageArray);
+                byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
+                fileName = Convert.ToBase64String(imageArray);
             }
             else
             {
@@ -69,8 +69,8 @@ namespace BTP_API.Ultils
                     Avatar.CopyTo(fileStream);
                 }
 
-                //byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
-                //fileName = Convert.ToBase64String(imageArray);
+                byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
+                fileName = Convert.ToBase64String(imageArray);
             }
             else
             {

@@ -145,5 +145,40 @@
             }
         }
 
+        [HttpGet("{id}/feedback")]
+        public async Task<IActionResult> getFeedbackInBook([FromRoute] int id, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _manageBookRepository.getFeedbackInBookAsync(id, page);
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+        [HttpDelete("delete-feedback/{id}")]
+        public async Task<IActionResult> deleteFeedback([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _manageBookRepository.deleteFeedbackAsync(id);
+                if (apiMessage.Message == Message.DELETE_SUCCESS.ToString())
+                {
+                    return Ok(apiMessage);
+                }
+                return NotFound(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.DELETE_FAILED.ToString() });
+            }
+        }
     }
 }

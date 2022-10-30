@@ -15,6 +15,72 @@
             _personalRepository = personalRepository;
         }
 
+        [HttpGet("notification/all")]
+        public async Task<IActionResult> getAllNotification([FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _personalRepository.getAllNotificationAsync(page);
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
+                {
+                    return BadRequest(apiResponse);
+                }
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+        [HttpGet("notification/top10new")]
+        public async Task<IActionResult> get10NewNotification()
+        {
+            try
+            {
+                var apiResponse = await _personalRepository.get10NewNotificationAsync();
+                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
+                {
+                    return BadRequest(apiResponse);
+                }
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+
+        [HttpDelete("notification/mark-read/{id}")]
+        public async Task<IActionResult> markReadNotification([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _personalRepository.markReadNotificationAsync(id);
+                if (apiMessage.Message == Message.NOTIFICATION_NOT_EXIST.ToString())
+                {
+                    return NotFound(apiMessage);
+                }
+                if (apiMessage.Message == Message.SUCCESS.ToString())
+                {
+                    return Ok(apiMessage);
+                }
+                return BadRequest(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+            }
+        }
 
         [HttpGet("can-trade")]
         public async Task<IActionResult> getBookCanTrade()

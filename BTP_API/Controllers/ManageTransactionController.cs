@@ -119,7 +119,7 @@
             }
         }
 
-        [HttpGet("rent/{id}")]
+        [HttpGet("rent/{id}/detail")]
         public async Task<IActionResult> getAllRentDetail([FromRoute] int id)
         {
             try

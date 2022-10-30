@@ -80,13 +80,13 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> searchPostByHashtagAsync(string search, int page = 1)
+        public async Task<ApiResponse> searchPostAsync(string search, int page = 1)
         {
             List<Post> posts;
             if (search != null)
             {
                 search = search.ToLower().Trim();
-                posts = await _context.Posts.Include(b => b.User).Where(b => b.Hashtag.ToLower().Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false).ToListAsync();
+                posts = await _context.Posts.Include(b => b.User).Where(b => b.Hashtag.ToLower().Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false || b.Title.ToLower().Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false).ToListAsync();
             }
             else
             {
@@ -125,6 +125,7 @@ namespace BTP_API.ServicesImpl
             var post = new Post
             {
                 UserId = cookie.GetUserId(),
+                Title = postVM.Title,
                 Content = postVM.Content,
                 Image = fileImageName,
                 Hashtag = postVM.Hashtag,

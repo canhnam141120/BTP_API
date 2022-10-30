@@ -15,6 +15,44 @@ namespace BTP_API.Services
             _environment = environment;
             _httpContextAccessor = httpContextAccessor;
         }
+
+        public async Task<ApiResponse> getAllBookFromFavoriteUserAsync(int page = 1)
+        {
+            Cookie cookie = new Cookie(_httpContextAccessor);
+            int userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiResponse { Message = Message.NOT_YET_LOGIN.ToString() };
+            }
+
+            List<Book> bookList = new List<Book>();
+
+            var favoriteUsers = await _context.FavoriteUserLists.Where(f => f.UserId == userId).ToListAsync();
+            foreach (var favoriteUser in favoriteUsers)
+            {
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.UserId == favoriteUser.FavoriteUserId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
+                foreach(var book in books)
+                {
+                    bookList.Add(book);
+                }
+            }
+           
+            if (bookList.Count == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.LIST_EMPTY.ToString()
+                };
+            }
+            var result = PaginatedList<Book>.Create(bookList, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = result,
+                NumberOfRecords = result.Count
+            };
+        }
+
         public async Task<ApiResponse> getAllBookAsync(int page = 1)
         {
             var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
@@ -233,6 +271,7 @@ namespace BTP_API.Services
             }
             return new ApiMessage { Message = Message.BOOK_NOT_EXIST.ToString() };
         }
+
         public async Task<ApiMessage> updateBookAsync(int bookId, BookVM bookVM)
         {
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId);

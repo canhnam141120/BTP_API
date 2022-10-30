@@ -51,7 +51,5 @@ namespace BTP_API.ViewModels
         [Required]
         public float RentFee { get; set; }
         
-        [Required]
-        public int NumberOfDays { get; set; }
     }
 }

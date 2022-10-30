@@ -13,6 +13,27 @@ namespace BookTradingPlatform.Controllers
             _bookRepository = bookRepository;
         }
 
+        [HttpGet("from-favorite-users")]
+        public async Task<IActionResult> getAllBookFromFavoriteUser([FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.getAllBookFromFavoriteUserAsync(page);
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
         [HttpGet("all")]
         public async Task<IActionResult> getAllBooks([FromQuery] int page = 1)
         {
@@ -143,6 +164,10 @@ namespace BookTradingPlatform.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 var apiResponse = await _bookRepository.createBookAsync(bookVM);
                 if (apiResponse.NumberOfRecords != 0)
                 {

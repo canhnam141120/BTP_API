@@ -25,6 +25,11 @@ namespace BTP_API.Models
         [Required]
         public int UserId { get; set; }
         /// <summary>
+        /// Tiêu đề
+        /// </summary>
+        [Required]
+        public string Title { get; set; }
+        /// <summary>
         /// Nội dung
         /// </summary>
         [Required]

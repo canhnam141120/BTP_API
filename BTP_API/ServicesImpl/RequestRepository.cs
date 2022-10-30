@@ -1,4 +1,7 @@
-﻿namespace BTP_API.ServicesImpl
+﻿using BTP_API.Models;
+using BTP_API.ViewModels;
+
+namespace BTP_API.ServicesImpl
 {
     public class RequestRepository : IRequestRepository
     {
@@ -21,6 +24,7 @@
                     Message = Message.NOT_YET_LOGIN.ToString()
                 };
             }
+
             var user = await _context.ShipInfos.SingleOrDefaultAsync(s => s.UserId == userId);
             if(user.IsUpdate == false)
             {
@@ -28,6 +32,28 @@
                 {
                     Message = Message.SHIP_INFO_EMPTY.ToString()
                 };
+            }
+
+            var userInfo = await _context.Users.SingleOrDefaultAsync(s => s.Id == userId);
+
+            var bookCheck = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookid);
+            if(bookCheck == null)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.BOOK_NOT_EXIST.ToString()
+                };
+            }
+            foreach(var item in bookOffer)
+            {
+                var bookOfferCheck = await _context.Books.SingleOrDefaultAsync(b => b.Id == item);
+                if(bookOfferCheck == null)
+                {
+                    return new ApiMessage
+                    {
+                        Message = Message.BOOK_NOT_EXIST.ToString()
+                    };
+                }
             }
 
             foreach (int i in bookOffer)
@@ -45,12 +71,19 @@
                 _context.Add(request);
 
                 var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == i);
-                if (book != null)
-                {
-                    book.IsTrade = true;
-                }
-                await _context.SaveChangesAsync();
+                book.IsTrade = true;              
             }
+
+            var notification = new Notification
+            {
+                UserId = bookCheck.UserId,
+                Content = userInfo.Fullname + @" đã yêu cầu đổi sách """ + bookCheck.Title + @""" của bạn - Vào danh sách yêu cầu để kiểm tra!",
+                CreatedDate = DateTime.Now,
+                IsRead = false,
+            };
+            _context.Add(notification);
+
+            await _context.SaveChangesAsync();
             return new ApiMessage
             {
                 Message = Message.REQUEST_SUCCESS.ToString(),
@@ -58,6 +91,16 @@
         }
         public async Task<ApiMessage> cancelRequestAsync(int requestId)
         {
+            Cookie cookie = new Cookie(_httpContextAccessor);
+            int userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
+
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
             {
@@ -67,22 +110,48 @@
                 };
             }
 
+            var bookOffer = await _context.Books.Include(b => b.User).SingleOrDefaultAsync(b => b.Id == request.BookOfferId && b.UserId == userId);
+            if(bookOffer == null)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.REQUEST_NOT_EXIST.ToString(),
+                };
+            }
+
+            bookOffer.IsTrade = false;
+
             request.IsNewest = false;
             request.Status = StatusRequest.Cancel.ToString();
-            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == requestId);
-            if (book != null)
+
+            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == request.BookId);
+            var notification = new Notification
             {
-                book.IsTrade = false;
-            }
+                UserId = book.UserId,
+                Content = bookOffer.User.Fullname +  @" đã hủy yêu cầu đổi sách """ + bookOffer.Title  + @""" lấy sách """ + book.Title + @""" của bạn!",
+                CreatedDate = DateTime.Now,
+                IsRead = false,
+            };
+            _context.Add(notification);
+
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
                 Message = Message.SUCCESS.ToString(),
             };
-
         }
         public async Task<ApiMessage> acceptRequestAsync(int requestId)
         {
+            Cookie cookie = new Cookie(_httpContextAccessor);
+            int userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
+
             CalculateFee calculateFee = new CalculateFee(_context);
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
@@ -93,8 +162,18 @@
                 };
             }
 
-            var listRequect = await _context.ExchangeRequests.Where(r => r.BookId == request.BookId
+            var book1 = await _context.Books.Include(b => b.User).SingleOrDefaultAsync(b => b.Id == request.BookId && b.UserId == userId);
+            if (book1 == null)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.REQUEST_NOT_EXIST.ToString(),
+                };
+            }
+
+            var listRequect = await _context.ExchangeRequests.Where(r => r.BookId == request.BookId && r.BookOfferId != request.BookOfferId
             && r.IsNewest == true && r.Status == StatusRequest.Waiting.ToString()).ToListAsync();
+
             List<int> bookIds = new List<int>();
             foreach (var item in listRequect)
             {
@@ -108,13 +187,20 @@
                 if (bookOffer != null)
                 {
                     bookOffer.IsTrade = false;
+                    var notification = new Notification
+                    {
+                        UserId = bookOffer.UserId,
+                        Content = @"Yêu cầu đổi sách """ + bookOffer.Title + @""" của bạn lấy sách """ + book1.Title +  @""" của" + book1.User.Fullname + " không được chấp nhận!",
+                        CreatedDate = DateTime.Now,
+                        IsRead = false,
+                    };
+                    _context.Add(notification);
                 }
             }
 
             request.IsAccept = true;
             request.Status = StatusRequest.Approved.ToString();
 
-            var book1 = await _context.Books.SingleOrDefaultAsync(r => r.Id == request.BookId);
             var book2 = await _context.Books.SingleOrDefaultAsync(r => r.Id == request.BookOfferId);
 
             if (book1 == null || book2 == null)
@@ -306,6 +392,14 @@
                     await _context.SaveChangesAsync();
                 }
             }
+            var notificationOk = new Notification
+            {
+                UserId = book2.UserId,
+                Content = @"Yêu cầu đổi sách """ + book2.Title + @""" của bạn lấy sách """ + book1.Title + @""" của" + book1.User.Fullname + " được chấp nhận!",
+                CreatedDate = DateTime.Now,
+                IsRead = false,
+            };
+            _context.Add(notificationOk);
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
@@ -315,6 +409,15 @@
 
         public async Task<ApiMessage> deniedRequestAsync(int requestId)
         {
+            Cookie cookie = new Cookie(_httpContextAccessor);
+            int userId = cookie.GetUserId();
+            if (userId == 0)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.NOT_YET_LOGIN.ToString()
+                };
+            }
 
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
@@ -324,14 +427,33 @@
                     Message = Message.REQUEST_NOT_EXIST.ToString(),
                 };
             }
+
+            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == request.BookId && b.UserId == userId);
+            if (book == null)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.REQUEST_NOT_EXIST.ToString(),
+                };
+            }
+
             request.IsNewest = false;
             request.Status = StatusRequest.Denied.ToString();
 
-            var book = _context.Books.SingleOrDefault(b => b.Id == request.BookOfferId);
-            if (book != null)
+            var bookOffer = _context.Books.SingleOrDefault(b => b.Id == request.BookOfferId);
+            if (bookOffer != null)
             {
-                book.IsTrade = false;
+                bookOffer.IsTrade = false;
             }
+            var notification = new Notification
+            {
+                UserId = bookOffer.UserId,
+                Content = @"Yêu cầu đổi sách """ + bookOffer.Title + @""" của bạn lấy sách """ + book.Title + @""" của" + book.User.Fullname + " không được chấp nhận!",
+                CreatedDate = DateTime.Now,
+                IsRead = false,
+            };
+            _context.Add(notification);
+
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
@@ -361,6 +483,8 @@
                 };
             }
 
+            var userInfo = await _context.Users.SingleOrDefaultAsync(s => s.Id == userId);
+
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId && b.IsRent == true && b.IsTrade == false && b.Status == StatusRequest.Approved.ToString());
             if (book == null)
             {
@@ -369,6 +493,7 @@
                     Message = Message.BOOK_NOT_EXIST.ToString(),
                 };
             }
+
             book.IsTrade = true;
             var rentNew = new Rent
             {
@@ -483,6 +608,14 @@
                 _context.Add(rentDetail);
                 await _context.SaveChangesAsync();
             }
+            var notification = new Notification
+            {
+                UserId = book.UserId,
+                Content = @"Sách """ + book.Title + @""" của bạn được " + userInfo.Fullname + " đặt thuê!",
+                CreatedDate = DateTime.Now,
+                IsRead = false,
+            };
+            _context.Add(notification);
             await _context.SaveChangesAsync();
             return new ApiMessage
             {

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "SXl4M3XuSkCbVDM67nP+mLLuF2joKan7I43+TfoaJPk=",
+  "Hash": "v4Blacz+Kcpb2cxhOv/bLWXejptuj81T7oUthSrIe38=",
   "Source": "BTP_API",
   "BasePath": "_content/BTP_API",
   "Mode": "Default",
@@ -66,6 +66,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\PostImage\\banvevanminh.jpg"
+    },
+    {
+      "Identity": "F:\\BTP_API\\BTP_API\\wwwroot\\PostImage\\IMG_8518.JPG",
+      "SourceId": "BTP_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
+      "BasePath": "_content/BTP_API",
+      "RelativePath": "PostImage/IMG_8518.JPG",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PostImage\\IMG_8518.JPG"
     }
   ]
 }

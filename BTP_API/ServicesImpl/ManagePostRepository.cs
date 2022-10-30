@@ -1,5 +1,6 @@
 ﻿using BTP_API.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Hosting;
 using static BTP_API.Helpers.EnumVariable;
 
 namespace BTP_API.Services
@@ -120,6 +121,14 @@ namespace BTP_API.Services
                 }
                 post.Status = StatusRequest.Approved.ToString();
                 _context.Update(post);
+                var notification = new Notification
+                {
+                    UserId = post.UserId,
+                    Content = @"Bài đăng """ + post.Title + @""" của bạn đã được duyệt!",
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                };
+                _context.Add(notification);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -146,6 +155,14 @@ namespace BTP_API.Services
                 }
                 post.Status = StatusRequest.Denied.ToString();
                 _context.Update(post);
+                var notification = new Notification
+                {
+                    UserId = post.UserId,
+                    Content = @"Bài đăng """ + post.Title + @""" của bạn không được duyệt!",
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                };
+                _context.Add(notification);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -183,6 +200,14 @@ namespace BTP_API.Services
             if(comment != null)
             {
                 _context.Remove(comment);
+                var notification = new Notification
+                {
+                    UserId = comment.UserId,
+                    Content = @"Bình luận """ + comment.Content + @""" của bạn bị xóa vì vi phạm nội quy!",
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                };
+                _context.Add(notification);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {

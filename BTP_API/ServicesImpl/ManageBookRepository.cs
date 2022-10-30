@@ -111,6 +111,14 @@
                 }
                 book.Status = StatusRequest.Approved.ToString();
                 _context.Update(book);
+                var notification = new Notification
+                {
+                    UserId = book.UserId,
+                    Content = @"Sách """ + book.Title + @""" của bạn đã được duyệt!",
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                };
+                _context.Add(notification);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -136,6 +144,14 @@
                 }
                 book.Status = StatusRequest.Denied.ToString();
                 _context.Update(book);
+                var notification = new Notification
+                {
+                    UserId = book.UserId,
+                    Content = @"Sách """ + book.Title + @""" của bạn không được duyệt!",
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                };
+                _context.Add(notification);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -145,6 +161,51 @@
             return new ApiMessage
             {
                 Message = Message.BOOK_NOT_EXIST.ToString()
+            };
+        }
+
+        public async Task<ApiResponse> getFeedbackInBookAsync(int bookId, int page = 1)
+        {
+            var feedbacks = await _context.Feedbacks.Include(p => p.User).Where(p => p.BookId == bookId).OrderByDescending(f => f.CreatedDate).ToListAsync();
+            if (feedbacks.Count == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.LIST_EMPTY.ToString()
+                };
+            }
+            var result = PaginatedList<Feedback>.Create(feedbacks, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = result,
+                NumberOfRecords = result.Count
+            };
+        }
+
+        public async Task<ApiMessage> deleteFeedbackAsync(int feedbackId)
+        {
+            var feedback = await _context.Feedbacks.SingleOrDefaultAsync(b => b.Id == feedbackId);
+            if (feedback != null)
+            {
+                _context.Remove(feedback);
+                var notification = new Notification
+                {
+                    UserId = feedback.UserId,
+                    Content = @"Đánh giá """ + feedback.Content + @""" của bạn bị xóa vì vi phạm nội quy!",
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                };
+                _context.Add(notification);
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.DELETE_SUCCESS.ToString()
+                };
+            }
+            return new ApiMessage
+            {
+                Message = Message.COMMENT_NOT_EXIST.ToString()
             };
         }
     }

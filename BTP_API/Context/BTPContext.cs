@@ -24,6 +24,7 @@
         public virtual DbSet<Fee> Fees { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<Rent> Rents { get; set; }
         public virtual DbSet<RentBill> RentBills { get; set; }
@@ -578,6 +579,11 @@
                     .HasMaxLength(50)
                     .HasComment("Thẻ");
 
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasComment("Tiêu đề");
+
                 entity.Property(e => e.Image)
                     .IsRequired()
                     .HasComment("Ảnh");
@@ -598,6 +604,35 @@
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Post_User");
+            });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.ToTable("Notification");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasComment("Mã thông báo");
+
+                entity.Property(e => e.Content)
+                    .IsRequired()
+                    .HasComment("Nội dung");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("timestamp without time zone")
+                    .HasComment("Ngày tạo");
+
+                entity.Property(e => e.IsRead).HasComment("Đã đọc?");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasComment("Mã người dùng");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notification_User");
             });
 
             modelBuilder.Entity<RefreshToken>(entity =>
