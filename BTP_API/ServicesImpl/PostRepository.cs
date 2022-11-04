@@ -56,7 +56,7 @@ namespace BTP_API.ServicesImpl
         }
         public async Task<ApiResponse> getCommentInPostAsync(int postId, int page = 1)
         {
-            var check = await _context.Posts.AnyAsync(p => p.Id == postId);
+            var check = await _context.Posts.AnyAsync(p => p.Id == postId && p.Status == StatusRequest.Approved.ToString() && p.IsHide == false);
             if (!check)
             {
                 return new ApiResponse
@@ -86,7 +86,7 @@ namespace BTP_API.ServicesImpl
             if (search != null)
             {
                 search = search.ToLower().Trim();
-                posts = await _context.Posts.Include(b => b.User).Where(b => b.Hashtag.ToLower().Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false || b.Title.ToLower().Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false).ToListAsync();
+                posts = await _context.Posts.Include(b => b.User).Where(b =>  b.Title.ToLower().Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false).ToListAsync();
             }
             else
             {
@@ -150,7 +150,7 @@ namespace BTP_API.ServicesImpl
             {
                 return new ApiMessage { Message = Message.NOT_YET_LOGIN.ToString() };
             }
-            var post = await _context.Posts.FindAsync(postId);
+            var post = await _context.Posts.SingleOrDefaultAsync(p => p.Id == postId && p.Status == StatusRequest.Approved.ToString() && p.IsHide == false);
             if (post != null)
             {
                 var comment = new Comment
@@ -168,7 +168,7 @@ namespace BTP_API.ServicesImpl
         }
         public async Task<ApiMessage> hidePostAsync(int postId)
         {
-            var post = await _context.Posts.SingleOrDefaultAsync(u => u.Id == postId);
+            var post = await _context.Posts.SingleOrDefaultAsync(u => u.Id == postId && u.Status == StatusRequest.Approved.ToString());
             if (post != null)
             {
                 post.IsHide = true;
@@ -180,7 +180,7 @@ namespace BTP_API.ServicesImpl
         }
         public async Task<ApiMessage> showPostAsync(int postId)
         {
-            var post = await _context.Posts.SingleOrDefaultAsync(u => u.Id == postId);
+            var post = await _context.Posts.SingleOrDefaultAsync(u => u.Id == postId && u.Status == StatusRequest.Approved.ToString());
             if (post != null)
             {
                 post.IsHide = false;

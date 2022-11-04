@@ -88,6 +88,10 @@
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
+                }
                 var apiResponse = await _postRepository.createPostAsync(postVM);
                 if (apiResponse.NumberOfRecords != 0)
                 {
@@ -113,6 +117,10 @@
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+                }
                 var apiMessage = await _postRepository.commentPostAsync(id, commentVM);
                 if (apiMessage.Message == Message.SUCCESS.ToString())
                 {

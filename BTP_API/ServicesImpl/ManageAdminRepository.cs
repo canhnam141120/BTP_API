@@ -10,7 +10,7 @@
         }
         public async Task<ApiResponse> getAllAdminAsync(int page = 1)
         {
-            var admins = await _context.Users.Where(b => b.RoleId == 2 && b.IsActive == true).OrderByDescending(b => b.Id).ToListAsync();
+            var admins = await _context.Users.Where(b => b.RoleId == 2).OrderByDescending(b => b.Id).ToListAsync();
             if (admins.Count == 0)
             {
                 return new ApiResponse
@@ -51,7 +51,7 @@
             }
             else
             {
-                admins = await _context.Users.Where(b => b.RoleId == 2 && b.IsActive == true).OrderByDescending(b => b.Id).ToListAsync();
+                admins = await _context.Users.Where(b => b.RoleId == 2).OrderByDescending(b => b.Id).ToListAsync();
             }
             
             if (admins.Count == 0)

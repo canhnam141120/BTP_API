@@ -166,7 +166,7 @@ namespace BookTradingPlatform.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
                 }
                 var apiResponse = await _bookRepository.createBookAsync(bookVM);
                 if (apiResponse.NumberOfRecords != 0)
@@ -186,6 +186,10 @@ namespace BookTradingPlatform.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+                }
                 var apiMessage = await _bookRepository.feedbackBookAsync(id, feedbackVM);
                 if(apiMessage.Message == Message.SUCCESS.ToString())
                 {

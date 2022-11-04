@@ -177,6 +177,14 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> getCommentInPostAsync(int postID, int page = 1)
         {
+            var post = await _context.Posts.AnyAsync(b => b.Id == postID);
+            if(!post)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.POST_NOT_EXIST.ToString()
+                };
+            }
             var comments = await _context.Comments.Include(p => p.User).Where(p => p.PostId == postID).OrderByDescending(f => f.CreatedDate).ToListAsync();
             if (comments.Count == 0)
             {

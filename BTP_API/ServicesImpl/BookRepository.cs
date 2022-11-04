@@ -90,7 +90,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getFeedbackInBookAsync(int bookId, int page = 1)
         {
-            var check = await _context.Books.AnyAsync(b => b.Id == bookId);
+            var check = await _context.Books.AnyAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);
             if (!check)
             {
                 return new ApiResponse
@@ -255,7 +255,7 @@ namespace BTP_API.Services
                 return new ApiMessage { Message = Message.NOT_YET_LOGIN.ToString() };
             }
 
-            var book = await _context.Books.FindAsync(bookId);
+            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);
             if (book != null)
             {
                 var feedback = new Feedback
@@ -274,7 +274,7 @@ namespace BTP_API.Services
 
         public async Task<ApiMessage> updateBookAsync(int bookId, BookVM bookVM)
         {
-            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId);
+            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true );
             if (book != null)
             {
                 book.CategoryId = bookVM.CategoryId;
@@ -292,8 +292,6 @@ namespace BTP_API.Services
                 book.IsExchange = bookVM.IsExchange;
                 book.IsRent = bookVM.IsRent;
                 book.RentFee = bookVM.RentFee;
-                book.IsReady = true;
-                book.Status = StatusRequest.Waiting.ToString();
                 _context.Books.Update(book);
                 await _context.SaveChangesAsync();
                 return new ApiMessage { Message = Message.UPDATE_SUCCESS.ToString() };
@@ -305,7 +303,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiMessage> hideBookAsync(int bookId)
         {
-            var book = await _context.Books.SingleOrDefaultAsync(u => u.Id == bookId && u.IsReady == true);
+            var book = await _context.Books.SingleOrDefaultAsync(u => u.Id == bookId && u.Status == StatusRequest.Approved.ToString());
             if (book != null)
             {
                 book.IsReady = false;
@@ -317,7 +315,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiMessage> showBookAsync(int bookId)
         {
-            var book = await _context.Books.SingleOrDefaultAsync(u => u.Id == bookId && u.IsReady == false);
+            var book = await _context.Books.SingleOrDefaultAsync(u => u.Id == bookId && u.Status == StatusRequest.Approved.ToString());
             if (book != null)
             {
                 book.IsReady = true;

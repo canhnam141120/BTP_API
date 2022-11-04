@@ -52,6 +52,10 @@
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
+                }
                 var apiResponse = await _manageCategoryRepository.createCategoryAsync(categoryVM);
                 return Ok(apiResponse);
             }

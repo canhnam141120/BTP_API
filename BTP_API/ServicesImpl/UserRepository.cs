@@ -34,6 +34,15 @@ namespace BTP_API.Services
                 };
             }
 
+            bool isValid = BCrypt.Net.BCrypt.Verify(loginVM.Password, user.Password);
+            if (!isValid)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.PASSWORD_INCORRECT.ToString()
+                };
+            }
+
             if (user.IsVerify == false)
             {
                 return new ApiResponse
@@ -47,14 +56,6 @@ namespace BTP_API.Services
                 return new ApiResponse
                 {
                     Message = Message.ACCOUNT_IS_BAN.ToString()
-                };
-            }
-            bool isValid = BCrypt.Net.BCrypt.Verify(loginVM.Password, user.Password);
-            if (!isValid)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.PASSWORD_INCORRECT.ToString()
                 };
             }
 
