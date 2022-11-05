@@ -10,7 +10,7 @@
         }
         public async Task<ApiResponse> getAllBookAsync(int page = 1)
         {
-            var books = await _context.Books.Include(b => b.User).OrderByDescending(b => b.Id).ToListAsync();
+            var books = await _context.Books.Include(b => b.User).Include(b => b.Category).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -28,7 +28,7 @@
         }
         public async Task<ApiResponse> getAllBookApprovedAsync(int page = 1)
         {
-            var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
+            var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -46,7 +46,7 @@
         }
         public async Task<ApiResponse> getAllBookDeniedAsync(int page = 1)
         {
-            var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).ToListAsync();
+            var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -64,7 +64,7 @@
         }
         public async Task<ApiResponse> getAllBookWaitingAsync(int page = 1)
         {
-            var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).ToListAsync();
+            var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             if (books.Count == 0)
             {
                 return new ApiResponse
@@ -82,7 +82,7 @@
         }
         public async Task<ApiResponse> getBookByIdAsync(int bookId)
         {
-            var book = await _context.Books.Include(b => b.User).SingleOrDefaultAsync(b => b.Id == bookId);
+            var book = await _context.Books.Include(b => b.User).Include(b => b.Category).SingleOrDefaultAsync(b => b.Id == bookId);
             if (book == null)
             {
                 return new ApiResponse
