@@ -15,7 +15,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getAllExBillAsync(int page = 1)
         {
-            var exBills = await _context.ExchangeBills.OrderByDescending(e => e.Id).ToListAsync();
+            var exBills = await _context.ExchangeBills.Include(e => e.User).OrderByDescending(e => e.Id).ToListAsync();
             if (exBills.Count == 0)
             {
                 return new ApiResponse
@@ -33,7 +33,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getExBillDetailAsync(int exBillId)
         {
-            var exBill = await _context.ExchangeBills.SingleOrDefaultAsync(b => b.Id == exBillId);
+            var exBill = await _context.ExchangeBills.Include(b => b.User).SingleOrDefaultAsync(b => b.Id == exBillId);
             if (exBill == null)
             {
                 return new ApiResponse
@@ -68,7 +68,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getAllRentBillAsync(int page = 1)
         {
-            var rentBills = await _context.RentBills.OrderByDescending(r => r.Id).ToListAsync();
+            var rentBills = await _context.RentBills.Include(r => r.User).OrderByDescending(r => r.Id).ToListAsync();
             if (rentBills.Count == 0)
             {
                 return new ApiResponse
@@ -86,7 +86,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getRentBillDetailAsync(int rentBillId)
         {
-            var rentBill = await _context.RentBills.SingleOrDefaultAsync(b => b.Id == rentBillId);
+            var rentBill = await _context.RentBills.Include(b => b.User).SingleOrDefaultAsync(b => b.Id == rentBillId);
             if (rentBill == null)
             {
                 return new ApiResponse
