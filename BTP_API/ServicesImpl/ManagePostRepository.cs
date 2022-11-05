@@ -15,7 +15,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getAllPostAsync(int page = 1)
         {
-            var posts = await _context.Posts.OrderByDescending(f => f.CreatedDate).ToListAsync();
+            var posts = await _context.Posts.Include(f => f.User).OrderByDescending(f => f.CreatedDate).ToListAsync();
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -34,7 +34,7 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> getPostApprovedAsync(int page = 1)
         {
-            var posts = await _context.Posts.Where(b => b.Status == StatusRequest.Approved.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
+            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Approved.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -53,7 +53,7 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> getPostDeniedAsync(int page = 1)
         {
-            var posts = await _context.Posts.Where(b => b.Status == StatusRequest.Denied.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
+            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Denied.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -72,7 +72,7 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> getPostWaitingAsync(int page = 1)
         {
-            var posts = await _context.Posts.Where(b => b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
+            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
             if (posts.Count == 0)
             {
                 return new ApiResponse
@@ -91,7 +91,7 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> getPostByIdAsync(int postID)
         {
-            var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postID);
+            var post = await _context.Posts.Include(f => f.User).SingleOrDefaultAsync(b => b.Id == postID);
             if (post == null)
             {
                 return new ApiResponse

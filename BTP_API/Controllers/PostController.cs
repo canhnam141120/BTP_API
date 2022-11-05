@@ -112,7 +112,7 @@
             }
         }
 
-        [HttpPost("post{id}/comment")]
+        [HttpPost("{id}/comment/create")]
         public async Task<IActionResult> commentPost([FromRoute] int id, [FromForm] CommentVM commentVM)
         {
             try

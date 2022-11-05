@@ -181,7 +181,7 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpPost("{id}/feedback")]
+        [HttpPost("{id}/feedback/create")]
         public async Task<IActionResult> feedbackBook([FromRoute] int id, [FromForm] FeedbackVM feedbackVM)
         {
             try
