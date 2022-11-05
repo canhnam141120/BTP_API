@@ -15,7 +15,7 @@ namespace BTP_API.ServicesImpl
         }
         public async Task<ApiResponse> getAllExchangeAsync(int page = 1)
         {
-            var exchanges = await _context.Exchanges.OrderByDescending(e => e.Id).ToListAsync();
+            var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).OrderByDescending(e => e.Id).ToListAsync();
             if (exchanges.Count == 0)
             {
                 return new ApiResponse
@@ -147,7 +147,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> getAllRentAsync(int page = 1)
         {
-            var rents = await _context.Rents.OrderByDescending(r => r.Id).ToListAsync();
+            var rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).OrderByDescending(r => r.Id).ToListAsync();
             if (rents.Count == 0)
             {
                 return new ApiResponse
