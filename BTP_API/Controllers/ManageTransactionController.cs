@@ -29,9 +29,9 @@
             }
         }
 
-        [HttpGet("exchange/{id}/detail")]
+        [HttpGet("exchange/detail/{id}")]
         public async Task<IActionResult> getAllExchangeDetail([FromRoute] int id)
-        {
+        {///
             try
             {
                 var apiResponse = await _manageTransactionRepository.getAllExchangeDetailAsync(id);
@@ -47,7 +47,7 @@
             }
         }
 
-        [HttpGet("exchange/{id}/bill")]
+        [HttpGet("exchange/bill/{id}")]
         public async Task<IActionResult> getAllExchangeBill([FromRoute] int id)
         {
             try
@@ -65,7 +65,7 @@
             }
         }
 
-        [HttpPut("exchange/{id}/update-status")]
+        [HttpPut("exchange/update-status/{id}")]
         public async Task<IActionResult> updateStatusExchange([FromRoute] int id, [FromForm] string status)
         {
             try
@@ -83,7 +83,7 @@
             }
         }
 
-        [HttpPut("exchange-detail/{id}/update-status")]
+        [HttpPut("exchange-detail/update-status/{id}")]
         public async Task<IActionResult> updateExchangeDetail([FromRoute] int id, [FromForm] ExchangeDetailVM exchangeDetailVM)
         {
             try
@@ -119,7 +119,7 @@
             }
         }
 
-        [HttpGet("rent/{id}/detail")]
+        [HttpGet("rent/detail/{id}")]
         public async Task<IActionResult> getAllRentDetail([FromRoute] int id)
         {
             try
@@ -137,7 +137,7 @@
             }
         }
 
-        [HttpGet("rent/{id}/bill")]
+        [HttpGet("rent/bill/{id}")]
         public async Task<IActionResult> getAllRentBill([FromRoute] int id)
         {
             try
@@ -155,7 +155,7 @@
             }
         }
 
-        [HttpPut("rent/{id}/update-status")]
+        [HttpPut("rent/update-status/{id}")]
         public async Task<IActionResult> updateStatusRent([FromRoute] int id, [FromForm] string status)
         {
             try
@@ -173,7 +173,7 @@
             }
         }
 
-        [HttpPut("rent-detail/{id}/update-status")]
+        [HttpPut("rent-detail/update-status/{id}")]
         public async Task<IActionResult> updateRentDetail  ([FromRoute] int id, [FromForm] RentDetailVM rentDetailVM)
         {
             try
