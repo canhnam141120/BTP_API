@@ -145,7 +145,7 @@
             }
         }
 
-        [HttpGet("{id}/comment")]
+        [HttpGet("comment/{id}")]
         public async Task<IActionResult> getCommentInPost([FromRoute] int id, [FromQuery] int page = 1)
         {
             try

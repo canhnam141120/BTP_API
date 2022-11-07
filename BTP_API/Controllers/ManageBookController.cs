@@ -145,7 +145,7 @@
             }
         }
 
-        [HttpGet("{id}/feedback")]
+        [HttpGet("feedback/{id}")]
         public async Task<IActionResult> getFeedbackInBook([FromRoute] int id, [FromQuery] int page = 1)
         {
             try

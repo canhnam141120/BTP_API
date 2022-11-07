@@ -11,7 +11,7 @@
             _transactionRepository = transactionRepository;
         }
 
-        [HttpPut("exchange/{id}/cancel")]
+        [HttpPut("exchange/cancel/{id}")]
         public async Task<IActionResult> cancelExchange([FromRoute] int id)
         {
             try
@@ -29,7 +29,7 @@
             }
         }
 
-        [HttpPut("exchange-detail/{id}/cancel")]
+        [HttpPut("exchange-detail/cancel/{id}")]
         public async Task<IActionResult> cancelExchangeDetail([FromRoute] int id)
         {
             try
@@ -51,7 +51,7 @@
             }
         }
 
-        [HttpPut("rent/{id}/cancel")]
+        [HttpPut("rent/cancel/{id}")]
         public async Task<IActionResult> cancelRent([FromRoute] int id)
         {
             try
@@ -69,7 +69,7 @@
             }
         }
 
-        [HttpPut("rent-detail/{id}/cancel")]
+        [HttpPut("rent-detail/cancel/{id}")]
         public async Task<IActionResult> cancelRentDetail([FromRoute] int id)
         {
             try

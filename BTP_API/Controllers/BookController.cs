@@ -76,7 +76,7 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpGet("{id}/feedback")]
+        [HttpGet("feedback/{id}")]
         public async Task<IActionResult> getFeedbackInBook([FromRoute] int id, [FromQuery] int page = 1)
         {
             try
@@ -181,7 +181,7 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpPost("{id}/feedback/create")]
+        [HttpPost("feedback/create/{id}")]
         public async Task<IActionResult> feedbackBook([FromRoute] int id, [FromForm] FeedbackVM feedbackVM)
         {
             try
