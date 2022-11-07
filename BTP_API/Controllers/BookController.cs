@@ -135,7 +135,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("search-by-title")]
-        public async Task<IActionResult> searchBookByTitle([FromQuery] string search, [FromQuery] int page = 1)
+        public async Task<IActionResult> searchBookByTitle([FromForm] string search, [FromQuery] int page = 1)
         {
             try
             {
