@@ -104,7 +104,7 @@
         }
 
         [HttpPost("search")]
-        public async Task<IActionResult> searchUser([FromQuery] string search, [FromQuery] int page = 1)
+        public async Task<IActionResult> searchUser([FromForm] string search, [FromQuery] int page = 1)
         {
             try
             {

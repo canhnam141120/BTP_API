@@ -28,14 +28,14 @@ builder.Configuration.AddConfiguration(configurationBuilder.Build());
 
 var defaultConnectionString = string.Empty;
 
-if (builder.Environment.EnvironmentName == "Development")
-{
-    defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-}
-else
-{
+//if (builder.Environment.EnvironmentName == "Development")
+//{
+//    defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//}
+//else
+//{
     // Use connection string provided at runtime by Heroku.
-    var connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    var connectionUrl = "postgres://pywgupxdwfpxrf:72920fd6643b9123783422128cd07c8ab0381d206608988768d3e1be53fc3441@ec2-3-214-57-29.compute-1.amazonaws.com:5432/dr8bb7r6ai6bk";
 
     connectionUrl = connectionUrl.Replace("postgres://", string.Empty);
     var userPassSide = connectionUrl.Split("@")[0];
@@ -47,7 +47,7 @@ else
     var database = hostSide.Split("/")[1].Split("?")[0];
 
     defaultConnectionString = $"Host={host};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=true";
-}
+//}
 
 builder.Services.AddDbContext<BTPContext>(option =>
 {

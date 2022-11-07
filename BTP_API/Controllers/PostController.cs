@@ -66,7 +66,7 @@
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> searchPost([FromQuery] string search, [FromQuery] int page = 1)
+        public async Task<IActionResult> searchPost([FromForm] string search, [FromQuery] int page = 1)
         {
             try
             {

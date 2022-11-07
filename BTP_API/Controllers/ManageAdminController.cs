@@ -49,8 +49,8 @@
             }
         }
 
-        [HttpPost("search")]
-        public async Task<IActionResult> searchAdmin([FromQuery] string search, [FromQuery] int page = 1)
+        [HttpPost("search/{search}")]
+        public async Task<IActionResult> searchAdmin([FromRoute] string search, [FromQuery] int page = 1)
         {
             try
             {
