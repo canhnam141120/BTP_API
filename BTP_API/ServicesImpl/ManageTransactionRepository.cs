@@ -66,7 +66,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.EXCHANGE_NOT_EXIST.ToString()
                 };
             }
-            var exchangeBills = await _context.ExchangeBills.Where(b => b.ExchangeId == exchangeId).ToListAsync();
+            var exchangeBills = await _context.ExchangeBills.Include(b => b.User).Where(b => b.ExchangeId == exchangeId).ToListAsync();
             if (exchangeBills.Count == 0)
             {
                 return new ApiResponse
@@ -199,7 +199,7 @@ namespace BTP_API.ServicesImpl
                     Message = Message.RENT_NOT_EXIST.ToString()
                 };
             }
-            var rentBills = await _context.RentBills.Where(b => b.RentId == rentId).ToListAsync();
+            var rentBills = await _context.RentBills.Include(b => b.User).Where(b => b.RentId == rentId).ToListAsync();
             if (rentBills.Count == 0)
             {
                 return new ApiResponse
