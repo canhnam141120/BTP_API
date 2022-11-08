@@ -190,7 +190,6 @@ namespace BTP_API.Services
         }
         public async Task<ApiMessage> forgotPasswordAsync(string email)
         {
-
             CreateRandomToken random = new CreateRandomToken();
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (user == null)

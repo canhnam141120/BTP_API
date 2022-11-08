@@ -47,7 +47,7 @@
             }
         }
 
-        [HttpGet("{id}/comment")]
+        [HttpGet("comment/{id}")]
         public async Task<IActionResult> getCommentInPost([FromRoute] int id, [FromQuery] int page = 1)
         {
             try
@@ -112,7 +112,7 @@
             }
         }
 
-        [HttpPost("{id}/comment/create")]
+        [HttpPost("comment/create/{id}")]
         public async Task<IActionResult> commentPost([FromRoute] int id, [FromForm] CommentVM commentVM)
         {
             try

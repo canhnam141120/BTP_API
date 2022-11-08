@@ -18,7 +18,7 @@ namespace BTP_API.Ultils
                 }
 
                 byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
-                fileName = Convert.ToBase64String(imageArray);
+                fileName = "data:image/jpeg;base64," + Convert.ToBase64String(imageArray);
             }
             else
             {
@@ -47,7 +47,7 @@ namespace BTP_API.Ultils
                     postVM.Image.CopyTo(fileStream);
                 }
                 byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
-                fileName = Convert.ToBase64String(imageArray);
+                fileName = "data:image/jpeg;base64," + Convert.ToBase64String(imageArray);
             }
             else
             {
@@ -70,7 +70,7 @@ namespace BTP_API.Ultils
                 }
 
                 byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
-                fileName = Convert.ToBase64String(imageArray);
+                fileName = "data:image/jpeg;base64," + Convert.ToBase64String(imageArray);
             }
             else
             {
