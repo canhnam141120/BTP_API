@@ -25,7 +25,7 @@
             }
             catch
             {
-                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
@@ -43,7 +43,7 @@
             }
             catch
             {
-                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
@@ -61,7 +61,7 @@
             }
             catch
             {
-                return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 
@@ -79,12 +79,12 @@
             }
             catch
             {
-                return BadRequest(new ApiMessage{Message = Message.SEARCH_FAILED.ToString() });
+                return BadRequest(new ApiMessage { Message = Message.SEARCH_FAILED.ToString() });
             }
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> createPost([FromForm] PostVM postVM)
+        public async Task<IActionResult> createPost([FromForm] string token, [FromForm] PostVM postVM)
         {
             try
             {
@@ -92,7 +92,7 @@
                 {
                     return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
                 }
-                var apiResponse = await _postRepository.createPostAsync(postVM);
+                var apiResponse = await _postRepository.createPostAsync(token, postVM);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -113,7 +113,7 @@
         }
 
         [HttpPost("comment/create/{id}")]
-        public async Task<IActionResult> commentPost([FromRoute] int id, [FromForm] CommentVM commentVM)
+        public async Task<IActionResult> commentPost([FromForm] string token, [FromRoute] int id, [FromForm] CommentVM commentVM)
         {
             try
             {
@@ -121,7 +121,7 @@
                 {
                     return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
                 }
-                var apiMessage = await _postRepository.commentPostAsync(id, commentVM);
+                var apiMessage = await _postRepository.commentPostAsync(token, id, commentVM);
                 if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
                     return Ok(apiMessage);

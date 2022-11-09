@@ -37,11 +37,11 @@
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> logout()
+        public async Task<IActionResult> logout([FromForm] string token)
         {
             try
             {
-                var apiMessage = await _userRepository.logoutAsync();
+                var apiMessage = await _userRepository.logoutAsync(token);
                 if(apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiMessage);

@@ -108,13 +108,13 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> createPostAsync(PostVM postVM)
+        public async Task<ApiResponse> createPostAsync(string token, PostVM postVM)
         {
             UploadFile uploadFile = new UploadFile();
-            Cookie cookie = new Cookie(_httpContextAccessor);
+            Cookie cookie = new Cookie();
             string fileImageName = uploadFile.UploadPostImage(postVM, _environment);
 
-            var userId = cookie.GetUserId();
+            var userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -124,7 +124,7 @@ namespace BTP_API.ServicesImpl
             }
             var post = new Post
             {
-                UserId = cookie.GetUserId(),
+                UserId = userId,
                 Title = postVM.Title,
                 Content = postVM.Content,
                 Image = fileImageName,
@@ -142,10 +142,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiMessage> commentPostAsync(int postId, CommentVM commentVM)
+        public async Task<ApiMessage> commentPostAsync(string token, int postId, CommentVM commentVM)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage { Message = Message.NOT_YET_LOGIN.ToString() };
@@ -156,7 +156,7 @@ namespace BTP_API.ServicesImpl
                 var comment = new Comment
                 {
                     PostId = postId,
-                    UserId = cookie.GetUserId(),
+                    UserId = userId,
                     Content = commentVM.Content,
                     CreatedDate = DateTime.Now
                 };

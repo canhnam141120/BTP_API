@@ -12,11 +12,11 @@
         }
 
         [HttpPost("create/{bookid}")]
-        public async Task<IActionResult> createRequest([FromRoute] int bookid, [FromForm] List<int> bookOffer)
+        public async Task<IActionResult> createRequest([FromForm] string token, [FromRoute] int bookid, [FromForm] List<int> bookOffer)
         {
             try
             {
-                var apiMessage = await _requestRepository.createRequestAsync(bookid, bookOffer);
+                var apiMessage = await _requestRepository.createRequestAsync(token, bookid, bookOffer);
                 return Ok(apiMessage);
             }
             catch
@@ -27,11 +27,11 @@
 
         //Người offer tự hủy
         [HttpPut("cancel/{id}")]
-        public async Task<IActionResult> cancelRequest([FromRoute] int id)
+        public async Task<IActionResult> cancelRequest([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _requestRepository.cancelRequestAsync(id);
+                var apiMessage = await _requestRepository.cancelRequestAsync(token, id);
                 if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
                     return Ok(apiMessage);
@@ -45,11 +45,11 @@
         }
 
         [HttpPut("accept/{id}")]
-        public async Task<IActionResult> acceptRequest([FromRoute] int id)
+        public async Task<IActionResult> acceptRequest([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _requestRepository.acceptRequestAsync(id);
+                var apiMessage = await _requestRepository.acceptRequestAsync(token, id);
                 if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
                     return Ok(apiMessage);
@@ -63,11 +63,11 @@
         }
 
         [HttpPut("denied/{id}")]
-        public async Task<IActionResult> deniedRequest([FromRoute] int id)
+        public async Task<IActionResult> deniedRequest([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _requestRepository.deniedRequestAsync(id);
+                var apiMessage = await _requestRepository.deniedRequestAsync(token, id);
                 if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
                     return Ok(apiMessage);
@@ -81,11 +81,11 @@
         }
 
         [HttpPost("rent/{bookId}")]
-        public async Task<IActionResult> rentBook([FromRoute] int bookId)
+        public async Task<IActionResult> rentBook([FromForm] string token, [FromRoute] int bookId)
         {
             try
             {
-                var apiMessage = await _requestRepository.rentBookAsync(bookId);
+                var apiMessage = await _requestRepository.rentBookAsync(token, bookId);
                 if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
                     return Ok(apiMessage);

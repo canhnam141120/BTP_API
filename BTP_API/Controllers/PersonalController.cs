@@ -15,12 +15,12 @@
             _personalRepository = personalRepository;
         }
 
-        [HttpGet("notification/all")]
-        public async Task<IActionResult> getAllNotification([FromQuery] int page = 1)
+        [HttpPost("notification/all")]
+        public async Task<IActionResult> getAllNotification([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getAllNotificationAsync(page);
+                var apiResponse = await _personalRepository.getAllNotificationAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -37,12 +37,12 @@
             }
         }
 
-        [HttpGet("notification/top10new")]
-        public async Task<IActionResult> get10NewNotification()
+        [HttpPost("notification/top10new")]
+        public async Task<IActionResult> get10NewNotification([FromForm] string token)
         {
             try
             {
-                var apiResponse = await _personalRepository.get10NewNotificationAsync();
+                var apiResponse = await _personalRepository.get10NewNotificationAsync(token);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -60,12 +60,12 @@
         }
 
 
-        [HttpDelete("notification/mark-read/{id}")]
-        public async Task<IActionResult> markReadNotification([FromRoute] int id)
+        [HttpDelete("notification/mark-read")]
+        public async Task<IActionResult> markReadNotification([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _personalRepository.markReadNotificationAsync(id);
+                var apiMessage = await _personalRepository.markReadNotificationAsync(token, id);
                 if (apiMessage.Message == Message.NOTIFICATION_NOT_EXIST.ToString())
                 {
                     return NotFound(apiMessage);
@@ -82,12 +82,12 @@
             }
         }
 
-        [HttpGet("can-trade")]
-        public async Task<IActionResult> getBookCanTrade()
+        [HttpPost("can-trade")]
+        public async Task<IActionResult> getBookCanTrade([FromForm] string token)
         {
             try
             {
-                var apiResponse = await _personalRepository.getBookCanTradeAsync();
+                var apiResponse = await _personalRepository.getBookCanTradeAsync(token);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -104,12 +104,12 @@
             }
         }
 
-        [HttpGet("my-book-list")]
-        public async Task<IActionResult> getAllBook([FromQuery] int page = 1)
+        [HttpPost("my-book-list")]
+        public async Task<IActionResult> getAllBook([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getAllBookAsync(page);
+                var apiResponse = await _personalRepository.getAllBookAsync(token, page);
                 if(apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -126,12 +126,12 @@
             }
         }
 
-        [HttpGet("my-approved-book-list")]
-        public async Task<IActionResult> getBookApprovedAsync([FromQuery] int page = 1)
+        [HttpPost("my-approved-book-list")]
+        public async Task<IActionResult> getBookApprovedAsync([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getAllBookAsync(page);
+                var apiResponse = await _personalRepository.getAllBookAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -148,12 +148,12 @@
             }
         }
 
-        [HttpGet("my-denied-book-list")]
-        public async Task<IActionResult> getBookDenied([FromQuery] int page = 1)
+        [HttpPost("my-denied-book-list")]
+        public async Task<IActionResult> getBookDenied([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getBookDeniedAsync(page);
+                var apiResponse = await _personalRepository.getBookDeniedAsync(token, page);
                 if(apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -170,12 +170,12 @@
             }
         }
 
-        [HttpGet("my-waiting-book-list")]
-        public async Task<IActionResult> getBookWaiting([FromQuery] int page = 1)
+        [HttpPost("my-waiting-book-list")]
+        public async Task<IActionResult> getBookWaiting([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getBookWaitingAsync(page);
+                var apiResponse = await _personalRepository.getBookWaitingAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -192,12 +192,12 @@
             }
         }
 
-        [HttpGet("my-post-list")]
-        public async Task<IActionResult> getAllPost([FromQuery] int page = 1)
+        [HttpPost("my-post-list")]
+        public async Task<IActionResult> getAllPost([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getAllPostAsync(page);
+                var apiResponse = await _personalRepository.getAllPostAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -214,12 +214,12 @@
             }
         }
 
-        [HttpGet("my-approved-post-list")]
-        public async Task<IActionResult> getPostApproved([FromQuery] int page = 1)
+        [HttpPost("my-approved-post-list")]
+        public async Task<IActionResult> getPostApproved([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getPostApprovedAsync(page);
+                var apiResponse = await _personalRepository.getPostApprovedAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -236,12 +236,12 @@
             }
         }
 
-        [HttpGet("my-denied-post-list")]
-        public async Task<IActionResult> getPostDenied([FromQuery] int page = 1)
+        [HttpPost("my-denied-post-list")]
+        public async Task<IActionResult> getPostDenied([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getPostDeniedAsync(page);
+                var apiResponse = await _personalRepository.getPostDeniedAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -258,12 +258,12 @@
             }
         }
 
-        [HttpGet("my-waiting-post-list")]
-        public async Task<IActionResult> getPostWaiting([FromQuery] int page = 1)
+        [HttpPost("my-waiting-post-list")]
+        public async Task<IActionResult> getPostWaiting([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getPostWaitingAsync(page);
+                var apiResponse = await _personalRepository.getPostWaitingAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -281,12 +281,12 @@
         }
 
 
-        [HttpGet("my-favorites-book")]
-        public async Task<IActionResult> getBookByFavorites([FromQuery] int page = 1)
+        [HttpPost("my-favorites-book")]
+        public async Task<IActionResult> getBookByFavorites([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getBookByFavoritesAsync(page);
+                var apiResponse = await _personalRepository.getBookByFavoritesAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -304,11 +304,11 @@
         }
 
         [HttpPost("my-favorites-book/add/{bookId}")]
-        public async Task<IActionResult> addBookByFavorites([FromRoute] int bookId)
+        public async Task<IActionResult> addBookByFavorites([FromForm] string token, [FromRoute] int bookId)
         {
             try
             {
-                var apiMessage = await _personalRepository.addBookByFavoritesAsync(bookId);
+                var apiMessage = await _personalRepository.addBookByFavoritesAsync(token, bookId);
                 if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
                     return NotFound(apiMessage);
@@ -326,11 +326,11 @@
         }
 
         [HttpDelete("un-favorites-book/{bookId}")]
-        public async Task<IActionResult> deleteBookByFavorites([FromRoute] int bookId)
+        public async Task<IActionResult> deleteBookByFavorites([FromForm] string token, [FromRoute] int bookId)
         {
             try
             {
-                var apiMessage = await _personalRepository.deleteBookByFavoritesAsync(bookId);
+                var apiMessage = await _personalRepository.deleteBookByFavoritesAsync(token, bookId);
                 if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
                     return NotFound(apiMessage);
@@ -349,12 +349,12 @@
 
 
 
-        [HttpGet("my-favorites-post")]
-        public async Task<IActionResult> getPostByFavorites([FromQuery] int page = 1)
+        [HttpPost("my-favorites-post")]
+        public async Task<IActionResult> getPostByFavorites([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getPostByFavoritesAsync(page);
+                var apiResponse = await _personalRepository.getPostByFavoritesAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -372,11 +372,11 @@
         }
 
         [HttpPost("my-favorites-post/add/{postId}")]
-        public async Task<IActionResult> addPostByFavorites([FromRoute] int postId)
+        public async Task<IActionResult> addPostByFavorites([FromForm] string token, [FromRoute] int postId)
         {
             try
             {
-                var apiMessage = await _personalRepository.addPostByFavoritesAsync(postId);
+                var apiMessage = await _personalRepository.addPostByFavoritesAsync(token, postId);
                 if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
                     return NotFound(apiMessage);
@@ -394,11 +394,11 @@
         }
 
         [HttpDelete("un-favorites-post/{postId}")]
-        public async Task<IActionResult> deletePostByFavorites([FromRoute] int postId)
+        public async Task<IActionResult> deletePostByFavorites([FromForm] string token, [FromRoute] int postId)
         {
             try
             {
-                var apiMessage = await _personalRepository.deletePostByFavoritesAsync(postId);
+                var apiMessage = await _personalRepository.deletePostByFavoritesAsync(token, postId);
                 if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
                     return NotFound(apiMessage);
@@ -416,12 +416,12 @@
         }
 
 
-        [HttpGet("my-favorites-user")]
-        public async Task<IActionResult> getUserByFavorites([FromQuery] int page = 1)
+        [HttpPost("my-favorites-user")]
+        public async Task<IActionResult> getUserByFavorites([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.getUserByFavoritesAsync(page);
+                var apiResponse = await _personalRepository.getUserByFavoritesAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -439,11 +439,11 @@
         }
 
         [HttpPost("my-favorites-user/add/{userId}")]
-        public async Task<IActionResult> addUserByFavorites([FromRoute] int userId)
+        public async Task<IActionResult> addUserByFavorites([FromForm] string token, [FromRoute] int userId)
         {
             try
             {
-                var apiMessage = await _personalRepository.addUserByFavoritesAsync(userId);
+                var apiMessage = await _personalRepository.addUserByFavoritesAsync(token, userId);
                 if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
                     return NotFound(apiMessage);
@@ -461,11 +461,11 @@
         }
 
         [HttpDelete("un-favorites-user/{userId}")]
-        public async Task<IActionResult> deleteUserByFavorites([FromRoute] int userId)
+        public async Task<IActionResult> deleteUserByFavorites([FromForm] string token, [FromRoute] int userId)
         {
             try
             {
-                var apiMessage = await _personalRepository.deleteUserByFavoritesAsync(userId);
+                var apiMessage = await _personalRepository.deleteUserByFavoritesAsync(token, userId);
                 if (apiMessage.Message == Message.BOOK_NOT_EXIST.ToString())
                 {
                     return NotFound(apiMessage);
@@ -483,12 +483,12 @@
         }
 
 
-        [HttpGet("my-profile")]
-        public async Task<IActionResult> getInfoUserId()
+        [HttpPost("my-profile")]
+        public async Task<IActionResult> getInfoUserId([FromForm] string token)
         {
             try
             {
-                var apiResponse = await _personalRepository.getInfoUserIdAsync();
+                var apiResponse = await _personalRepository.getInfoUserIdAsync(token);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -506,11 +506,11 @@
         }
 
         [HttpPut("edit-profile")]
-        public async Task<IActionResult> editInfo([FromForm] UserVM userVM)
+        public async Task<IActionResult> editInfo([FromForm] string token, [FromForm] UserVM userVM)
         {
             try
             {
-                var apiMessage = await _personalRepository.editInfoAsync(userVM);
+                var apiMessage = await _personalRepository.editInfoAsync(token, userVM);
                 if (apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiMessage);
@@ -528,11 +528,11 @@
         }
 
         [HttpPut("edit-password")]
-        public async Task<IActionResult> editPassword([FromForm] ChangePasswordVM changePasswordVM)
+        public async Task<IActionResult> editPassword([FromForm] string token, [FromForm] ChangePasswordVM changePasswordVM)
         {
             try
             {
-                var apiMessage = await _personalRepository.editPasswordAsync(changePasswordVM);
+                var apiMessage = await _personalRepository.editPasswordAsync(token, changePasswordVM);
                 if (apiMessage.Message == Message.USER_NOT_EXIST.ToString())
                 {
                     return NotFound(apiMessage);
@@ -550,12 +550,12 @@
         }
 
 
-        [HttpGet("request-send")]
-        public async Task<IActionResult> listOfRequestSend([FromQuery] int page = 1)
+        [HttpPost("request-send")]
+        public async Task<IActionResult> listOfRequestSend([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.listOfRequestSendAsync(page);
+                var apiResponse = await _personalRepository.listOfRequestSendAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -572,12 +572,12 @@
             }
         }
 
-        [HttpGet("request-received/{bookId}")]
-        public async Task<IActionResult> listOfRequestReceived([FromRoute] int bookId, [FromQuery] int page = 1)
+        [HttpPost("request-received/{bookId}")]
+        public async Task<IActionResult> listOfRequestReceived([FromForm] string token, [FromRoute] int bookId, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.listOfRequestReceivedSendAsync(bookId, page);
+                var apiResponse = await _personalRepository.listOfRequestReceivedSendAsync(token, bookId, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -595,12 +595,12 @@
         }
 
 
-        [HttpGet("my-transaction-exchange-all")]
-        public async Task<IActionResult> myTransactionExchange([FromQuery] int page = 1)
+        [HttpPost("my-transaction-exchange-all")]
+        public async Task<IActionResult> myTransactionExchange([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.myTransactionExchangeAsync(page);
+                var apiResponse = await _personalRepository.myTransactionExchangeAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -617,12 +617,12 @@
             }
         }
 
-        [HttpGet("my-transaction-exchange-detail/{id}")]
-        public async Task<IActionResult> myTransactionExDetail([FromRoute] int id)
+        [HttpPost("my-transaction-exchange-detail/{id}")]
+        public async Task<IActionResult> myTransactionExDetail([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiResponse = await _personalRepository.myTransactionExDetailAsync(id);
+                var apiResponse = await _personalRepository.myTransactionExDetailAsync(token, id);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -639,12 +639,12 @@
             }
         }
 
-        [HttpGet("my-transaction-exchange-bill/{id}")]
-        public async Task<IActionResult> myTransactionExBill([FromRoute] int id)
+        [HttpPost("my-transaction-exchange-bill/{id}")]
+        public async Task<IActionResult> myTransactionExBill([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiResponse = await _personalRepository.myTransactionExBillAsync(id);
+                var apiResponse = await _personalRepository.myTransactionExBillAsync(token, id);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -661,12 +661,12 @@
             }
         }
 
-        [HttpGet("my-exchange-bill-all")]
-        public async Task<IActionResult> myExBillAll([FromQuery] int page = 1)
+        [HttpPost("my-exchange-bill-all")]
+        public async Task<IActionResult> myExBillAll([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.myExBillAllAsync(page);
+                var apiResponse = await _personalRepository.myExBillAllAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -683,12 +683,12 @@
             }
         }
 
-        [HttpGet("my-transaction-rent-all")]
-        public async Task<IActionResult> myTransactionRent([FromQuery] int page = 1)
+        [HttpPost("my-transaction-rent-all")]
+        public async Task<IActionResult> myTransactionRent([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.myTransactionRentAsync(page);
+                var apiResponse = await _personalRepository.myTransactionRentAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -705,12 +705,12 @@
             }
         }
 
-        [HttpGet("my-transaction-rent-detail/{id}")]
-        public async Task<IActionResult> myTransactionRentDetail([FromRoute] int id)
+        [HttpPost("my-transaction-rent-detail/{id}")]
+        public async Task<IActionResult> myTransactionRentDetail([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiResponse = await _personalRepository.myTransactionRentDetailAsync(id);
+                var apiResponse = await _personalRepository.myTransactionRentDetailAsync(token, id);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -727,12 +727,12 @@
             }
         }
 
-        [HttpGet("my-transaction-rent-bill/{id}")]
-        public async Task<IActionResult> myTransactionRentBill([FromRoute] int id)
+        [HttpPost("my-transaction-rent-bill/{id}")]
+        public async Task<IActionResult> myTransactionRentBill([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiResponse = await _personalRepository.myTransactionRentBillAsync(id);
+                var apiResponse = await _personalRepository.myTransactionRentBillAsync(token, id);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -749,12 +749,12 @@
             }
         }
 
-        [HttpGet("my-rent-bill-all")]
-        public async Task<IActionResult> myRentBillAll([FromQuery] int page = 1)
+        [HttpPost("my-rent-bill-all")]
+        public async Task<IActionResult> myRentBillAll([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _personalRepository.myRentBillAllAsync(page);
+                var apiResponse = await _personalRepository.myRentBillAllAsync(token, page);
                 if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiResponse);
@@ -772,11 +772,11 @@
         }
 
         [HttpPut("update-info-shipping")]
-        public async Task<IActionResult> updateInfoShipping([FromForm] ShipInfoVM shipInfoVM)
+        public async Task<IActionResult> updateInfoShipping([FromForm] string token, [FromForm] ShipInfoVM shipInfoVM)
         {
             try
             {
-                var apiMessage = await _personalRepository.updateInfoShippingAsync(shipInfoVM);
+                var apiMessage = await _personalRepository.updateInfoShippingAsync(token, shipInfoVM);
                 if (apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
                 {
                     return BadRequest(apiMessage);

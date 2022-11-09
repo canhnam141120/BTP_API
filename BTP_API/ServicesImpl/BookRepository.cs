@@ -16,10 +16,10 @@ namespace BTP_API.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResponse> getAllBookFromFavoriteUserAsync(int page = 1)
+        public async Task<ApiResponse> getAllBookFromFavoriteUserAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse { Message = Message.NOT_YET_LOGIN.ToString() };
@@ -196,13 +196,13 @@ namespace BTP_API.Services
             };
         }
 
-        public async Task<ApiResponse> createBookAsync(BookVM bookVM)
+        public async Task<ApiResponse> createBookAsync(string token, BookVM bookVM)
         {
             UploadFile uploadFile = new UploadFile();
-            Cookie cookie = new Cookie(_httpContextAccessor);
+            Cookie cookie = new Cookie();
             string fileImageName = uploadFile.UploadBookImage(bookVM, _environment);
 
-            var userId = cookie.GetUserId();
+            var userId = cookie.GetUserId(token);
             if(userId == 0)
             {
                 return new ApiResponse
@@ -246,10 +246,10 @@ namespace BTP_API.Services
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiMessage> feedbackBookAsync(int bookId, FeedbackVM feedbackVM)
+        public async Task<ApiMessage> feedbackBookAsync(string token, int bookId, FeedbackVM feedbackVM)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage { Message = Message.NOT_YET_LOGIN.ToString() };

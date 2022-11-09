@@ -197,12 +197,12 @@ namespace BTP_API.ServicesImpl
             };
         }
 
-        public async Task<ApiMessage> cancelRentDetailAsync(int rentDetailId)
+        public async Task<ApiMessage> cancelRentDetailAsync(string token, int rentDetailId)
         {
 
             CalculateFee calculateFee = new CalculateFee(_context);
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            if (cookie.GetUserId() == 0)
+            Cookie cookie = new Cookie();
+            if (cookie.GetUserId(token) == 0)
             {
                 return new ApiMessage
                 {
@@ -256,7 +256,7 @@ namespace BTP_API.ServicesImpl
                 }
             }
 
-            var billRenter = await _context.RentBills.SingleOrDefaultAsync(b => b.RentId == rentDetail.RentId && b.UserId == cookie.GetUserId());
+            var billRenter = await _context.RentBills.SingleOrDefaultAsync(b => b.RentId == rentDetail.RentId && b.UserId == cookie.GetUserId(token));
             if (billRenter != null)
             {
                 if (listBook.Count == 1)

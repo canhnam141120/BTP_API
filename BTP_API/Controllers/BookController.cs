@@ -13,12 +13,12 @@ namespace BookTradingPlatform.Controllers
             _bookRepository = bookRepository;
         }
 
-        [HttpGet("from-favorite-users")]
-        public async Task<IActionResult> getAllBookFromFavoriteUser([FromQuery] int page = 1)
+        [HttpPost("from-favorite-users")]
+        public async Task<IActionResult> getAllBookFromFavoriteUser([FromForm] string token, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _bookRepository.getAllBookFromFavoriteUserAsync(page);
+                var apiResponse = await _bookRepository.getAllBookFromFavoriteUserAsync(token, page);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -160,7 +160,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> createBook([FromForm] BookVM bookVM)
+        public async Task<IActionResult> createBook([FromForm] string token, [FromForm] BookVM bookVM)
         {
             try
             {
@@ -168,7 +168,7 @@ namespace BookTradingPlatform.Controllers
                 {
                     return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
                 }
-                var apiResponse = await _bookRepository.createBookAsync(bookVM);
+                var apiResponse = await _bookRepository.createBookAsync(token, bookVM);
                 if (apiResponse.NumberOfRecords != 0)
                 {
                     return Ok(apiResponse);
@@ -182,7 +182,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("feedback/create/{id}")]
-        public async Task<IActionResult> feedbackBook([FromRoute] int id, [FromForm] FeedbackVM feedbackVM)
+        public async Task<IActionResult> feedbackBook([FromForm] string token, [FromRoute] int id, [FromForm] FeedbackVM feedbackVM)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace BookTradingPlatform.Controllers
                 {
                     return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
                 }
-                var apiMessage = await _bookRepository.feedbackBookAsync(id, feedbackVM);
+                var apiMessage = await _bookRepository.feedbackBookAsync(token, id, feedbackVM);
                 if(apiMessage.Message == Message.SUCCESS.ToString())
                 {
                     return Ok(apiMessage);

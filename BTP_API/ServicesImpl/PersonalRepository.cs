@@ -18,10 +18,10 @@ namespace BTP_API.ServicesImpl
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResponse> getAllNotificationAsync(int page = 1)
+        public async Task<ApiResponse> getAllNotificationAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -46,10 +46,10 @@ namespace BTP_API.ServicesImpl
             };
         }
 
-        public async Task<ApiResponse> get10NewNotificationAsync()
+        public async Task<ApiResponse> get10NewNotificationAsync(string token)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -73,10 +73,10 @@ namespace BTP_API.ServicesImpl
             };
         }
 
-        public async Task<ApiMessage> markReadNotificationAsync(int nottificationId)
+        public async Task<ApiMessage> markReadNotificationAsync(string token, int nottificationId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -111,10 +111,10 @@ namespace BTP_API.ServicesImpl
             };
         }
 
-        public async Task<ApiResponse> getBookCanTradeAsync()
+        public async Task<ApiResponse> getBookCanTradeAsync(string token)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -137,10 +137,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = books.Count
             };
         }
-        public async Task<ApiResponse> getAllBookAsync(int page = 1)
+        public async Task<ApiResponse> getAllBookAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -164,10 +164,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getBookApprovedAsync(int page = 1)
+        public async Task<ApiResponse> getBookApprovedAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -191,10 +191,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getBookDeniedAsync(int page = 1)
+        public async Task<ApiResponse> getBookDeniedAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -218,10 +218,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getBookWaitingAsync(int page = 1)
+        public async Task<ApiResponse> getBookWaitingAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -245,10 +245,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getAllPostAsync(int page = 1)
+        public async Task<ApiResponse> getAllPostAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -272,10 +272,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getPostApprovedAsync(int page = 1)
+        public async Task<ApiResponse> getPostApprovedAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -299,10 +299,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getPostDeniedAsync(int page = 1)
+        public async Task<ApiResponse> getPostDeniedAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -326,10 +326,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getPostWaitingAsync(int page = 1)
+        public async Task<ApiResponse> getPostWaitingAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -353,10 +353,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> getBookByFavoritesAsync(int page = 1)
+        public async Task<ApiResponse> getBookByFavoritesAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -380,10 +380,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiMessage> addBookByFavoritesAsync(int bookId)
+        public async Task<ApiMessage> addBookByFavoritesAsync(string token, int bookId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -422,10 +422,10 @@ namespace BTP_API.ServicesImpl
                 Message = Message.ADD_SUCCESS.ToString()
             };
         }
-        public async Task<ApiMessage> deleteBookByFavoritesAsync(int bookId)
+        public async Task<ApiMessage> deleteBookByFavoritesAsync(string token, int bookId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -458,10 +458,10 @@ namespace BTP_API.ServicesImpl
                 Message = Message.NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getPostByFavoritesAsync(int page = 1)
+        public async Task<ApiResponse> getPostByFavoritesAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -485,10 +485,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiMessage> addPostByFavoritesAsync(int postId)
+        public async Task<ApiMessage> addPostByFavoritesAsync(string token, int postId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -537,10 +537,10 @@ namespace BTP_API.ServicesImpl
                 Message = Message.ADD_SUCCESS.ToString()
             };
         }
-        public async Task<ApiMessage> deletePostByFavoritesAsync(int postId)
+        public async Task<ApiMessage> deletePostByFavoritesAsync(string token, int postId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -573,10 +573,10 @@ namespace BTP_API.ServicesImpl
                 Message = Message.NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getUserByFavoritesAsync(int page = 1)
+        public async Task<ApiResponse> getUserByFavoritesAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -600,10 +600,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiMessage> addUserByFavoritesAsync(int favoriteUserId)
+        public async Task<ApiMessage> addUserByFavoritesAsync(string token, int favoriteUserId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -652,10 +652,10 @@ namespace BTP_API.ServicesImpl
                 Message = Message.ADD_SUCCESS.ToString()
             };
         }
-        public async Task<ApiMessage> deleteUserByFavoritesAsync(int favoriteUserId)
+        public async Task<ApiMessage> deleteUserByFavoritesAsync(string token, int favoriteUserId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -689,10 +689,10 @@ namespace BTP_API.ServicesImpl
                 Message = Message.NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getInfoUserIdAsync()
+        public async Task<ApiResponse> getInfoUserIdAsync(string token)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -715,11 +715,11 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiMessage> editInfoAsync(UserVM userVM)
+        public async Task<ApiMessage> editInfoAsync(string token, UserVM userVM)
         {
             UploadFile uploadFile = new UploadFile();
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -747,10 +747,10 @@ namespace BTP_API.ServicesImpl
                 Message = Message.UPDATE_SUCCESS.ToString()
             };
         }
-        public async Task<ApiMessage> editPasswordAsync(ChangePasswordVM changePasswordVM)
+        public async Task<ApiMessage> editPasswordAsync(string token, ChangePasswordVM changePasswordVM)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -784,10 +784,10 @@ namespace BTP_API.ServicesImpl
                 Message = Message.UPDATE_SUCCESS.ToString()
             };
         }
-        public async Task<ApiResponse> listOfRequestSendAsync(int page = 1)
+        public async Task<ApiResponse> listOfRequestSendAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -822,10 +822,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> listOfRequestReceivedSendAsync(int bookId, int page = 1)
+        public async Task<ApiResponse> listOfRequestReceivedSendAsync(string token, int bookId, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -859,10 +859,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> myTransactionExchangeAsync(int page = 1)
+        public async Task<ApiResponse> myTransactionExchangeAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -886,10 +886,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> myTransactionExDetailAsync(int exchangeId)
+        public async Task<ApiResponse> myTransactionExDetailAsync(string token, int exchangeId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -922,10 +922,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = exchangeDetails.Count
             };
         }
-        public async Task<ApiResponse> myTransactionExBillAsync(int exchangeId)
+        public async Task<ApiResponse> myTransactionExBillAsync(string token, int exchangeId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -958,10 +958,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiResponse> myExBillAllAsync(int page = 1)
+        public async Task<ApiResponse> myExBillAllAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -985,10 +985,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> myTransactionRentAsync(int page = 1)
+        public async Task<ApiResponse> myTransactionRentAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -1012,10 +1012,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiResponse> myTransactionRentDetailAsync(int rentId)
+        public async Task<ApiResponse> myTransactionRentDetailAsync(string token, int rentId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -1048,10 +1048,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = rentDetails.Count
             };
         }
-        public async Task<ApiResponse> myTransactionRentBillAsync(int rentId)
+        public async Task<ApiResponse> myTransactionRentBillAsync(string token, int rentId)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -1084,10 +1084,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiResponse> myRentBillAllAsync(int page = 1)
+        public async Task<ApiResponse> myRentBillAllAsync(string token, int page = 1)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiResponse
@@ -1111,10 +1111,10 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = result.Count
             };
         }
-        public async Task<ApiMessage> updateInfoShippingAsync(ShipInfoVM shipInfoVM)
+        public async Task<ApiMessage> updateInfoShippingAsync(string token, ShipInfoVM shipInfoVM)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage

@@ -11,20 +11,18 @@ namespace BTP_API.Services
         private readonly BTPContext _context;
         private readonly AppSettings _appSettings;
         private readonly IConfiguration _config;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserRepository(BTPContext context, IOptionsMonitor<AppSettings> optionsMonitor, IConfiguration config, IHttpContextAccessor httpContextAccessor)
+        public UserRepository(BTPContext context, IOptionsMonitor<AppSettings> optionsMonitor, IConfiguration config)
         {
             _context = context;
             _appSettings = optionsMonitor.CurrentValue;
             _config = config;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ApiResponse> loginAsync(LoginVM loginVM)
         {
             Jwt jwt = new Jwt(_context, _appSettings, _config);
-            Cookie cookie = new Cookie(_httpContextAccessor);
+            //Cookie cookie = new Cookie();
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == loginVM.Email);
             if (user == null)
             {
@@ -61,7 +59,7 @@ namespace BTP_API.Services
 
             //Cấp token
             var token = jwt.GenerateToken(user);
-            cookie.SetaccessToken(token);
+            //cookie.SetaccessToken(token);
 
             return new ApiResponse
             {
@@ -71,10 +69,10 @@ namespace BTP_API.Services
             };
         }
 
-        public async Task<ApiMessage> logoutAsync()
+        public async Task<ApiMessage> logoutAsync(string token)
         {
-            Cookie cookie = new Cookie(_httpContextAccessor);
-            int userId = cookie.GetUserId();
+            Cookie cookie = new Cookie();
+            int userId = cookie.GetUserId(token);
             if (userId == 0)
             {
                 return new ApiMessage
@@ -83,15 +81,15 @@ namespace BTP_API.Services
                 };
             }
 
-            CookieOptions option = new CookieOptions();
-            option.Expires = DateTime.Now.AddDays(-1);
-            option.Secure = true;
-            option.IsEssential = true;
-            _httpContextAccessor.HttpContext.Response.Cookies.Append("accessToken", string.Empty, option);
-            _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", string.Empty, option);
-            //Then delete the cookie
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("accessToken");
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("refreshToken");
+            //CookieOptions option = new CookieOptions();
+            //option.Expires = DateTime.Now.AddDays(-1);
+            //option.Secure = true;
+            //option.IsEssential = true;
+            //_httpContextAccessor.HttpContext.Response.Cookies.Append("accessToken", string.Empty, option);
+            //_httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", string.Empty, option);
+            ////Then delete the cookie
+            //_httpContextAccessor.HttpContext.Response.Cookies.Delete("accessToken");
+            //_httpContextAccessor.HttpContext.Response.Cookies.Delete("refreshToken");
             return new ApiMessage { Message = Message.LOGOUT_SUCCESS.ToString() };
         }
         public async Task<ApiMessage> registerAsync(RegisterVM registerVM)
@@ -266,7 +264,7 @@ namespace BTP_API.Services
             var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
             ConvertUnixTimeToDateTime converDate = new ConvertUnixTimeToDateTime();
             Jwt jwt = new Jwt(_context, _appSettings, _config);
-            Cookie cookie = new Cookie(_httpContextAccessor);
+            Cookie cookie = new Cookie();
             var tokenValidateParam = new TokenValidationParameters
             {
                 //tự cấp token
@@ -355,7 +353,7 @@ namespace BTP_API.Services
             //create new token
             var user = await _context.Users.SingleOrDefaultAsync(nd => nd.Id == storedToken.UserId);
             var token = jwt.GenerateToken(user);
-            cookie.SetaccessToken(token);
+            //cookie.SetaccessToken(token);
 
             return new ApiResponse
             {

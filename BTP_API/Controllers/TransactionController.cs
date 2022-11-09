@@ -70,11 +70,11 @@
         }
 
         [HttpPut("rent-detail/cancel/{id}")]
-        public async Task<IActionResult> cancelRentDetail([FromRoute] int id)
+        public async Task<IActionResult> cancelRentDetail([FromForm] string token, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _transactionRepository.cancelRentDetailAsync(id);
+                var apiMessage = await _transactionRepository.cancelRentDetailAsync(token, id);
                 if (apiMessage.Message == Message.SUCCESS.ToString())
                 {
                     return Ok(apiMessage);
