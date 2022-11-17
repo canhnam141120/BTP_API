@@ -1,21 +1,14 @@
-﻿using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.Extensions.Hosting;
-using static System.Reflection.Metadata.BlobBuilder;
-
-namespace BTP_API.ServicesImpl
+﻿namespace BTP_API.ServicesImpl
 {
     public class PersonalRepository : IPersonalRepository
     {
         private readonly BTPContext _context;
         private readonly IWebHostEnvironment _environment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PersonalRepository(BTPContext context, IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
+        public PersonalRepository(BTPContext context, IWebHostEnvironment environment)
         {
             _context = context;
             _environment = environment;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ApiResponse> getAllNotificationAsync(string token, int page = 1)

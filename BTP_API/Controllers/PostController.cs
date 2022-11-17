@@ -11,6 +11,24 @@
             _postRepository = postRepository;
         }
 
+        [HttpGet("top-post")]
+        public async Task<IActionResult> get3Post()
+        {
+            try
+            {
+                var apiResponse = await _postRepository.get3PostAsync();
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
         [HttpGet("all")]
         public async Task<IActionResult> getAllPost([FromQuery] int page = 1)
         {

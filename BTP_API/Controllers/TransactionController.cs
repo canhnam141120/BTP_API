@@ -1,4 +1,6 @@
-﻿namespace BookTradingPlatform.Controllers
+﻿using Microsoft.Extensions.Options;
+
+namespace BookTradingPlatform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -89,6 +91,53 @@
             {
                 return BadRequest(new ApiMessage{Message = Message.FAILED.ToString() });
             }
+        }
+
+        [HttpPost("payment/{id}")]
+        public async Task<IActionResult> createURLPay([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _transactionRepository.createURLPayAsync(id);
+                if (apiMessage.Message == Message.CREATE_SUCCESS.ToString())
+                {
+                    return Ok(apiMessage);
+                }
+                if (apiMessage.Message == Message.CREATE_FAILED.ToString())
+                {
+                    return NotFound(apiMessage);
+                }
+                return BadRequest(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+            }
+
+        }
+
+        [HttpGet("payment/update")]
+        public async Task<IActionResult> updatePay([FromQuery] ResultPayment rs)
+        {
+            try
+            {
+                var apiMessage = await _transactionRepository.updatePayAsync(rs);
+
+                if (apiMessage.Message == Message.SUCCESS.ToString())
+                {
+                    return Ok(apiMessage);
+                }
+                if (apiMessage.Message == Message.BILL_NOT_EXIST.ToString())
+                {
+                    return NotFound(apiMessage);
+                }
+                return BadRequest(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+            }
+
         }
     }
 }

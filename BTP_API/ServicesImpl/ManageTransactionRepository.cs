@@ -1,9 +1,4 @@
-﻿using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-
-namespace BTP_API.ServicesImpl
+﻿namespace BTP_API.ServicesImpl
 {
     public class ManageTransactionRepository : IManageTransactionRepository
     {

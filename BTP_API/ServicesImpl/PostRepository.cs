@@ -1,21 +1,31 @@
-﻿using BTP_API.Models;
-using BTP_API.ViewModels;
-using Microsoft.Extensions.Hosting;
-using System.Xml.Linq;
-using static System.Reflection.Metadata.BlobBuilder;
-
-namespace BTP_API.ServicesImpl
+﻿namespace BTP_API.ServicesImpl
 {
     public class PostRepository : IPostRepository
     {
         private readonly BTPContext _context;
         private readonly IWebHostEnvironment _environment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public PostRepository(BTPContext context, IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
+        public PostRepository(BTPContext context, IWebHostEnvironment environment)
         {
             _context = context;
             _environment = environment;
-            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<ApiResponse> get3PostAsync()
+        {
+            var posts = await _context.Posts.Include(p => p.User).Where(p => p.Status == StatusRequest.Approved.ToString() && p.IsHide == false).OrderByDescending(p => p.Id).Take(3).ToListAsync();
+            if (posts.Count == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.LIST_EMPTY.ToString()
+                };
+            }
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = posts,
+                NumberOfRecords = posts.Count
+            };
         }
 
         public async Task<ApiResponse> getAllPostAsync(int page = 1)

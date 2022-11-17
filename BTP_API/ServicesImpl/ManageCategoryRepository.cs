@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BTP_API.Models;
 
 namespace BTP_API.Services
 {

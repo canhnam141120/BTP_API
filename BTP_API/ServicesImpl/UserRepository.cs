@@ -2,7 +2,6 @@
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.Text;
-using BTP_API.ViewModels;
 
 namespace BTP_API.Services
 {

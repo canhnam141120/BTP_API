@@ -1,17 +1,12 @@
-﻿using BTP_API.Models;
-using BTP_API.ViewModels;
-
-namespace BTP_API.ServicesImpl
+﻿namespace BTP_API.ServicesImpl
 {
     public class RequestRepository : IRequestRepository
     {
         private readonly BTPContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RequestRepository(BTPContext context, IHttpContextAccessor httpContextAccessor)
+        public RequestRepository(BTPContext context)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<ApiMessage> createRequestAsync(string token, int bookid, List<int> bookOffer)
         {

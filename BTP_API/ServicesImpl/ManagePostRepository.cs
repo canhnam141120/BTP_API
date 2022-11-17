@@ -1,9 +1,4 @@
-﻿using BTP_API.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Hosting;
-using static BTP_API.Helpers.EnumVariable;
-
-namespace BTP_API.Services
+﻿namespace BTP_API.Services
 {
     public class ManagePostRepository : IManagePostRepository
     {

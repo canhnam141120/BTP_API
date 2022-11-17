@@ -7,13 +7,11 @@ namespace BTP_API.Services
     {
         private readonly BTPContext _context;
         private readonly IWebHostEnvironment _environment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         
-        public BookRepository(BTPContext context, IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
+        public BookRepository(BTPContext context, IWebHostEnvironment environment)
         {
             _context = context;
             _environment = environment;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ApiResponse> getAllBookFromFavoriteUserAsync(string token, int page = 1)
@@ -50,6 +48,24 @@ namespace BTP_API.Services
                 Message = Message.GET_SUCCESS.ToString(),
                 Data = result,
                 NumberOfRecords = result.Count
+            };
+        }
+
+        public async Task<ApiResponse> get6BookAsync()
+        {
+            var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Take(6).ToListAsync();
+            if (books.Count == 0)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.LIST_EMPTY.ToString()
+                };
+            }
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = books,
+                NumberOfRecords = books.Count
             };
         }
 

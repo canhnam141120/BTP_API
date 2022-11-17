@@ -34,6 +34,27 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
+        [HttpGet("top-book")]
+        public async Task<IActionResult> get6Book()
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.get6BookAsync();
+                if (apiResponse.NumberOfRecords != 0)
+                {
+                    return Ok(apiResponse);
+                }
+                return NotFound(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
         [HttpGet("all")]
         public async Task<IActionResult> getAllBooks([FromQuery] int page = 1)
         {
