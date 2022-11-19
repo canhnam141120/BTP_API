@@ -14,16 +14,12 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("from-favorite-users")]
-        public async Task<IActionResult> getAllBookFromFavoriteUser([FromForm] string token, [FromQuery] int page = 1)
+        public async Task<IActionResult> getAllBookFromFavoriteUser([FromForm] int userId, [FromQuery] int page = 1)
         {
             try
             {
-                var apiResponse = await _bookRepository.getAllBookFromFavoriteUserAsync(token, page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+                var apiResponse = await _bookRepository.getAllBookFromFavoriteUserAsync(userId, page);
+                return Ok(apiResponse);
             }
             catch
             {
@@ -40,11 +36,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiResponse = await _bookRepository.get6BookAsync();
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+                return Ok(apiResponse);
             }
             catch
             {
@@ -61,11 +53,8 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiResponse = await _bookRepository.getAllBookAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+                return Ok(apiResponse);
+                
             }
             catch
             {
@@ -82,11 +71,9 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiResponse = await _bookRepository.getBookByIdAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
+                
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+               
             }
             catch
             {
@@ -103,11 +90,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiResponse = await _bookRepository.getFeedbackInBookAsync(id, page);
-                if(apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+                return Ok(apiResponse);
             }
             catch
             {
@@ -121,11 +104,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiResponse = await _bookRepository.getBookByCategoryAsync(id, page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+                return Ok(apiResponse);
             }
             catch
             {
@@ -142,11 +121,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiResponse = await _bookRepository.getBookByUserAsync(id, page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+                return Ok(apiResponse);
             }
             catch
             {
@@ -161,18 +136,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiResponse = await _bookRepository.searchBookByTitleAsync(search, page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                else
-                {
-                    if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
-                    {
-                        return BadRequest(apiResponse);
-                    }
-                    return NotFound(apiResponse);
-                }
+                return Ok(apiResponse);
             }
             catch
             {
@@ -181,7 +145,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> createBook([FromForm] string token, [FromForm] BookVM bookVM)
+        public async Task<IActionResult> createBook([FromForm] int userId, [FromForm] BookVM bookVM)
         {
             try
             {
@@ -189,12 +153,8 @@ namespace BookTradingPlatform.Controllers
                 {
                     return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
                 }
-                var apiResponse = await _bookRepository.createBookAsync(token, bookVM);
-                if (apiResponse.NumberOfRecords != 0)
-                {
+                var apiResponse = await _bookRepository.createBookAsync(userId, bookVM);
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -203,7 +163,7 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPost("feedback/create/{id}")]
-        public async Task<IActionResult> feedbackBook([FromForm] string token, [FromRoute] int id, [FromForm] FeedbackVM feedbackVM)
+        public async Task<IActionResult> feedbackBook([FromForm] int userId, [FromRoute] int id, [FromForm] FeedbackVM feedbackVM)
         {
             try
             {
@@ -211,16 +171,9 @@ namespace BookTradingPlatform.Controllers
                 {
                     return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
                 }
-                var apiMessage = await _bookRepository.feedbackBookAsync(token, id, feedbackVM);
-                if(apiMessage.Message == Message.SUCCESS.ToString())
-                {
-                    return Ok(apiMessage);
-                }
-                if(apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiMessage);
-                }
-                return NotFound(apiMessage);
+                var apiMessage = await _bookRepository.feedbackBookAsync(userId, id, feedbackVM);
+                return Ok(apiMessage);
+                
             }
             catch
             {
@@ -234,11 +187,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _bookRepository.updateBookAsync(id, bookVM);
-                if(apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
-                {
-                    return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
+                return Ok(apiMessage);
             }
             catch
             {
@@ -252,11 +201,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _bookRepository.hideBookAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
-                    return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
+                return Ok(apiMessage);
             }
             catch
             {
@@ -270,11 +215,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _bookRepository.showBookAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
-                    return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
+                return Ok(apiMessage);
             }
             catch
             {

@@ -14,53 +14,30 @@ namespace BTP_API.Services
             _environment = environment;
         }
 
-        public async Task<ApiResponse> getAllBookFromFavoriteUserAsync(string token, int page = 1)
+        public async Task<ApiResponse> getAllBookFromFavoriteUserAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse { Message = Message.NOT_YET_LOGIN.ToString() };
-            }
-
             List<Book> bookList = new List<Book>();
-
             var favoriteUsers = await _context.FavoriteUserLists.Where(f => f.UserId == userId).ToListAsync();
             foreach (var favoriteUser in favoriteUsers)
             {
-                var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.UserId == favoriteUser.FavoriteUserId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
+                var books = await _context.Books.Include(b => b.User).Where(b => b.UserId == favoriteUser.FavoriteUserId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
                 foreach(var book in books)
                 {
                     bookList.Add(book);
                 }
             }
-           
-            if (bookList.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(bookList, page, 9);
+            //var result = PaginatedList<Book>.Create(bookList, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = bookList.Skip(9 * (page -1)).Take(9),
+                NumberOfRecords = bookList.Count
             };
         }
 
         public async Task<ApiResponse> get6BookAsync()
         {
             var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Take(6).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -71,115 +48,59 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> getAllBookAsync(int page = 1)
         {
-            var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(books, page, 9);
+            var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+            var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
+            //var books = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = books,
+                NumberOfRecords = count
             };
         }
         public async Task<ApiResponse> getBookByIdAsync(int bookId)
         {
             var book = await _context.Books.Include(b => b.User).Include(b => b.Category).SingleOrDefaultAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);
-            if (book == null)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.BOOK_NOT_EXIST.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = book,
-                NumberOfRecords = 1
+                Data = book
             };
         }
         public async Task<ApiResponse> getFeedbackInBookAsync(int bookId, int page = 1)
         {
-            var check = await _context.Books.AnyAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);
-            if (!check)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.BOOK_NOT_EXIST.ToString()
-                };
-            }
-            var feedbacks = await _context.Feedbacks.Include(p => p.User).Where(p => p.BookId == bookId).OrderByDescending(p => p.CreatedDate).ToListAsync();
-            if (feedbacks.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Feedback>.Create(feedbacks, page, 5);
+            var feedbacks = await _context.Feedbacks.Include(p => p.User).Where(p => p.BookId == bookId).OrderByDescending(p => p.Id).Skip(5*(page-1)).Take(5).ToListAsync();
+            var count = await _context.Feedbacks.Where(p => p.BookId == bookId).CountAsync();
+            //var result = PaginatedList<Feedback>.Create(feedbacks, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = feedbacks,
+                NumberOfRecords = count
             };
         }
         public async Task<ApiResponse> getBookByCategoryAsync(int categoryId, int page = 1)
         {
-            var check = await _context.Categories.AnyAsync(u => u.Id == categoryId);
-            if (!check)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.CATEGORY_NOT_EXIST.ToString()
-                };
-            }
-            var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.CategoryId == categoryId && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(books, page, 9);
+            var books = await _context.Books.Include(b => b.User).Where(b => b.CategoryId == categoryId && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).Skip(9 *(page-1)).Take(9).ToListAsync();
+            var count = await _context.Books.Where(b => b.CategoryId == categoryId && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).CountAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = books,
+                NumberOfRecords = count
             };
         }
         public async Task<ApiResponse> getBookByUserAsync(int userId, int page = 1)
         {
-            var check = await _context.Users.AnyAsync(u => u.Id == userId);
-            if (!check)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.USER_NOT_EXIST.ToString()
-                };
-            }
-            var books = await _context.Books.Include(b => b.User).Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(books, page, 6);
+            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Skip(6*(page-1)).Take(6).ToListAsync();
+            var count = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = books,
+                NumberOfRecords = count
             };
         }
 
@@ -193,39 +114,22 @@ namespace BTP_API.Services
             }
             else
             {
-                books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
+                books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
             }
 
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(books, page, 9);
+            //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = books.Skip(9*(page-1)).Take(9),
+                NumberOfRecords = books.Count
             };
         }
 
-        public async Task<ApiResponse> createBookAsync(string token, BookVM bookVM)
+        public async Task<ApiResponse> createBookAsync(int userId, BookVM bookVM)
         {
             UploadFile uploadFile = new UploadFile();
-            Cookie cookie = new Cookie();
             string fileImageName = uploadFile.UploadBookImage(bookVM, _environment);
-
-            var userId = cookie.GetUserId(token);
-            if(userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
 
             var book = new Book
             {
@@ -262,15 +166,8 @@ namespace BTP_API.Services
                 NumberOfRecords = 1
             };
         }
-        public async Task<ApiMessage> feedbackBookAsync(string token, int bookId, FeedbackVM feedbackVM)
+        public async Task<ApiMessage> feedbackBookAsync(int userId, int bookId, FeedbackVM feedbackVM)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage { Message = Message.NOT_YET_LOGIN.ToString() };
-            }
-
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);
             if (book != null)
             {
