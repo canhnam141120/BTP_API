@@ -10,110 +10,95 @@
         }
         public async Task<ApiResponse> getAllPostAsync(int page = 1)
         {
-            var posts = await _context.Posts.Include(f => f.User).OrderByDescending(f => f.CreatedDate).ToListAsync();
-            if (posts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Post>.Create(posts, page, 5);
+            var posts = await _context.Posts.Include(f => f.User).OrderByDescending(f => f.Id).Skip(5*(page-1)).Take(5).ToListAsync();
+            var count = await _context.Posts.CountAsync();
+            //var result = PaginatedList<Post>.Create(posts, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = posts,
+                NumberOfRecords = count
             };
         }
 
         public async Task<ApiResponse> getPostApprovedAsync(int page = 1)
         {
-            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Approved.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
-            if (posts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Post>.Create(posts, page, 5);
+            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Approved.ToString()).OrderByDescending(f => f.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.Posts.Where(b => b.Status == StatusRequest.Approved.ToString()).CountAsync();
+
+            //var result = PaginatedList<Post>.Create(posts, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = posts,
+                NumberOfRecords = count
             };
         }
 
         public async Task<ApiResponse> getPostDeniedAsync(int page = 1)
         {
-            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Denied.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
-            if (posts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Post>.Create(posts, page, 5);
+            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Denied.ToString()).OrderByDescending(f => f.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.Posts.Where(b => b.Status == StatusRequest.Denied.ToString()).CountAsync();
+
+            //var result = PaginatedList<Post>.Create(posts, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = posts,
+                NumberOfRecords = count
             };
         }
 
         public async Task<ApiResponse> getPostWaitingAsync(int page = 1)
         {
-            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(f => f.CreatedDate).ToListAsync();
-            if (posts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Post>.Create(posts, page, 5);
+            var posts = await _context.Posts.Include(f => f.User).Where(b => b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(f => f.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.Posts.Where(b => b.Status == StatusRequest.Waiting.ToString()).CountAsync();
+            //var result = PaginatedList<Post>.Create(posts, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = posts,
+                NumberOfRecords = count
             };
         }
 
         public async Task<ApiResponse> getPostByIdAsync(int postID)
         {
             var post = await _context.Posts.Include(f => f.User).SingleOrDefaultAsync(b => b.Id == postID);
-            if (post == null)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.POST_NOT_EXIST.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = post,
-                NumberOfRecords = 1
+                Data = post
+            };
+        }
+
+        public async Task<ApiResponse> searchPostAsync(string search, int page = 1)
+        {
+            List<Post> posts;
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+                posts = await _context.Posts.Include(b => b.User).Where(b => b.Title.ToLower().Contains(search)).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                posts = await _context.Posts.Include(b => b.User).OrderByDescending(b => b.Id).ToListAsync();
+            }
+
+            //var result = PaginatedList<Book>.Create(books, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = posts.Skip(5 * (page - 1)).Take(9),
+                NumberOfRecords = posts.Count
             };
         }
 
         public async Task<ApiMessage> approvedPostAsync(int postID)
         {
-            var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postID && b.Status == StatusRequest.Waiting.ToString());
+            var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postID);
             if (post != null)
             {
-                if (post.Status == StatusRequest.Approved.ToString())
-                {
-                    return new ApiMessage
-                    {
-                        Message = Message.APPROVED.ToString()
-                    };
-                }
                 post.Status = StatusRequest.Approved.ToString();
                 _context.Update(post);
                 var notification = new Notification
@@ -138,16 +123,9 @@
 
         public async Task<ApiMessage> deniedPostAsync(int postID)
         {
-            var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postID && b.Status == StatusRequest.Waiting.ToString());
+            var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postID);
             if (post != null)
             {
-                if (post.Status == StatusRequest.Denied.ToString())
-                {
-                    return new ApiMessage
-                    {
-                        Message = Message.DENIED.ToString()
-                    };
-                }
                 post.Status = StatusRequest.Denied.ToString();
                 _context.Update(post);
                 var notification = new Notification
@@ -172,28 +150,14 @@
 
         public async Task<ApiResponse> getCommentInPostAsync(int postID, int page = 1)
         {
-            var post = await _context.Posts.AnyAsync(b => b.Id == postID);
-            if(!post)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.POST_NOT_EXIST.ToString()
-                };
-            }
-            var comments = await _context.Comments.Include(p => p.User).Where(p => p.PostId == postID).OrderByDescending(f => f.CreatedDate).ToListAsync();
-            if (comments.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Comment>.Create(comments, page, 10);
+            var comments = await _context.Comments.Include(p => p.User).Where(p => p.PostId == postID).OrderByDescending(f => f.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.Comments.Where(p => p.PostId == postID).CountAsync();
+            //var result = PaginatedList<Comment>.Create(comments, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = comments,
+                NumberOfRecords = count
             };
         }
 

@@ -10,20 +10,15 @@
         }
         public async Task<ApiResponse> getAllAdminAsync(int page = 1)
         {
-            var admins = await _context.Users.Where(b => b.RoleId == 2).OrderByDescending(b => b.Id).ToListAsync();
-            if (admins.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<User>.Create(admins, page, 10);
+            var admins = await _context.Users.Where(b => b.RoleId == 2).OrderByDescending(b => b.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.Users.Where(b => b.RoleId == 2).CountAsync();
+
+            //var result = PaginatedList<User>.Create(admins, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = admins,
+                NumberOfRecords = count
             };
         }
 
@@ -53,20 +48,13 @@
             {
                 admins = await _context.Users.Where(b => b.RoleId == 2).OrderByDescending(b => b.Id).ToListAsync();
             }
-            
-            if (admins.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<User>.Create(admins, page, 10);
+
+            //var result = PaginatedList<User>.Create(admins, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = admins.Skip(10*(page-1)).Take(10),
+                NumberOfRecords = admins.Count
             };
         }
     }

@@ -17,11 +17,7 @@
             try
             {
                 var apiResponse = await _manageUserRepository.getAllUserAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -35,11 +31,7 @@
             try
             {
                 var apiResponse = await _manageUserRepository.getAllUserBanAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -50,15 +42,10 @@
         [HttpGet("active-list")]
         public async Task<IActionResult> getAllUserActive([FromQuery] int page = 1)
         {
-
             try
             {
                 var apiResponse = await _manageUserRepository.getAllUserActiveAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -73,11 +60,7 @@
             try
             {
                 var apiResponse = await _manageUserRepository.getTopUserLikeAsync();
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -91,11 +74,7 @@
             try
             {
                 var apiResponse = await _manageUserRepository.getUserByIdAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -109,11 +88,7 @@
             try
             {
                 var apiResponse = await _manageUserRepository.searchUserAsync(search, page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -127,11 +102,7 @@
             try
             {
                 var apiMessage = await _manageUserRepository.banAccAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -145,11 +116,7 @@
             try
             {
                 var apiMessage = await _manageUserRepository.activeAccAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -163,11 +130,7 @@
             try
             {
                 var apiMessage = await _manageUserRepository.authorityAdminAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {

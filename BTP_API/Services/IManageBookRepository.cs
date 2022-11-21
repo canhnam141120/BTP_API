@@ -9,6 +9,7 @@ namespace BTP_API.ServicesImpl
         public Task<ApiResponse> getAllBookDeniedAsync(int page = 1);
         public Task<ApiResponse> getAllBookWaitingAsync(int page = 1);
         public Task<ApiResponse> getBookByIdAsync(int bookId);
+        public Task<ApiResponse> searchBookAsync(string search, int page = 1);
         public Task<ApiMessage> approvedBookAsync(int bookId);
         public Task<ApiMessage> deniedBookAsync(int bookId);
         public Task<ApiResponse> getFeedbackInBookAsync(int bookId, int page = 1);

@@ -11,53 +11,22 @@
             _environment = environment;
         }
 
-        public async Task<ApiResponse> getAllNotificationAsync(string token, int page = 1)
+        public async Task<ApiResponse> getAllNotificationAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var notifications = await _context.Notifications.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (notifications.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Notification>.Create(notifications, page, 10);
+            var notifications = await _context.Notifications.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Skip(20*(page-1)).Take(20).ToListAsync();
+            var count = await _context.Notifications.Where(b => b.UserId == userId).CountAsync();
+            //var result = PaginatedList<Notification>.Create(notifications, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = notifications,
+                NumberOfRecords = count
             };
         }
 
-        public async Task<ApiResponse> get10NewNotificationAsync(string token)
+        public async Task<ApiResponse> get10NewNotificationAsync(int userId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
             var notifications = await _context.Notifications.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Take(10).ToListAsync();
-            if (notifications.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -66,27 +35,8 @@
             };
         }
 
-        public async Task<ApiMessage> markReadNotificationAsync(string token, int nottificationId)
+        public async Task<ApiMessage> markReadNotificationAsync(int userId, int nottificationId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
-            var notification = await _context.Notifications.AnyAsync(f => f.Id == nottificationId);
-            if (!notification)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOTIFICATION_NOT_EXIST.ToString()
-                };
-            }
-
             var check = await _context.Notifications.SingleOrDefaultAsync(f => f.Id == nottificationId && f.UserId == userId);
             if (check != null)
             {
@@ -104,25 +54,9 @@
             };
         }
 
-        public async Task<ApiResponse> getBookCanTradeAsync(string token)
+        public async Task<ApiResponse> getBookCanTradeAsync(int userId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
             var books = await _context.Books.Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -130,261 +64,116 @@
                 NumberOfRecords = books.Count
             };
         }
-        public async Task<ApiResponse> getAllBookAsync(string token, int page = 1)
+        public async Task<ApiResponse> getAllBookAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var books = await _context.Books.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(books, page, 9);
+            var books = await _context.Books.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Skip(6*(page-1)).Take(6).ToListAsync();
+            var count = await _context.Books.Where(b => b.UserId == userId).CountAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = books,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> getBookApprovedAsync(string token, int page = 1)
+        public async Task<ApiResponse> getBookApprovedAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(books, page, 9);
+            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var count = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).CountAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = books,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> getBookDeniedAsync(string token, int page = 1)
+        public async Task<ApiResponse> getBookDeniedAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(books, page, 9);
+            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var count = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).CountAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = books,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> getBookWaitingAsync(string token, int page = 1)
+        public async Task<ApiResponse> getBookWaitingAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).ToListAsync();
-            if (books.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Book>.Create(books, page, 9);
+            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var count = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).CountAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = books,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> getAllPostAsync(string token, int page = 1)
+        public async Task<ApiResponse> getAllPostAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var posts = await _context.Posts.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (posts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Post>.Create(posts, page, 6);
+            var posts = await _context.Posts.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.Posts.Where(b => b.UserId == userId).CountAsync();
+            //var result = PaginatedList<Post>.Create(posts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = posts,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> getPostApprovedAsync(string token, int page = 1)
+        public async Task<ApiResponse> getPostApprovedAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
-            if (posts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Post>.Create(posts, page, 6);
+            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).CountAsync();
+            //var result = PaginatedList<Post>.Create(posts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = posts,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> getPostDeniedAsync(string token, int page = 1)
+        public async Task<ApiResponse> getPostDeniedAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).ToListAsync();
-            if (posts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Post>.Create(posts, page, 6);
+            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).CountAsync();
+            //var result = PaginatedList<Post>.Create(posts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = posts,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> getPostWaitingAsync(string token, int page = 1)
+        public async Task<ApiResponse> getPostWaitingAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).ToListAsync();
-            if (posts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Post>.Create(posts, page, 6);
+            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).CountAsync();
+            //var result = PaginatedList<Post>.Create(posts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = posts,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> getBookByFavoritesAsync(string token, int page = 1)
+        public async Task<ApiResponse> getBookByFavoritesAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var favoriteBooks = await _context.FavoriteBookLists.Include(f => f.Book).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (favoriteBooks.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<FavoriteBookList>.Create(favoriteBooks, page, 6);
+            var favoriteBooks = await _context.FavoriteBookLists.Include(f => f.Book).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var count = await _context.FavoriteBookLists.Where(f => f.UserId == userId).CountAsync();
+            //var result = PaginatedList<FavoriteBookList>.Create(favoriteBooks, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = favoriteBooks,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiMessage> addBookByFavoritesAsync(string token, int bookId)
+        public async Task<ApiMessage> addBookByFavoritesAsync(int userId, int bookId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var book = await _context.Books.AnyAsync(f => f.Id == bookId);
             if (!book)
             {
@@ -415,18 +204,8 @@
                 Message = Message.ADD_SUCCESS.ToString()
             };
         }
-        public async Task<ApiMessage> deleteBookByFavoritesAsync(string token, int bookId)
+        public async Task<ApiMessage> deleteBookByFavoritesAsync(int userId, int bookId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var book = await _context.Books.AnyAsync(f => f.Id == bookId);
             if (!book)
             {
@@ -451,45 +230,21 @@
                 Message = Message.NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getPostByFavoritesAsync(string token, int page = 1)
+        public async Task<ApiResponse> getPostByFavoritesAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var favoritePosts = await _context.FavoritePostLists.Include(f => f.Post).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (favoritePosts.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<FavoritePostList>.Create(favoritePosts, page, 6);
+ 
+            var favoritePosts = await _context.FavoritePostLists.Include(f => f.Post).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.FavoriteBookLists.Where(f => f.UserId == userId).CountAsync();
+            //var result = PaginatedList<FavoritePostList>.Create(favoritePosts, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = favoritePosts,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiMessage> addPostByFavoritesAsync(string token, int postId)
+        public async Task<ApiMessage> addPostByFavoritesAsync(int userId, int postId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             var post = await _context.Posts.Include(f => f.User).SingleOrDefaultAsync(f => f.Id == postId);
@@ -530,18 +285,8 @@
                 Message = Message.ADD_SUCCESS.ToString()
             };
         }
-        public async Task<ApiMessage> deletePostByFavoritesAsync(string token, int postId)
+        public async Task<ApiMessage> deletePostByFavoritesAsync(int userId, int postId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var post = await _context.Posts.AnyAsync(f => f.Id == postId);
             if (!post)
             {
@@ -566,45 +311,20 @@
                 Message = Message.NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getUserByFavoritesAsync(string token, int page = 1)
+        public async Task<ApiResponse> getUserByFavoritesAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var favoriteUsers = await _context.FavoriteUserLists.Include(f => f.FavoriteUser).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (favoriteUsers.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<FavoriteUserList>.Create(favoriteUsers, page, 6);
+            var favoriteUsers = await _context.FavoriteUserLists.Include(f => f.FavoriteUser).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).Skip(12*(page-1)).Take(12).ToListAsync();
+            var count = await _context.FavoriteUserLists.Where(f => f.UserId == userId).CountAsync();
+            //var result = PaginatedList<FavoriteUserList>.Create(favoriteUsers, page, 6);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = favoriteUsers,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiMessage> addUserByFavoritesAsync(string token, int favoriteUserId)
+        public async Task<ApiMessage> addUserByFavoritesAsync(int userId, int favoriteUserId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             var userFavorite = await _context.Users.SingleOrDefaultAsync(f => f.Id == favoriteUserId);
@@ -645,18 +365,8 @@
                 Message = Message.ADD_SUCCESS.ToString()
             };
         }
-        public async Task<ApiMessage> deleteUserByFavoritesAsync(string token, int favoriteUserId)
+        public async Task<ApiMessage> deleteUserByFavoritesAsync(int userId, int favoriteUserId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var user = await _context.Users.SingleOrDefaultAsync(f => f.Id == favoriteUserId);
             if (user == null)
             {
@@ -682,44 +392,19 @@
                 Message = Message.NOT_EXIST.ToString()
             };
         }
-        public async Task<ApiResponse> getInfoUserIdAsync(string token)
+        public async Task<ApiResponse> getInfoUserIdAsync(int userId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
-            if (user == null)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.USER_NOT_EXIST.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = user,
-                NumberOfRecords = 1
+                Data = user
             };
         }
-        public async Task<ApiMessage> editInfoAsync(string token, UserVM userVM)
+        public async Task<ApiMessage> editInfoAsync(int userId, UserVM userVM)
         {
             UploadFile uploadFile = new UploadFile();
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
+
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
@@ -740,17 +425,8 @@
                 Message = Message.UPDATE_SUCCESS.ToString()
             };
         }
-        public async Task<ApiMessage> editPasswordAsync(string token, ChangePasswordVM changePasswordVM)
+        public async Task<ApiMessage> editPasswordAsync(int userId, ChangePasswordVM changePasswordVM)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
@@ -777,137 +453,57 @@
                 Message = Message.UPDATE_SUCCESS.ToString()
             };
         }
-        public async Task<ApiResponse> listOfRequestSendAsync(string token, int page = 1)
+        public async Task<ApiResponse> listOfRequestSendAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
             var myBooks = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).ToListAsync();
 
             List<ExchangeRequest> exchangeRequests = new List<ExchangeRequest>();
 
             foreach (var book in myBooks)
             {
-                var data = await _context.ExchangeRequests.Where(r => r.BookOfferId == book.Id).OrderBy(b => b.Id).ToListAsync();
+                var data = await _context.ExchangeRequests.Include(r => r.Book).Include(r => r.BookOffer).Where(r => r.BookOfferId == book.Id).OrderBy(b => b.Id).ToListAsync();
                 foreach (var item in data)
                 {
                     exchangeRequests.Add(item);
                 }
             }
-            if (exchangeRequests.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<ExchangeRequest>.Create(exchangeRequests, page, 5);
+
+            //var result = PaginatedList<ExchangeRequest>.Create(exchangeRequests, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = exchangeRequests.Skip(4*(page-1)).Take(4),
+                NumberOfRecords = exchangeRequests.Count
             };
         }
-        public async Task<ApiResponse> listOfRequestReceivedSendAsync(string token, int bookId, int page = 1)
+        public async Task<ApiResponse> listOfRequestReceivedSendAsync(int userId, int bookId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
-            var check = await _context.Books.Where(b => b.Id == bookId && b.UserId == userId).ToListAsync();
-            if (check.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.BOOK_NOT_EXIST.ToString()
-                };
-            }
-
-            var data = await _context.ExchangeRequests.Include(r => r.BookOffer.User).Where(r => r.BookId == bookId).OrderByDescending(b => b.Id).ToListAsync();
-            if (data.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<ExchangeRequest>.Create(data, page, 5);
+            var data = await _context.ExchangeRequests.Include(r => r.BookOffer.User).Where(r => r.BookId == bookId).OrderByDescending(b => b.Id).Skip(5*(page-1)).Take(5).ToListAsync();
+            var count = await _context.ExchangeRequests.Where(r => r.BookId == bookId).CountAsync();
+            //var result = PaginatedList<ExchangeRequest>.Create(data, page, 5);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = data,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> myTransactionExchangeAsync(string token, int page = 1)
+        public async Task<ApiResponse> myTransactionExchangeAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var exchanges = await _context.Exchanges.Where(b => b.UserId1 == userId || b.UserId2 == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (exchanges.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
+            var exchanges = await _context.Exchanges.Where(b => b.UserId1 == userId || b.UserId2 == userId).OrderByDescending(b => b.Id).Skip(10 * (page - 1)).Take(5).ToListAsync();
+            var count = await _context.Exchanges.Where(b => b.UserId1 == userId || b.UserId2 == userId).CountAsync();
+
+            //var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = exchanges,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiResponse> myTransactionExDetailAsync(string token, int exchangeId)
+        public async Task<ApiResponse> myTransactionExDetailAsync(int userId, int exchangeId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
-            var exchange = await _context.Exchanges.AnyAsync(e => e.Id == exchangeId);
-            if (!exchange)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.EXCHANGE_NOT_EXIST.ToString()
-                };
-            }
-
             var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId).ToListAsync();
-            if (exchangeDetails.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -915,125 +511,43 @@
                 NumberOfRecords = exchangeDetails.Count
             };
         }
-        public async Task<ApiResponse> myTransactionExBillAsync(string token, int exchangeId)
+        public async Task<ApiResponse> myTransactionExBillAsync(int userId, int exchangeId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
-            var exchange = await _context.Exchanges.AnyAsync(e => e.Id == exchangeId);
-            if (!exchange)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.EXCHANGE_NOT_EXIST.ToString()
-                };
-            }
-
             var exchangeBill = await _context.ExchangeBills.SingleOrDefaultAsync(b => b.ExchangeId == exchangeId && b.UserId == userId);
-            if (exchangeBill == null)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.BILL_NOT_EXIST.ToString()
-                };
-            }
-            return new ApiResponse
-            {
-                Message = Message.GET_SUCCESS.ToString(),
-                Data = exchangeBill,
-                NumberOfRecords = 1
-            };
-        }
-        public async Task<ApiResponse> myExBillAllAsync(string token, int page = 1)
-        {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var exchangeBills = await _context.ExchangeBills.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (exchangeBills.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<ExchangeBill>.Create(exchangeBills, page, 10);
-            return new ApiResponse
-            {
-                Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
-            };
-        }
-        public async Task<ApiResponse> myTransactionRentAsync(string token, int page = 1)
-        {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var rents = await _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (rents.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Rent>.Create(rents, page, 10);
-            return new ApiResponse
-            {
-                Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
-            };
-        }
-        public async Task<ApiResponse> myTransactionRentDetailAsync(string token, int rentId)
-        {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
 
-            var rent = await _context.Rents.AnyAsync(e => e.Id == rentId);
-            if (!rent)
+            return new ApiResponse
             {
-                return new ApiResponse
-                {
-                    Message = Message.RENT_NOT_EXIST.ToString()
-                };
-            }
-
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = exchangeBill
+            };
+        }
+        public async Task<ApiResponse> myExBillAllAsync(int userId, int page = 1)
+        {
+            var exchangeBills = await _context.ExchangeBills.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.ExchangeBills.Where(b => b.UserId == userId).CountAsync();
+            //var result = PaginatedList<ExchangeBill>.Create(exchangeBills, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = exchangeBills,
+                NumberOfRecords = count
+            };
+        }
+        public async Task<ApiResponse> myTransactionRentAsync(int userId, int page = 1)
+        {
+            var rents = await _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).OrderByDescending(b => b.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).CountAsync();
+            //var result = PaginatedList<Rent>.Create(rents, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = rents,
+                NumberOfRecords = count
+            };
+        }
+        public async Task<ApiResponse> myTransactionRentDetailAsync(int userId, int rentId)
+        {
             var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId).ToListAsync();
-            if (rentDetails.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -1041,80 +555,29 @@
                 NumberOfRecords = rentDetails.Count
             };
         }
-        public async Task<ApiResponse> myTransactionRentBillAsync(string token, int rentId)
+        public async Task<ApiResponse> myTransactionRentBillAsync(int userId, int rentId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
-            var rent = await _context.Rents.AnyAsync(e => e.Id == rentId);
-            if (!rent)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.RENT_NOT_EXIST.ToString()
-                };
-            }
-
             var rentBill = await _context.RentBills.SingleOrDefaultAsync(b => b.RentId == rentId && b.UserId == userId);
-            if (rentBill == null)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.BILL_NOT_EXIST.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = rentBill,
-                NumberOfRecords = 1
+                Data = rentBill
             };
         }
-        public async Task<ApiResponse> myRentBillAllAsync(string token, int page = 1)
+        public async Task<ApiResponse> myRentBillAllAsync(int userId, int page = 1)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-            var rentBills = await _context.RentBills.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
-            if (rentBills.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<RentBill>.Create(rentBills, page, 10);
+            var rentBills = await _context.RentBills.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.RentBills.Where(b => b.UserId == userId).CountAsync();
+            //var result = PaginatedList<RentBill>.Create(rentBills, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = rentBills,
+                NumberOfRecords = count
             };
         }
-        public async Task<ApiMessage> updateInfoShippingAsync(string token, ShipInfoVM shipInfoVM)
+        public async Task<ApiMessage> updateInfoShippingAsync(int userId, ShipInfoVM shipInfoVM)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
             var shipInfo = await _context.ShipInfos.SingleOrDefaultAsync(u => u.UserId == userId);
             if (shipInfo == null)
             {

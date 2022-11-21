@@ -136,6 +136,8 @@
             {
                 entity.ToTable("Category");
 
+                entity.Property(e => e.Flag);
+
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasComment("Mã loại");

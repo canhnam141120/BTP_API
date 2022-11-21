@@ -14,37 +14,25 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getAllExBillAsync(int page = 1)
         {
-            var exBills = await _context.ExchangeBills.Include(e => e.User).OrderByDescending(e => e.Id).ToListAsync();
-            if (exBills.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<ExchangeBill>.Create(exBills, page, 10);
+            var exBills = await _context.ExchangeBills.Include(e => e.User).OrderByDescending(e => e.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.ExchangeBills.CountAsync();
+
+            //var result = PaginatedList<ExchangeBill>.Create(exBills, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = exBills,
+                NumberOfRecords = count
             };
         }
         public async Task<ApiResponse> getExBillDetailAsync(int exBillId)
         {
             var exBill = await _context.ExchangeBills.Include(b => b.User).SingleOrDefaultAsync(b => b.Id == exBillId);
-            if (exBill == null)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.BILL_NOT_EXIST.ToString()
-                };
-            }
+
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
                 Data = exBill,
-                NumberOfRecords = 1
             };
         }
         public async Task<ApiMessage> updateStatusExBillDetailAsync(int exBillId, ExchangeBillVM exchangeBillVM)
@@ -67,37 +55,24 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getAllRentBillAsync(int page = 1)
         {
-            var rentBills = await _context.RentBills.Include(r => r.User).OrderByDescending(r => r.Id).ToListAsync();
-            if (rentBills.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<RentBill>.Create(rentBills, page, 10);
+            var rentBills = await _context.RentBills.Include(r => r.User).OrderByDescending(r => r.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.RentBills.CountAsync();
+            //var result = PaginatedList<RentBill>.Create(rentBills, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = rentBills,
+                NumberOfRecords = count
             };
         }
         public async Task<ApiResponse> getRentBillDetailAsync(int rentBillId)
         {
             var rentBill = await _context.RentBills.Include(b => b.User).SingleOrDefaultAsync(b => b.Id == rentBillId);
-            if (rentBill == null)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.BILL_NOT_EXIST.ToString()
-                };
-            }
+
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = rentBill,
-                NumberOfRecords = 1
+                Data = rentBill
             };
         }
         public async Task<ApiMessage> updateStatusRentBillDetailAsync(int rentBillId, RentBillVM rentBillVM)

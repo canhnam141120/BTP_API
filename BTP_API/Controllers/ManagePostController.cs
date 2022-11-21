@@ -17,11 +17,7 @@
             try
             {
                 var apiResponse = await _managePostRepository.getAllPostAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -35,11 +31,7 @@
             try
             {
                 var apiResponse = await _managePostRepository.getPostApprovedAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -53,11 +45,7 @@
             try
             {
                 var apiResponse = await _managePostRepository.getPostDeniedAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -71,11 +59,7 @@
             try
             {
                 var apiResponse = await _managePostRepository.getPostWaitingAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -89,15 +73,25 @@
             try
             {
                 var apiResponse = await _managePostRepository.getPostByIdAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
                 return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> searchPost([FromForm] string search, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _managePostRepository.searchPostAsync(search, page);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.SEARCH_FAILED.ToString() });
             }
         }
 
@@ -107,15 +101,7 @@
             try
             {
                 var apiMessage = await _managePostRepository.approvedPostAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                if (apiMessage.Message == Message.APPROVED.ToString())
-                {
-                    return BadRequest(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -129,15 +115,7 @@
             try
             {
                 var apiMessage = await _managePostRepository.deniedPostAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                if (apiMessage.Message == Message.DENIED.ToString())
-                {
-                    return BadRequest(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -151,11 +129,7 @@
             try
             {
                 var apiResponse = await _managePostRepository.getCommentInPostAsync(id, page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -169,11 +143,7 @@
             try
             {
                 var apiMessage = await _managePostRepository.deleteCommentAsync(id);
-                if (apiMessage.Message == Message.DELETE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {

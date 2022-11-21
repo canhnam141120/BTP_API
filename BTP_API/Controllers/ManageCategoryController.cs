@@ -17,11 +17,7 @@
             try
             {
                 var apiResponse = await _manageCategoryRepository.getAllCategoryAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -35,15 +31,25 @@
             try
             {
                 var apiResponse = await _manageCategoryRepository.getCategoryByIdAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
                 return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> searchCategory([FromForm] string search, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _manageCategoryRepository.searchCategoryAsync(search, page);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.SEARCH_FAILED.ToString() });
             }
         }
 
@@ -71,11 +77,7 @@
             try
             {
                 var apiMessage = await _manageCategoryRepository.updateCategoryAsync(id, categoryVM);
-                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -83,17 +85,13 @@
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpPut("delete/{id}")]
         public async Task<IActionResult> deleteCategory([FromRoute] int id)
         {
             try
             {
                 var apiMessage = await _manageCategoryRepository.deleteCategoryAsync(id);
-                if (apiMessage.Message == Message.DELETE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {

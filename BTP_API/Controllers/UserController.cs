@@ -17,18 +17,7 @@
             try
             {
                 var apiResponse = await _userRepository.loginAsync(loginVM);
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                else
-                {
-                    if (apiResponse.Message == Message.ACCOUNT_NOT_EXIST.ToString())
-                    {
-                        return NotFound(apiResponse);
-                    }
-                    return BadRequest(apiResponse);
-                }
+                 return Ok(apiResponse);
             }
             catch
             {
@@ -42,10 +31,6 @@
             try
             {
                 var apiMessage = await _userRepository.logoutAsync(token);
-                if(apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiMessage);
-                }
                 return Ok(apiMessage);
             }
             catch
@@ -60,11 +45,7 @@
             try
             {
                 var apiMessage = await _userRepository.registerAsync(registerVM);
-                if (apiMessage.Message.Contains(Message.REGISTER_SUCCESS.ToString()))
-                {
                     return Ok(apiMessage);
-                }
-                return BadRequest(apiMessage);
             }
             catch
             {
@@ -78,11 +59,7 @@
             try
             {
                 var apiMessage = await _userRepository.verifyAsync(verifyCode);
-                if (apiMessage.Message == Message.VERIFY_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return BadRequest(apiMessage);
             }
             catch
             {
@@ -97,11 +74,7 @@
             try
             {
                 var apiMessage = await _userRepository.forgotPasswordAsync(email);
-                if (apiMessage.Message.Contains(Message.SUCCESS.ToString()))
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -115,15 +88,7 @@
             try
             {
                 var apiMessage = await _userRepository.resetPasswordAsync(resetPasswordVM);
-                if (apiMessage.Message == Message.ACCOUNT_NOT_EXIST.ToString())
-                {
-                    return NotFound(apiMessage);
-                }
-                if (apiMessage.Message == Message.CHANGE_PASSWORD_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return BadRequest(apiMessage);
             }
             catch
             {
@@ -137,11 +102,7 @@
             try
             {
                 var apiResponse = await _userRepository.renewTokenAsync(tokenModel);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return BadRequest(apiResponse);
             }
             catch
             {

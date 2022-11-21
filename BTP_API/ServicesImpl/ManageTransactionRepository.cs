@@ -10,40 +10,19 @@
         }
         public async Task<ApiResponse> getAllExchangeAsync(int page = 1)
         {
-            var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).OrderByDescending(e => e.Id).ToListAsync();
-            if (exchanges.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
+            var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).OrderByDescending(e => e.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.Exchanges.CountAsync();
+            //var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = exchanges,
+                NumberOfRecords = count
             };
         }
         public async Task<ApiResponse> getAllExchangeDetailAsync(int exchangeId)
         {
-            var check = await _context.Exchanges.AnyAsync(b => b.Id == exchangeId);
-            if (!check)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.EXCHANGE_NOT_EXIST.ToString()
-                };
-            }
             var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId).ToListAsync();
-            if (exchangeDetails.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -53,22 +32,7 @@
         }
         public async Task<ApiResponse> getAllExchangeBillAsync(int exchangeId)
         {
-            var check = await _context.Exchanges.AnyAsync(b => b.Id == exchangeId);
-            if (!check)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.EXCHANGE_NOT_EXIST.ToString()
-                };
-            }
             var exchangeBills = await _context.ExchangeBills.Include(b => b.User).Where(b => b.ExchangeId == exchangeId).ToListAsync();
-            if (exchangeBills.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -142,40 +106,19 @@
 
         public async Task<ApiResponse> getAllRentAsync(int page = 1)
         {
-            var rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).OrderByDescending(r => r.Id).ToListAsync();
-            if (rents.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Rent>.Create(rents, page, 10);
+            var rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).OrderByDescending(r => r.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.Rents.CountAsync();
+            //var result = PaginatedList<Rent>.Create(rents, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = rents,
+                NumberOfRecords = count
             };
         }
         public async Task<ApiResponse> getAllRentDetailAsync(int rentId)
         {
-            var check = await _context.Rents.AnyAsync(b => b.Id == rentId);
-            if (!check)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.RENT_NOT_EXIST.ToString()
-                };
-            }
             var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId).ToListAsync();
-            if (rentDetails.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -186,22 +129,7 @@
 
         public async Task<ApiResponse> getAllRentBillAsync(int rentId)
         {
-            var check = await _context.Rents.AnyAsync(b => b.Id == rentId);
-            if (!check)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.RENT_NOT_EXIST.ToString()
-                };
-            }
             var rentBills = await _context.RentBills.Include(b => b.User).Where(b => b.RentId == rentId).ToListAsync();
-            if (rentBills.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),

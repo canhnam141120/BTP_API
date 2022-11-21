@@ -12,11 +12,11 @@
         }
 
         [HttpPost("create/{bookid}")]
-        public async Task<IActionResult> createRequest([FromForm] string token, [FromRoute] int bookid, [FromForm] List<int> bookOffer)
+        public async Task<IActionResult> createRequest([FromForm] int userId, [FromRoute] int bookid, [FromForm] List<int> bookOffer)
         {
             try
             {
-                var apiMessage = await _requestRepository.createRequestAsync(token, bookid, bookOffer);
+                var apiMessage = await _requestRepository.createRequestAsync(userId, bookid, bookOffer);
                 return Ok(apiMessage);
             }
             catch
@@ -27,16 +27,12 @@
 
         //Người offer tự hủy
         [HttpPut("cancel/{id}")]
-        public async Task<IActionResult> cancelRequest([FromForm] string token, [FromRoute] int id)
+        public async Task<IActionResult> cancelRequest([FromForm] int userId, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _requestRepository.cancelRequestAsync(token, id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
+                var apiMessage = await _requestRepository.cancelRequestAsync(userId, id);
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -45,16 +41,12 @@
         }
 
         [HttpPut("accept/{id}")]
-        public async Task<IActionResult> acceptRequest([FromForm] string token, [FromRoute] int id)
+        public async Task<IActionResult> acceptRequest([FromForm] int userId, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _requestRepository.acceptRequestAsync(token, id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
+                var apiMessage = await _requestRepository.acceptRequestAsync(userId, id);
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -63,16 +55,12 @@
         }
 
         [HttpPut("denied/{id}")]
-        public async Task<IActionResult> deniedRequest([FromForm] string token, [FromRoute] int id)
+        public async Task<IActionResult> deniedRequest([FromForm] int userId, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _requestRepository.deniedRequestAsync(token, id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
+                var apiMessage = await _requestRepository.deniedRequestAsync(userId, id);
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -81,20 +69,12 @@
         }
 
         [HttpPost("rent/{bookId}")]
-        public async Task<IActionResult> rentBook([FromForm] string token, [FromRoute] int bookId)
+        public async Task<IActionResult> rentBook([FromForm] int userId, [FromRoute] int bookId)
         {
             try
             {
-                var apiMessage = await _requestRepository.rentBookAsync(token, bookId);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
+                var apiMessage = await _requestRepository.rentBookAsync(userId, bookId);
                     return Ok(apiMessage);
-                }
-                if (apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {

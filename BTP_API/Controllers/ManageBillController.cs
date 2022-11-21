@@ -17,11 +17,7 @@
             try
             {
                 var apiResponse = await _manageBillRepository.getAllExBillAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+                return Ok(apiResponse);
             }
             catch
             {
@@ -35,11 +31,7 @@
             try
             {
                 var apiResponse = await _manageBillRepository.getExBillDetailAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -53,11 +45,7 @@
             try
             {
                 var apiMessage = await _manageBillRepository.updateStatusExBillDetailAsync(id, exchangeBillVM);
-                if(apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -72,11 +60,7 @@
             try
             {
                 var apiResponse = await _manageBillRepository.getAllRentBillAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -90,11 +74,7 @@
             try
             {
                 var apiResponse = await _manageBillRepository.getRentBillDetailAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -108,11 +88,7 @@
             try
             {
                 var apiMessage = await _manageBillRepository.updateStatusRentBillDetailAsync(id, rentBillVM);
-                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {

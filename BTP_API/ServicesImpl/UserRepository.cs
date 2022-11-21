@@ -21,7 +21,6 @@ namespace BTP_API.Services
         public async Task<ApiResponse> loginAsync(LoginVM loginVM)
         {
             Jwt jwt = new Jwt(_context, _appSettings, _config);
-            //Cookie cookie = new Cookie();
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == loginVM.Email);
             if (user == null)
             {
@@ -157,7 +156,7 @@ namespace BTP_API.Services
 
             return new ApiMessage
             {
-                Message = Message.REGISTER_SUCCESS.ToString() + " - PLEASE GET CODE VERIFY FROM YOUR MAIL BOX!"
+                Message = Message.REGISTER_SUCCESS.ToString()
             };
         }
         public async Task<ApiMessage> verifyAsync(string verifyCode)
@@ -222,7 +221,7 @@ namespace BTP_API.Services
 
             return new ApiMessage
             {
-                Message = Message.SUCCESS.ToString() + " - PLEASE GET CODE RESET PASSWORD FROM YOUR MAIL!"
+                Message = Message.SUCCESS.ToString()
             };
         }
         public async Task<ApiMessage> resetPasswordAsync(ResetPasswordVM resetPasswordVM)

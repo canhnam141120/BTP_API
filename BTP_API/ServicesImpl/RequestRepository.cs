@@ -8,18 +8,8 @@
         {
             _context = context;
         }
-        public async Task<ApiMessage> createRequestAsync(string token, int bookid, List<int> bookOffer)
+        public async Task<ApiMessage> createRequestAsync(int userId, int bookid, List<int> bookOffer)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var user = await _context.ShipInfos.SingleOrDefaultAsync(s => s.UserId == userId);
             if(user.IsUpdate == false)
             {
@@ -84,18 +74,8 @@
                 Message = Message.REQUEST_SUCCESS.ToString(),
             };
         }
-        public async Task<ApiMessage> cancelRequestAsync(string token, int requestId)
+        public async Task<ApiMessage> cancelRequestAsync(int userId, int requestId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
             {
@@ -135,18 +115,8 @@
                 Message = Message.SUCCESS.ToString(),
             };
         }
-        public async Task<ApiMessage> acceptRequestAsync(string token, int requestId)
+        public async Task<ApiMessage> acceptRequestAsync(int userId, int requestId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             CalculateFee calculateFee = new CalculateFee(_context);
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
@@ -402,18 +372,8 @@
             };
         }
 
-        public async Task<ApiMessage> deniedRequestAsync(string token, int requestId)
+        public async Task<ApiMessage> deniedRequestAsync(int userId, int requestId)
         {
-            Cookie cookie = new Cookie();
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
-
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
             {
@@ -456,18 +416,9 @@
             };
         }
 
-        public async Task<ApiMessage> rentBookAsync(string token, int bookId)
+        public async Task<ApiMessage> rentBookAsync(int userId, int bookId)
         {
-            Cookie cookie = new Cookie();
             CalculateFee calculateFee = new CalculateFee(_context);
-            int userId = cookie.GetUserId(token);
-            if (userId == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString(),
-                };
-            }
 
             var user = await _context.ShipInfos.SingleOrDefaultAsync(s => s.UserId == userId);
             if (user.IsUpdate == false)

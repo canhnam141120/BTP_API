@@ -12,16 +12,12 @@
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> getAllFee([FromQuery] int page = 1)
+        public async Task<IActionResult> getAllFee()
         {
             try
             {
-                var apiResponse = await _manageFeeRepository.getAllFeeAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
+                var apiResponse = await _manageFeeRepository.getAllFeeAsync();
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -35,11 +31,7 @@
             try
             {
                 var apiResponse = await _manageFeeRepository.getFeeByIdAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {

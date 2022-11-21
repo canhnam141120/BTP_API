@@ -23,6 +23,9 @@ namespace BTP_API.Models
         /// </summary>
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        public bool Flag { get; set; }
         [JsonIgnore]
         public virtual ICollection<Book> Books { get; set; }
     }

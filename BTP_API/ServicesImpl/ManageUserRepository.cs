@@ -11,71 +11,46 @@
 
         public async Task<ApiResponse> getAllUserAsync(int page = 1)
         {
-            var users = await _context.Users.Where(b => b.RoleId == 3).OrderByDescending(u => u.Id).ToListAsync();
-            if (users.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<User>.Create(users, page, 20);
+            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsVerify == true).OrderByDescending(u => u.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.Users.Where(b => b.RoleId == 3 && b.IsVerify == true).CountAsync();
+            //var result = PaginatedList<User>.Create(users, page, 20);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = users,
+                NumberOfRecords = count
             };
         }
 
         public async Task<ApiResponse> getAllUserActiveAsync(int page = 1)
         {
-            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == true).OrderByDescending(u => u.Id).ToListAsync();
-            if (users.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<User>.Create(users, page, 20);
+            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == true && b.IsVerify == true).OrderByDescending(u => u.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == true && b.IsVerify == true).CountAsync();
+            //var result = PaginatedList<User>.Create(users, page, 20);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = users,
+                NumberOfRecords = count
             };
         }
 
         public async Task<ApiResponse> getAllUserBanAsync(int page = 1)
         {
-            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == false).OrderByDescending(u => u.Id).ToListAsync();
-            if (users.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<User>.Create(users, page, 20);
+            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == false && b.IsVerify == true).OrderByDescending(u => u.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == false && b.IsVerify == true).CountAsync();
+            //var result = PaginatedList<User>.Create(users, page, 20);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = users,
+                NumberOfRecords = count
             };
         }
 
         public async Task<ApiResponse> getTopUserLikeAsync()
         {
-            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == true).OrderByDescending(b => b.LikeNumber).Take(5).ToListAsync();
-            if (users.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
+            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == true && b.IsVerify == true).OrderByDescending(b => b.LikeNumber).Take(5).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -86,19 +61,11 @@
 
         public async Task<ApiResponse> getUserByIdAsync(int userId)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(b => b.RoleId == 3 && b.Id == userId);
-            if (user == null)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.USER_NOT_EXIST.ToString()
-                };
-            }
+            var user = await _context.Users.SingleOrDefaultAsync(b => b.RoleId == 3 && b.Id == userId && b.IsVerify == true);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = user,
-                NumberOfRecords = 1
+                Data = user
             };
         }
 
@@ -108,26 +75,18 @@
             if(search != null)
             {
                 search = search.ToLower().Trim();
-                users = await _context.Users.Where(b => b.RoleId == 3 && b.Email.ToLower().Contains(search) || b.RoleId == 3 && b.Phone.Contains(search)).OrderByDescending(u => u.Id).ToListAsync();
+                users = await _context.Users.Where(b => b.RoleId == 3 && b.Email.ToLower().Contains(search) && b.IsVerify == true || b.RoleId == 3 && b.Phone.Contains(search) && b.IsVerify == true).OrderByDescending(u => u.Id).ToListAsync();
             }
             else
             {
                 users = await _context.Users.Where(b => b.RoleId == 3).OrderByDescending(u => u.Id).ToListAsync();
             }
-            
-            if (users.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<User>.Create(users, page, 20);
+            //var result = PaginatedList<User>.Create(users, page, 20);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = users.Skip(10*(page-1)).Take(10),
+                NumberOfRecords = users.Count
             };
         }
 

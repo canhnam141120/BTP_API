@@ -17,11 +17,7 @@
             try
             {
                 var apiResponse = await _manageTransactionRepository.getAllExchangeAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -35,11 +31,7 @@
             try
             {
                 var apiResponse = await _manageTransactionRepository.getAllExchangeDetailAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -53,11 +45,7 @@
             try
             {
                 var apiResponse = await _manageTransactionRepository.getAllExchangeBillAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -71,11 +59,7 @@
             try
             {
                 var apiMessage = await _manageTransactionRepository.updateStatusExchangeAsync(id, status);
-                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -89,11 +73,7 @@
             try
             {
                 var apiMessage = await _manageTransactionRepository.updateExchangeDetailAsync(id, exchangeDetailVM);
-                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -107,11 +87,7 @@
             try
             {
                 var apiResponse = await _manageTransactionRepository.getAllRentAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -125,11 +101,7 @@
             try
             {
                 var apiResponse = await _manageTransactionRepository.getAllRentDetailAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -143,11 +115,7 @@
             try
             {
                 var apiResponse = await _manageTransactionRepository.getAllRentBillAsync(id);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -161,11 +129,7 @@
             try
             {
                 var apiMessage = await _manageTransactionRepository.updateStatusRentAsync(id, status);
-                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -179,11 +143,7 @@
             try
             {
                 var apiMessage = await _manageTransactionRepository.updateRentDetailAsync(id, rentDetailVM);
-                if (apiMessage.Message == Message.UPDATE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {

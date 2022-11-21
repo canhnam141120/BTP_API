@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BTP_API.ViewModels;
 
 namespace BTP_API.Services
 {
@@ -14,47 +15,57 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getAllCategoryAsync(int page = 1)
         {
-            var categories = await _context.Categories.OrderByDescending(c => c.Id).ToListAsync();
-            if (categories.Count == 0)
-            {
-                return new ApiResponse
-                {
-                    Message = Message.LIST_EMPTY.ToString()
-                };
-            }
-            var result = PaginatedList<Category>.Create(categories, page, 20);
+            var categories = await _context.Categories.Where(c => c.Flag == true).OrderByDescending(c => c.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.Categories.Where(c => c.Flag == true).CountAsync();
+            //var result = PaginatedList<Category>.Create(categories, page, 20);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = result,
-                NumberOfRecords = result.Count
+                Data = categories,
+                NumberOfRecords = count
             };
         }
 
         public async Task<ApiResponse> getCategoryByIdAsync(int categoryId)
         {
             var category = await _context.Categories.SingleOrDefaultAsync(c => c.Id == categoryId);
-            if (category == null)
+            return new ApiResponse
             {
-                return new ApiResponse
-                {
-                    Message = Message.CATEGORY_NOT_EXIST.ToString()
-                };
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = category
+            };
+        }
+
+        public async Task<ApiResponse> searchCategoryAsync(string search, int page = 1)
+        {
+            List<Category> categoris;
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+                categoris = await _context.Categories.Where(b => b.Name.ToLower().Contains(search)).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                categoris = await _context.Categories.OrderByDescending(b => b.Id).ToListAsync();
             }
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = category,
-                NumberOfRecords = 1
+                Data = categoris.Skip(10 * (page - 1)).Take(9),
+                NumberOfRecords = categoris.Count
             };
         }
 
         public async Task<ApiResponse> createCategoryAsync(CategoryVM categoryVM)
         {
-            var category =_mapper.Map<Category>(categoryVM);
+            var category = new Category
+            {
+                Name = categoryVM.Name,
+                Flag = true
+            };
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
-            
+
             return new ApiResponse
             {
                 Message = Message.CREATE_SUCCESS.ToString(),
@@ -81,7 +92,7 @@ namespace BTP_API.Services
             var category = await _context.Categories.SingleOrDefaultAsync(c => c.Id == categoryId);
             if (category != null)
             {
-                _context.Remove(category);
+                category.Flag = false;
                 await _context.SaveChangesAsync();
                 return new ApiMessage { Message = Message.DELETE_SUCCESS.ToString() };
             }

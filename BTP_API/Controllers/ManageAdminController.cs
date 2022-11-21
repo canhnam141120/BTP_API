@@ -18,11 +18,7 @@
             try
             {
                 var apiResponse = await _manageAdminRepository.getAllAdminAsync(page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
-                    return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
+                return Ok(apiResponse);
             }
             catch
             {
@@ -37,11 +33,7 @@
             try
             {
                 var apiMessage = await _manageAdminRepository.removeAdminAsync(id);
-                if(apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -55,11 +47,7 @@
             try
             {
                 var apiResponse = await _manageAdminRepository.searchAdminAsync(search, page);
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {

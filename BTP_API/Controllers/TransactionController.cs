@@ -19,11 +19,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _transactionRepository.cancelExchangeAsync(id);
-                if(apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -37,15 +33,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _transactionRepository.cancelExchangeDetailAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                if (apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -59,11 +47,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _transactionRepository.cancelRentAsync(id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -77,15 +61,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _transactionRepository.cancelRentDetailAsync(token, id);
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                if (apiMessage.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiMessage);
-                }
-                return NotFound(apiMessage);
             }
             catch
             {
@@ -99,15 +75,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _transactionRepository.createURLPayAsync(id);
-                if (apiMessage.Message == Message.CREATE_SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                if (apiMessage.Message == Message.CREATE_FAILED.ToString())
-                {
-                    return NotFound(apiMessage);
-                }
-                return BadRequest(apiMessage);
             }
             catch
             {
@@ -122,16 +90,7 @@ namespace BookTradingPlatform.Controllers
             try
             {
                 var apiMessage = await _transactionRepository.updatePayAsync(rs);
-
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                if (apiMessage.Message == Message.BILL_NOT_EXIST.ToString())
-                {
-                    return NotFound(apiMessage);
-                }
-                return BadRequest(apiMessage);
             }
             catch
             {

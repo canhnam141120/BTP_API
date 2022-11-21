@@ -2,10 +2,10 @@
 {
     public interface IRequestRepository
     {
-        public Task<ApiMessage> createRequestAsync(string token, int bookid, List<int> bookOffer);
-        public Task<ApiMessage> cancelRequestAsync(string token, int requestId);
-        public Task<ApiMessage> acceptRequestAsync(string token, int requestId);
-        public Task<ApiMessage> deniedRequestAsync(string token, int requestId);
-        public Task<ApiMessage> rentBookAsync(string token, int bookId);
+        public Task<ApiMessage> createRequestAsync(int userId, int bookid, List<int> bookOffer);
+        public Task<ApiMessage> cancelRequestAsync(int userId, int requestId);
+        public Task<ApiMessage> acceptRequestAsync(int userId, int requestId);
+        public Task<ApiMessage> deniedRequestAsync(int userId, int requestId);
+        public Task<ApiMessage> rentBookAsync(int userId, int bookId);
     }
 }

@@ -7,7 +7,6 @@
         public Task<ApiResponse> getAllExchangeBillAsync(int exchangeId);
         public Task<ApiMessage> updateStatusExchangeAsync(int exchangeId, string status);
         public Task<ApiMessage> updateExchangeDetailAsync(int exchangeDetailId, ExchangeDetailVM exchangeDetailVM);
-
         public Task<ApiResponse> getAllRentAsync(int page = 1);
         public Task<ApiResponse> getAllRentDetailAsync(int rentId);
         public Task<ApiResponse> getAllRentBillAsync(int rentId);
