@@ -35,15 +35,7 @@
             try
             {
                 var apiResponse = await _personalRepository.get10NewNotificationAsync(userId);
-                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiResponse);
-                }
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -58,15 +50,7 @@
             try
             {
                 var apiMessage = await _personalRepository.markReadNotificationAsync(userId, id);
-                if (apiMessage.Message == Message.NOTIFICATION_NOT_EXIST.ToString())
-                {
-                    return NotFound(apiMessage);
-                }
-                if (apiMessage.Message == Message.SUCCESS.ToString())
-                {
                     return Ok(apiMessage);
-                }
-                return BadRequest(apiMessage);
             }
             catch
             {
@@ -80,15 +64,7 @@
             try
             {
                 var apiResponse = await _personalRepository.getBookCanTradeAsync(userId);
-                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiResponse);
-                }
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -102,15 +78,7 @@
             try
             {
                 var apiResponse = await _personalRepository.getAllBookAsync(userId, page);
-                if(apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiResponse);
-                }
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -124,15 +92,7 @@
             try
             {
                 var apiResponse = await _personalRepository.getAllBookAsync(userId, page);
-                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiResponse);
-                }
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -146,15 +106,7 @@
             try
             {
                 var apiResponse = await _personalRepository.getBookDeniedAsync(userId, page);
-                if(apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiResponse);
-                }
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -168,15 +120,7 @@
             try
             {
                 var apiResponse = await _personalRepository.getBookWaitingAsync(userId, page);
-                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiResponse);
-                }
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
@@ -190,15 +134,7 @@
             try
             {
                 var apiResponse = await _personalRepository.getAllPostAsync(userId, page);
-                if (apiResponse.Message == Message.NOT_YET_LOGIN.ToString())
-                {
-                    return BadRequest(apiResponse);
-                }
-                if (apiResponse.NumberOfRecords != 0)
-                {
                     return Ok(apiResponse);
-                }
-                return NotFound(apiResponse);
             }
             catch
             {
