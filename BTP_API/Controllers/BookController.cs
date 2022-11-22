@@ -115,6 +115,23 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
+        [HttpGet("6book/category{id}")]
+        public async Task<IActionResult> get6BookByCategory([FromRoute] int id)
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.get6BookByCategoryAsync(id);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
         [HttpGet("user{id}")]
         public async Task<IActionResult> getBookByUser([FromRoute] int id, [FromQuery] int page = 1)
         {
@@ -126,6 +143,23 @@ namespace BookTradingPlatform.Controllers
             catch
             {
                 return BadRequest(new ApiMessage {Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
+        [HttpGet("6book/user{id}")]
+        public async Task<IActionResult> get6BookByUser([FromRoute] int id)
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.get6BookByUserAsync(id);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
                 });
             }
         }

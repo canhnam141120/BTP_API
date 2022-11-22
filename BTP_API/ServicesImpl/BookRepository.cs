@@ -91,6 +91,19 @@ namespace BTP_API.Services
                 NumberOfRecords = count
             };
         }
+
+        public async Task<ApiResponse> get6BookByCategoryAsync(int categoryId)
+        {
+            var books = await _context.Books.Include(b => b.User).Where(b => b.CategoryId == categoryId && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).Take(6).ToListAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = books,
+                NumberOfRecords = books.Count
+            };
+        }
+
         public async Task<ApiResponse> getBookByUserAsync(int userId, int page = 1)
         {
             var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Skip(6*(page-1)).Take(6).ToListAsync();
@@ -101,6 +114,18 @@ namespace BTP_API.Services
                 Message = Message.GET_SUCCESS.ToString(),
                 Data = books,
                 NumberOfRecords = count
+            };
+        }
+
+        public async Task<ApiResponse> get6BookByUserAsync(int userId)
+        {
+            var books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Take(6).ToListAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 6);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = books,
+                NumberOfRecords = books.Count
             };
         }
 
