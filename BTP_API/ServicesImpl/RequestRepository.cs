@@ -166,7 +166,7 @@
             request.IsAccept = true;
             request.Status = StatusRequest.Approved.ToString();
 
-            var book2 = await _context.Books.SingleOrDefaultAsync(r => r.Id == request.BookOfferId);
+            var book2 = await _context.Books.Include(r => r.User).SingleOrDefaultAsync(r => r.Id == request.BookOfferId);
 
             if (book1 == null || book2 == null)
             {
@@ -383,7 +383,7 @@
                 };
             }
 
-            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == request.BookId && b.UserId == userId);
+            var book = await _context.Books.Include(b => b.User).SingleOrDefaultAsync(b => b.Id == request.BookId && b.UserId == userId);
             if (book == null)
             {
                 return new ApiMessage
@@ -395,7 +395,7 @@
             request.IsNewest = false;
             request.Status = StatusRequest.Denied.ToString();
 
-            var bookOffer = _context.Books.SingleOrDefault(b => b.Id == request.BookOfferId);
+            var bookOffer = _context.Books.Include(b => b.User).SingleOrDefault(b => b.Id == request.BookOfferId);
             if (bookOffer != null)
             {
                 bookOffer.IsTrade = false;

@@ -478,7 +478,7 @@
         }
         public async Task<ApiResponse> listOfRequestReceivedSendAsync(int userId, int bookId)
         {
-            var data = await _context.ExchangeRequests.Include(r => r.BookOffer.User).Include(r => r.BookOffer.Category).Where(r => r.BookId == bookId).OrderByDescending(b => b.Id).ToListAsync();
+            var data = await _context.ExchangeRequests.Include(r => r.BookOffer.User).Include(r => r.BookOffer.Category).Where(r => r.BookId == bookId && r.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             var count = await _context.ExchangeRequests.Where(r => r.BookId == bookId).CountAsync();
             //var result = PaginatedList<ExchangeRequest>.Create(data, page, 5);
             return new ApiResponse
