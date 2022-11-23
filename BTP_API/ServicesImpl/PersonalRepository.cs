@@ -56,7 +56,7 @@
 
         public async Task<ApiResponse> getBookCanTradeAsync(int userId)
         {
-            var books = await _context.Books.Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
+            var books = await _context.Books.Include(b => b.Category.Name).Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -476,9 +476,9 @@
                 NumberOfRecords = exchangeRequests.Count
             };
         }
-        public async Task<ApiResponse> listOfRequestReceivedSendAsync(int userId, int bookId, int page = 1)
+        public async Task<ApiResponse> listOfRequestReceivedSendAsync(int userId, int bookId)
         {
-            var data = await _context.ExchangeRequests.Include(r => r.BookOffer.User).Where(r => r.BookId == bookId).OrderByDescending(b => b.Id).Skip(5*(page-1)).Take(5).ToListAsync();
+            var data = await _context.ExchangeRequests.Include(r => r.BookOffer.User).Include(r => r.BookOffer.Category).Where(r => r.BookId == bookId).OrderByDescending(b => b.Id).ToListAsync();
             var count = await _context.ExchangeRequests.Where(r => r.BookId == bookId).CountAsync();
             //var result = PaginatedList<ExchangeRequest>.Create(data, page, 5);
             return new ApiResponse
@@ -490,7 +490,7 @@
         }
         public async Task<ApiResponse> myTransactionExchangeAsync(int userId, int page = 1)
         {
-            var exchanges = await _context.Exchanges.Where(b => b.UserId1 == userId || b.UserId2 == userId).OrderByDescending(b => b.Id).Skip(10 * (page - 1)).Take(5).ToListAsync();
+            var exchanges = await _context.Exchanges.Include(b => b.UserId1Navigation).Include(b => b.UserId2Navigation).Where(b => b.UserId1 == userId || b.UserId2 == userId).OrderByDescending(b => b.Id).Skip(10 * (page - 1)).Take(5).ToListAsync();
             var count = await _context.Exchanges.Where(b => b.UserId1 == userId || b.UserId2 == userId).CountAsync();
 
             //var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
@@ -503,7 +503,7 @@
         }
         public async Task<ApiResponse> myTransactionExDetailAsync(int userId, int exchangeId)
         {
-            var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId).ToListAsync();
+            var exchangeDetails = await _context.ExchangeDetails.Include(b => b.Book1).Include(b => b.Book2).Where(b => b.ExchangeId == exchangeId).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -535,7 +535,7 @@
         }
         public async Task<ApiResponse> myTransactionRentAsync(int userId, int page = 1)
         {
-            var rents = await _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).OrderByDescending(b => b.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var rents = await _context.Rents.Include(b => b.Owner).Include(b=> b.Renter).Where(b => b.OwnerId == userId || b.RenterId == userId).OrderByDescending(b => b.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
             var count = await _context.Rents.Where(b => b.OwnerId == userId || b.RenterId == userId).CountAsync();
             //var result = PaginatedList<Rent>.Create(rents, page, 10);
             return new ApiResponse
@@ -547,7 +547,7 @@
         }
         public async Task<ApiResponse> myTransactionRentDetailAsync(int userId, int rentId)
         {
-            var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId).ToListAsync();
+            var rentDetails = await _context.RentDetails.Include(b => b.Book).Where(b => b.RentId == rentId).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),

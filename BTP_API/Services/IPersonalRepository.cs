@@ -29,7 +29,7 @@ namespace BTP_API.Services
         public Task<ApiMessage> editInfoAsync(int userId, UserVM userVM);
         public Task<ApiMessage> editPasswordAsync(int userId, ChangePasswordVM changePasswordVM);
         public Task<ApiResponse> listOfRequestSendAsync(int userId, int page = 1);
-        public Task<ApiResponse> listOfRequestReceivedSendAsync(int userId, int bookId, int page = 1);
+        public Task<ApiResponse> listOfRequestReceivedSendAsync(int userId, int bookId);
         public Task<ApiResponse> myTransactionExchangeAsync(int userId, int page = 1);
         public Task<ApiResponse> myTransactionExDetailAsync(int userId, int exchangeId);
         public Task<ApiResponse> myTransactionExBillAsync(int userId, int exchangeId);

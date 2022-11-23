@@ -373,11 +373,11 @@
         }
 
         [HttpPost("request-received/{bookId}")]
-        public async Task<IActionResult> listOfRequestReceived([FromForm] int userId, [FromRoute] int bookId, [FromQuery] int page = 1)
+        public async Task<IActionResult> listOfRequestReceived([FromForm] int userId, [FromRoute] int bookId)
         {
             try
             {
-                var apiResponse = await _personalRepository.listOfRequestReceivedSendAsync(userId, bookId, page);
+                var apiResponse = await _personalRepository.listOfRequestReceivedSendAsync(userId, bookId);
                     return Ok(apiResponse);
             }
             catch
