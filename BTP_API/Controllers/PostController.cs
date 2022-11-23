@@ -25,6 +25,23 @@
             }
         }
 
+        [HttpGet("user{id}")]
+        public async Task<IActionResult> getPostByUser([FromRoute] int id, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _postRepository.getPostByUserAsync(id, page);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
         [HttpGet("all")]
         public async Task<IActionResult> getAllPost([FromQuery] int page = 1)
         {

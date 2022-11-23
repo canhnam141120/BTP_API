@@ -21,6 +21,19 @@
             };
         }
 
+        public async Task<ApiResponse> getPostByUserAsync(int userId, int page = 1)
+        {
+            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var count = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).CountAsync();
+            //var result = PaginatedList<Book>.Create(books, page, 6);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = posts,
+                NumberOfRecords = count
+            };
+        }
+
         public async Task<ApiResponse> getAllPostAsync(int page = 1)
         {
             var posts = await _context.Posts.Include(p => p.User).Where(p => p.Status == StatusRequest.Approved.ToString() && p.IsHide == false).OrderByDescending(p => p.Id).Skip(10*(page-1)).Take(10).ToListAsync();
