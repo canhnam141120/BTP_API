@@ -56,7 +56,7 @@
 
         public async Task<ApiResponse> getBookCanTradeAsync(int userId)
         {
-            var books = await _context.Books.Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
+            var books = await _context.Books.Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -461,7 +461,7 @@
 
             foreach (var book in myBooks)
             {
-                var data = await _context.ExchangeRequests.Include(r => r.Book).Include(r => r.BookOffer).Where(r => r.BookOfferId == book.Id).OrderBy(b => b.Id).ToListAsync();
+                var data = await _context.ExchangeRequests.Include(r => r.Book).Include(r => r.BookOffer).Where(r => r.BookOfferId == book.Id && r.Status == StatusRequest.Waiting.ToString()).OrderBy(b => b.Id).ToListAsync();
                 foreach (var item in data)
                 {
                     exchangeRequests.Add(item);
@@ -472,7 +472,7 @@
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = exchangeRequests.Skip(4*(page-1)).Take(4),
+                Data = exchangeRequests.OrderByDescending(r => r.Id).Skip(4*(page-1)).Take(4),
                 NumberOfRecords = exchangeRequests.Count
             };
         }
