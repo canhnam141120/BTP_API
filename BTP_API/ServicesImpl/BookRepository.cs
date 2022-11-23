@@ -106,7 +106,7 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> getBookByUserAsync(int userId, int page = 1)
         {
-            var books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Skip(5*(page-1)).Take(5).ToListAsync();
+            var books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Skip(10*(page-1)).Take(10).ToListAsync();
             var count = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
             //var result = PaginatedList<Book>.Create(books, page, 6);
             return new ApiResponse
