@@ -56,7 +56,7 @@
 
         public async Task<ApiResponse> getBookCanTradeAsync(int userId)
         {
-            var books = await _context.Books.Include(b => b.Category.Name).Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
+            var books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId && b.IsTrade == false && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
