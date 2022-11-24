@@ -40,7 +40,7 @@ namespace BTP_API.ViewModels
         [Required]
         public string StatusBook { get; set; }
         [Required]
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
         
         [Required]
         public bool IsExchange { get; set; }

@@ -4,7 +4,7 @@ namespace BTP_API.Ultils
 {
     public class UploadFile
     {
-        public string UploadBookImage(BookVM bookVM, IWebHostEnvironment environment)
+        /*public string UploadBookImage(BookVM bookVM, IWebHostEnvironment environment)
         {
             string fileName;
             if (bookVM != null)
@@ -25,7 +25,7 @@ namespace BTP_API.Ultils
                 fileName = "empty";
             }
             return fileName;
-        }
+        }*/
 
         public string UploadPostImage(PostVM postVM, IWebHostEnvironment environment)
         {

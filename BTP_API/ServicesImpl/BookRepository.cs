@@ -153,9 +153,6 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> createBookAsync(int userId, BookVM bookVM)
         {
-            UploadFile uploadFile = new UploadFile();
-            string fileImageName = uploadFile.UploadBookImage(bookVM, _environment);
-
             var book = new Book
             {
                 UserId = userId,
@@ -171,7 +168,7 @@ namespace BTP_API.Services
                 CoverPrice = bookVM.CoverPrice,
                 DepositPrice = bookVM.DepositPrice,
                 StatusBook = bookVM.StatusBook,
-                Image = fileImageName,
+                Image = bookVM.Image,
                 PostedDate = DateOnly.FromDateTime(DateTime.Today),
                 IsExchange = bookVM.IsExchange,
                 IsRent = bookVM.IsRent,
