@@ -69,7 +69,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> getFeedbackInBookAsync(int bookId, int page = 1)
         {
-            var feedbacks = await _context.Feedbacks.Include(p => p.User).Where(p => p.BookId == bookId).OrderByDescending(p => p.Id).Skip(8*(page-1)).Take(8).ToListAsync();
+            var feedbacks = await _context.Feedbacks.Include(p => p.User).Where(p => p.BookId == bookId).OrderByDescending(p => p.Id).Skip(5*(page-1)).Take(5).ToListAsync();
             var count = await _context.Feedbacks.Where(p => p.BookId == bookId).CountAsync();
             //var result = PaginatedList<Feedback>.Create(feedbacks, page, 5);
             return new ApiResponse
