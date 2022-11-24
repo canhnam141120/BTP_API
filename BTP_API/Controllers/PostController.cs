@@ -25,6 +25,20 @@
             }
         }
 
+        [HttpGet("6post")]
+        public async Task<IActionResult> get6Post()
+        {
+            try
+            {
+                var apiResponse = await _postRepository.get6PostAsync();
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
         [HttpGet("user{id}")]
         public async Task<IActionResult> getPostByUser([FromRoute] int id, [FromQuery] int page = 1)
         {

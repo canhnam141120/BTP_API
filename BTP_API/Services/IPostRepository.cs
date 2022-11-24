@@ -3,6 +3,7 @@
     public interface IPostRepository
     {
         public Task<ApiResponse> get3PostAsync();
+        public Task<ApiResponse> get6PostAsync();
         public Task<ApiResponse> getPostByUserAsync(int userId, int page = 1);
         public Task<ApiResponse> getAllPostAsync(int page = 1);
         public Task<ApiResponse> getPostByIdAsync(int postId);
