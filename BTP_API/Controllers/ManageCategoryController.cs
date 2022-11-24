@@ -11,6 +11,20 @@
             _manageCategoryRepository = manageCategoryRepository;
         }
 
+        [HttpGet("getAll")]
+        public async Task<IActionResult> getAll()
+        {
+            try
+            {
+                var apiResponse = await _manageCategoryRepository.getAllAsync();
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
         [HttpGet("all")]
         public async Task<IActionResult> getAllCategory([FromQuery] int page = 1)
         {

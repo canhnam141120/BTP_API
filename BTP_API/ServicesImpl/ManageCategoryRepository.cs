@@ -13,6 +13,16 @@ namespace BTP_API.Services
             _context = context;
             _mapper = mapper;
         }
+        public async Task<ApiResponse> getAllAsync()
+        {
+            var categories = await _context.Categories.Where(c => c.Flag == true).OrderBy(c => c.Name).ToListAsync();
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = categories,
+                NumberOfRecords = categories.Count
+            };
+        }
         public async Task<ApiResponse> getAllCategoryAsync(int page = 1)
         {
             var categories = await _context.Categories.Where(c => c.Flag == true).OrderByDescending(c => c.Id).Skip(10*(page-1)).Take(10).ToListAsync();
