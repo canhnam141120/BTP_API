@@ -513,7 +513,7 @@
         }
         public async Task<ApiResponse> myTransactionExBillAsync(int userId, int exchangeId)
         {
-            var exchangeBill = await _context.ExchangeBills.SingleOrDefaultAsync(b => b.ExchangeId == exchangeId && b.UserId == userId);
+            var exchangeBill = await _context.ExchangeBills.Include(b=>b.FeeId1Navigation).Include(b=>b.FeeId2Navigation).Include(b=>b.FeeId3Navigation).SingleOrDefaultAsync(b => b.ExchangeId == exchangeId && b.UserId == userId);
 
             return new ApiResponse
             {
