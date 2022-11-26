@@ -40,11 +40,6 @@ namespace BTP_API.Models
         [Required]
         public string Image { get; set; }
         /// <summary>
-        /// Thẻ
-        /// </summary>
-        [Required]
-        public string Hashtag { get; set; }
-        /// <summary>
         /// Ngày đăng
         /// </summary>
         [Required]

@@ -576,11 +576,6 @@
                     .HasColumnType("timestamp without time zone")
                     .HasComment("Ngày đăng");
 
-                entity.Property(e => e.Hashtag)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasComment("Thẻ");
-
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -919,10 +914,6 @@
                 entity.Property(e => e.AddressMain)
                     .IsRequired()
                     .HasComment("Địa chỉ chính");
-
-                entity.Property(e => e.AddressSub1).HasComment("Địa chỉ phụ 1");
-
-                entity.Property(e => e.AddressSub2).HasComment("Địa chỉ phụ 2");
 
                 entity.Property(e => e.Age).HasComment("Tuổi");
 

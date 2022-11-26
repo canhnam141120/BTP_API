@@ -27,7 +27,7 @@ namespace BTP_API.Ultils
             return fileName;
         }*/
 
-        public string UploadPostImage(PostVM postVM, IWebHostEnvironment environment)
+       /* public string UploadPostImage(PostVM postVM, IWebHostEnvironment environment)
         {
             string fileName;
             if (postVM != null)
@@ -54,9 +54,9 @@ namespace BTP_API.Ultils
                 fileName = "empty";
             }
             return fileName;
-        }
+        }*/
 
-        public string UploadUserImage(IFormFile Avatar, IWebHostEnvironment environment)
+        /*public string UploadUserImage(IFormFile Avatar, IWebHostEnvironment environment)
         {
             string fileName;
             if (Avatar != null)
@@ -77,6 +77,6 @@ namespace BTP_API.Ultils
                 fileName = "empty";
             }
             return fileName;
-        }
+        }*/
     }
 }

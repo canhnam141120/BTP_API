@@ -6,16 +6,9 @@ namespace BTP_API.ViewModels
     {
         [Required]
         public string Fullname { get; set; }
-
         public int? Age { get; set; }
-
         [Required]
         public string AddressMain { get; set; }
-
-        public string AddressSub1 { get; set; }
-
-        public string AddressSub2 { get; set; }
-
-        public IFormFile Avatar { get; set; }
+        public string Avatar { get; set; }
     }
 }

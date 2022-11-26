@@ -82,14 +82,6 @@ namespace BTP_API.Models
         [Required]
         public string AddressMain { get; set; }
         /// <summary>
-        /// Địa chỉ phụ 1
-        /// </summary>
-        public string AddressSub1 { get; set; }
-        /// <summary>
-        /// Địa chỉ phụ 2
-        /// </summary>
-        public string AddressSub2 { get; set; }
-        /// <summary>
         /// Ảnh đại diện
         /// </summary>
         public string Avatar { get; set; }

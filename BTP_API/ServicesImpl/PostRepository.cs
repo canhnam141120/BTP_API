@@ -102,16 +102,14 @@
         }
         public async Task<ApiResponse> createPostAsync(int userId, PostVM postVM)
         {
-            UploadFile uploadFile = new UploadFile();
-            string fileImageName = uploadFile.UploadPostImage(postVM, _environment);
-
+/*            UploadFile uploadFile = new UploadFile();
+            string fileImageName = uploadFile.UploadPostImage(postVM, _environment);*/
             var post = new Post
             {
                 UserId = userId,
                 Title = postVM.Title,
                 Content = postVM.Content,
-                Image = fileImageName,
-                Hashtag = postVM.Hashtag,
+                Image = postVM.Image,
                 CreatedDate = DateTime.Now,
                 IsHide = false,
                 Status = Status.Waiting.ToString()

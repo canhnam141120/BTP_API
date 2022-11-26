@@ -403,8 +403,6 @@
         }
         public async Task<ApiMessage> editInfoAsync(int userId, UserVM userVM)
         {
-            UploadFile uploadFile = new UploadFile();
-
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
@@ -416,9 +414,7 @@
             user.Fullname = userVM.Fullname;
             user.Age = userVM.Age;
             user.AddressMain = userVM.AddressMain;
-            user.AddressSub1 = userVM.AddressSub1;
-            user.AddressSub2 = userVM.AddressSub2;
-            user.Avatar = uploadFile.UploadUserImage(userVM.Avatar, _environment);
+            user.Avatar = userVM.Avatar;
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
