@@ -124,11 +124,11 @@
         }
 
         [HttpGet("feedback/{id}")]
-        public async Task<IActionResult> getFeedbackInBook([FromRoute] int id, [FromQuery] int page = 1)
+        public async Task<IActionResult> getFeedbackInBook([FromRoute] int id)
         {
             try
             {
-                var apiResponse = await _manageBookRepository.getFeedbackInBookAsync(id, page);
+                var apiResponse = await _manageBookRepository.getFeedbackInBookAsync(id);
                     return Ok(apiResponse);
             }
             catch

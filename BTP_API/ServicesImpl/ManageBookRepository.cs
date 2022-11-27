@@ -141,9 +141,9 @@
             };
         }
 
-        public async Task<ApiResponse> getFeedbackInBookAsync(int bookId, int page = 1)
+        public async Task<ApiResponse> getFeedbackInBookAsync(int bookId)
         {
-            var feedbacks = await _context.Feedbacks.Include(p => p.User).Where(p => p.BookId == bookId).OrderByDescending(f => f.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var feedbacks = await _context.Feedbacks.Include(p => p.User).Where(p => p.BookId == bookId).OrderByDescending(f => f.Id).ToListAsync();
             var count = await _context.Feedbacks.Where(p => p.BookId == bookId).CountAsync();
             //var result = PaginatedList<Feedback>.Create(feedbacks, page, 10);
             return new ApiResponse
