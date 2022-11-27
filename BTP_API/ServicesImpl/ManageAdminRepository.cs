@@ -8,17 +8,15 @@
         {
             _context = context;
         }
-        public async Task<ApiResponse> getAllAdminAsync(int page = 1)
+        public async Task<ApiResponse> getAllAdminAsync()
         {
-            var admins = await _context.Users.Where(b => b.RoleId == 2).OrderByDescending(b => b.Id).Skip(10*(page-1)).Take(10).ToListAsync();
-            var count = await _context.Users.Where(b => b.RoleId == 2).CountAsync();
-
+            var admins = await _context.Users.Where(b => b.RoleId == 2).OrderByDescending(b => b.Id).ToListAsync();
             //var result = PaginatedList<User>.Create(admins, page, 10);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
                 Data = admins,
-                NumberOfRecords = count
+                NumberOfRecords = admins.Count
             };
         }
 
@@ -35,7 +33,7 @@
             return new ApiMessage { Message = Message.USER_NOT_EXIST.ToString()};
         }
 
-        public async Task<ApiResponse> searchAdminAsync(string search, int page = 1)
+        public async Task<ApiResponse> searchAdminAsync(string search)
         {
             List<User> admins;
 
@@ -53,7 +51,7 @@
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = admins.Skip(10*(page-1)).Take(10),
+                Data = admins,
                 NumberOfRecords = admins.Count
             };
         }

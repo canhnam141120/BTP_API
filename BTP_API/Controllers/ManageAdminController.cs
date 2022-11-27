@@ -13,11 +13,11 @@
 
         [HttpGet("all")]
         //[Authorize(Roles = "1")]
-        public async Task<IActionResult> getAllAdmin([FromQuery] int page = 1)
+        public async Task<IActionResult> getAllAdmin()
         {
             try
             {
-                var apiResponse = await _manageAdminRepository.getAllAdminAsync(page);
+                var apiResponse = await _manageAdminRepository.getAllAdminAsync();
                 return Ok(apiResponse);
             }
             catch
@@ -42,11 +42,11 @@
         }
 
         [HttpPost("search")]
-        public async Task<IActionResult> searchAdmin([FromForm] string search, [FromQuery] int page = 1)
+        public async Task<IActionResult> searchAdmin([FromForm] string search)
         {
             try
             {
-                var apiResponse = await _manageAdminRepository.searchAdminAsync(search, page);
+                var apiResponse = await _manageAdminRepository.searchAdminAsync(search);
                     return Ok(apiResponse);
             }
             catch
