@@ -83,7 +83,7 @@
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = books.Skip(10 * (page - 1)).Take(9),
+                Data = books.Skip(10 * (page - 1)).Take(10),
                 NumberOfRecords = books.Count
             };
         }
