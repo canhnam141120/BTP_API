@@ -89,7 +89,7 @@
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
-                Data = posts.Skip(5 * (page - 1)).Take(9),
+                Data = posts.Skip(5 * (page - 1)).Take(5),
                 NumberOfRecords = posts.Count
             };
         }
