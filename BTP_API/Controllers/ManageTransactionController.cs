@@ -25,6 +25,20 @@
             }
         }
 
+        [HttpGet("exchange/{id}")]
+        public async Task<IActionResult> getExchangeByID([FromRoute] int id)
+        {
+            try
+            {
+                var apiResponse = await _manageTransactionRepository.getExchangeByIDAsync(id);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
         [HttpGet("exchange/waiting")]
         public async Task<IActionResult> getAllExchangeWaiting([FromQuery] int page = 1)
         {
@@ -160,6 +174,20 @@
             catch
             {
                 return BadRequest(new ApiMessage{Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+        [HttpGet("rent/{id}")]
+        public async Task<IActionResult> getRentByID([FromRoute] int id)
+        {
+            try
+            {
+                var apiResponse = await _manageTransactionRepository.getRentByIDAsync(id);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
 

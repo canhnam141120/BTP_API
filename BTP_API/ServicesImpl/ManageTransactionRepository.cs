@@ -23,6 +23,18 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = count
             };
         }
+
+        public async Task<ApiResponse> getExchangeByIDAsync(int exchangeId)
+        {
+            var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).SingleOrDefaultAsync(e => e.Id == exchangeId);
+            
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = exchanges,
+            };
+        }
+
         public async Task<ApiResponse> getAllExchangeWaitingAsync(int page = 1)
         {
             var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).Where(e => e.Status == Status.Waiting.ToString()).OrderByDescending(e => e.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
@@ -113,6 +125,7 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = exchangeBills.Count
             };
         }
+
         public async Task<ApiMessage> updateStatusExchangeAsync(int exchangeId, ExchangeVM exchangeVM)
         {
             var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
@@ -195,6 +208,17 @@ namespace BTP_API.ServicesImpl
                 Message = Message.GET_SUCCESS.ToString(),
                 Data = rents,
                 NumberOfRecords = count
+            };
+        }
+
+        public async Task<ApiResponse> getRentByIDAsync(int rentId)
+        {
+            var rent = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).SingleOrDefaultAsync(e => e.Id == rentId);
+
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = rent,
             };
         }
 
