@@ -121,10 +121,14 @@ namespace BTP_API.ServicesImpl
                 exchange.Status = exchangeVM.Status;
                 exchange.StorageStatus1 = exchangeVM.StorageStatus1;
                 exchange.StorageStatus2 = exchangeVM.StorageStatus2;
-                exchange.SendDate = exchangeVM.SendDate;
-                exchange.ReceiveDate = exchangeVM.ReceiveDate;
-                exchange.RecallDate = exchangeVM.RecallDate;
-                exchange.RefundDate = exchangeVM.RefundDate;
+                exchange.SendDate1 = exchangeVM.SendDate1;
+                exchange.ReceiveDate1 = exchangeVM.ReceiveDate1;
+                exchange.RecallDate1 = exchangeVM.RecallDate1;
+                exchange.RefundDate1 = exchangeVM.RefundDate1;
+                exchange.SendDate2 = exchangeVM.SendDate2;
+                exchange.ReceiveDate2 = exchangeVM.ReceiveDate2;
+                exchange.RecallDate2 = exchangeVM.RecallDate2;
+                exchange.RefundDate2 = exchangeVM.RefundDate2;
                 if (exchangeVM.Status == Status.Trading.ToString())
                 {
                     var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Waiting.ToString()).ToListAsync();

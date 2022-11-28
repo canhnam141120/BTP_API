@@ -52,19 +52,36 @@ namespace BTP_API.Models
         /// <summary>
         /// Ngày gửi
         /// </summary>
-        public DateOnly? SendDate { get; set; }
+        public DateOnly? SendDate1 { get; set; }
         /// <summary>
         /// Ngày nhận
         /// </summary>
-        public DateOnly? ReceiveDate { get; set; }
+        public DateOnly? ReceiveDate1 { get; set; }
         /// <summary>
         /// Ngày thu hồi
         /// </summary>
-        public DateOnly? RecallDate { get; set; }
+        public DateOnly? RecallDate1 { get; set; }
         /// <summary>
         /// Ngày hoàn trả
         /// </summary>
-        public DateOnly? RefundDate { get; set; }
+        public DateOnly? RefundDate1 { get; set; }
+
+        /// <summary>
+        /// Ngày gửi
+        /// </summary>
+        public DateOnly? SendDate2 { get; set; }
+        /// <summary>
+        /// Ngày nhận
+        /// </summary>
+        public DateOnly? ReceiveDate2 { get; set; }
+        /// <summary>
+        /// Ngày thu hồi
+        /// </summary>
+        public DateOnly? RecallDate2 { get; set; }
+        /// <summary>
+        /// Ngày hoàn trả
+        /// </summary>
+        public DateOnly? RefundDate2 { get; set; }
 
         public virtual User UserId1Navigation { get; set; }
         public virtual User UserId2Navigation { get; set; }

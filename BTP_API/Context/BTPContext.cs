@@ -210,13 +210,21 @@
                     .HasMaxLength(50)
                     .HasComment("Trạng thái2");
 
-                entity.Property(e => e.RecallDate).HasComment("Ngày thu hồi");
+                entity.Property(e => e.RecallDate1).HasComment("Ngày thu hồi");
 
-                entity.Property(e => e.ReceiveDate).HasComment("Ngày nhận");
+                entity.Property(e => e.ReceiveDate1).HasComment("Ngày nhận");
 
-                entity.Property(e => e.RefundDate).HasComment("Ngày hoàn trả");
+                entity.Property(e => e.RefundDate1).HasComment("Ngày hoàn trả");
 
-                entity.Property(e => e.SendDate).HasComment("Ngày gửi");
+                entity.Property(e => e.SendDate1).HasComment("Ngày gửi");
+
+                entity.Property(e => e.RecallDate2).HasComment("Ngày thu hồi");
+
+                entity.Property(e => e.ReceiveDate2).HasComment("Ngày nhận");
+
+                entity.Property(e => e.RefundDate2).HasComment("Ngày hoàn trả");
+
+                entity.Property(e => e.SendDate2).HasComment("Ngày gửi");
 
                 entity.Property(e => e.UserId1)
                     .HasColumnName("UserID1")
