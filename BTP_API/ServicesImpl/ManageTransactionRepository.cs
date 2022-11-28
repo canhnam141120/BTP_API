@@ -20,6 +20,76 @@
                 NumberOfRecords = count
             };
         }
+        public async Task<ApiResponse> getAllExchangeWaitingAsync(int page = 1)
+        {
+            var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).Where(e => e.Status == Status.Waiting.ToString()).OrderByDescending(e => e.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Exchanges.Where(e => e.Status == Status.Waiting.ToString()).CountAsync();
+            //var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = exchanges,
+                NumberOfRecords = count
+            };
+        }
+        public async Task<ApiResponse> getAllExchangeTradingAsync(int page = 1)
+        {
+            var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).Where(e => e.Status == Status.Trading.ToString()).OrderByDescending(e => e.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Exchanges.Where(e => e.Status == Status.Trading.ToString()).CountAsync();
+            //var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = exchanges,
+                NumberOfRecords = count
+            };
+        }
+        public async Task<ApiResponse> getAllExchangeCompleteAsync(int page = 1)
+        {
+            var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).Where(e => e.Status == Status.Complete.ToString()).OrderByDescending(e => e.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Exchanges.Where(e => e.Status == Status.Complete.ToString()).CountAsync();
+            //var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = exchanges,
+                NumberOfRecords = count
+            };
+        }
+        public async Task<ApiResponse> getAllExchangeCancelAsync(int page = 1)
+        {
+            var exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).Where(e => e.Status == Status.Cancel.ToString()).OrderByDescending(e => e.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Exchanges.Where(e => e.Status == Status.Cancel.ToString()).CountAsync();
+            //var result = PaginatedList<Exchange>.Create(exchanges, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = exchanges,
+                NumberOfRecords = count
+            };
+        }
+
+        public async Task<ApiResponse> searchExchangeAsync(int? id, int page = 1)
+        {
+            List<Exchange> exchanges;
+            if (id != null)
+            {
+                exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).Where(b => b.Id == id).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                exchanges = await _context.Exchanges.Include(e => e.UserId1Navigation).Include(e => e.UserId2Navigation).OrderByDescending(b => b.Id).ToListAsync();
+            }
+
+            //var result = PaginatedList<Book>.Create(books, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = exchanges.Skip(10 * (page - 1)).Take(10),
+                NumberOfRecords = exchanges.Count
+            };
+        }
+
         public async Task<ApiResponse> getAllExchangeDetailAsync(int exchangeId)
         {
             var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId).ToListAsync();
@@ -116,6 +186,78 @@
                 NumberOfRecords = count
             };
         }
+
+        public async Task<ApiResponse> getAllRentWaitingAsync(int page = 1)
+        {
+            var rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).Where(e => e.Status == Status.Waiting.ToString()).OrderByDescending(r => r.Id).Skip(10*(page-1)).Take(10).ToListAsync();
+            var count = await _context.Rents.Where(e => e.Status == Status.Waiting.ToString()).CountAsync();
+            //var result = PaginatedList<Rent>.Create(rents, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = rents,
+                NumberOfRecords = count
+            };
+        }
+        public async Task<ApiResponse> getAllRentTradingAsync(int page = 1)
+        {
+            var rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).Where(e => e.Status == Status.Trading.ToString()).OrderByDescending(r => r.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Rents.Where(e => e.Status == Status.Trading.ToString()).CountAsync();
+            //var result = PaginatedList<Rent>.Create(rents, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = rents,
+                NumberOfRecords = count
+            };
+        }
+        public async Task<ApiResponse> getAllRentCompleteAsync(int page = 1)
+        {
+            var rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).Where(e => e.Status == Status.Complete.ToString()).OrderByDescending(r => r.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Rents.Where(e => e.Status == Status.Complete.ToString()).CountAsync();
+            //var result = PaginatedList<Rent>.Create(rents, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = rents,
+                NumberOfRecords = count
+            };
+        }
+        public async Task<ApiResponse> getAllRentCancelAsync(int page = 1)
+        {
+            var rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).Where(e => e.Status == Status.Cancel.ToString()).OrderByDescending(r => r.Id).Skip(10 * (page - 1)).Take(10).ToListAsync();
+            var count = await _context.Rents.Where(e => e.Status == Status.Cancel.ToString()).CountAsync();
+            //var result = PaginatedList<Rent>.Create(rents, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = rents,
+                NumberOfRecords = count
+            };
+        }
+
+        public async Task<ApiResponse> searchRentAsync(int? id, int page = 1)
+        {
+            List<Rent> rents;
+            if (id != null)
+            {
+                rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).Where(b => b.Id == id).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).OrderByDescending(b => b.Id).ToListAsync();
+            }
+
+            //var result = PaginatedList<Book>.Create(books, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = rents.Skip(10 * (page - 1)).Take(10),
+                NumberOfRecords = rents.Count
+            };
+        }
+
+
         public async Task<ApiResponse> getAllRentDetailAsync(int rentId)
         {
             var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId).ToListAsync();

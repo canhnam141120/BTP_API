@@ -3,11 +3,21 @@
     public interface IManageTransactionRepository
     {
         public Task<ApiResponse> getAllExchangeAsync(int page = 1);
+        public Task<ApiResponse> getAllExchangeWaitingAsync(int page = 1);
+        public Task<ApiResponse> getAllExchangeTradingAsync(int page = 1);
+        public Task<ApiResponse> getAllExchangeCompleteAsync(int page = 1);
+        public Task<ApiResponse> getAllExchangeCancelAsync(int page = 1);
+        public Task<ApiResponse> searchExchangeAsync(int? id, int page = 1);
         public Task<ApiResponse> getAllExchangeDetailAsync(int exchangeId);
         public Task<ApiResponse> getAllExchangeBillAsync(int exchangeId);
         public Task<ApiMessage> updateStatusExchangeAsync(int exchangeId, string status);
         public Task<ApiMessage> updateExchangeDetailAsync(int exchangeDetailId, ExchangeDetailVM exchangeDetailVM);
         public Task<ApiResponse> getAllRentAsync(int page = 1);
+        public Task<ApiResponse> getAllRentWaitingAsync(int page = 1);
+        public Task<ApiResponse> getAllRentTradingAsync(int page = 1);
+        public Task<ApiResponse> getAllRentCompleteAsync(int page = 1);
+        public Task<ApiResponse> getAllRentCancelAsync(int page = 1);
+        public Task<ApiResponse> searchRentAsync(int? id,int page = 1);
         public Task<ApiResponse> getAllRentDetailAsync(int rentId);
         public Task<ApiResponse> getAllRentBillAsync(int rentId);
         public Task<ApiMessage> updateStatusRentAsync(int rentId, string status);
