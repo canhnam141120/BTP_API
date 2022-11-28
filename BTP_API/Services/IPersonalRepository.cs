@@ -38,6 +38,7 @@ namespace BTP_API.Services
         public Task<ApiResponse> myTransactionRentDetailAsync(int userId, int rentId);
         public Task<ApiResponse> myTransactionRentBillAsync(int userId, int rentId);
         public Task<ApiResponse> myRentBillAllAsync(int userId, int page = 1);
+        public Task<ApiResponse> getInfoShippingAsync(int userId);
         public Task<ApiMessage> updateInfoShippingAsync(int userId, ShipInfoVM shipInfoVM);
     }
 }

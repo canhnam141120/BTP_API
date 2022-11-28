@@ -572,7 +572,18 @@
                 NumberOfRecords = count
             };
         }
-        public async Task<ApiMessage> updateInfoShippingAsync(int userId, ShipInfoVM shipInfoVM)
+
+        public async Task<ApiResponse> getInfoShippingAsync(int userId)
+        {
+            var info = await _context.ShipInfos.SingleOrDefaultAsync(s => s.UserId == userId);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = info
+            };
+        }
+
+            public async Task<ApiMessage> updateInfoShippingAsync(int userId, ShipInfoVM shipInfoVM)
         {
             var shipInfo = await _context.ShipInfos.SingleOrDefaultAsync(u => u.UserId == userId);
             if (shipInfo == null)

@@ -499,6 +499,21 @@
             }
         }
 
+        [HttpPost("my-infoShip")]
+        public async Task<IActionResult> getInfoShipping([FromForm] int userId)
+        {
+            try
+            {
+                var apiResponse = await _personalRepository.getInfoShippingAsync(userId);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+
         [HttpPut("update-info-shipping")]
         public async Task<IActionResult> updateInfoShipping([FromForm] int userId, [FromForm] ShipInfoVM shipInfoVM)
         {
