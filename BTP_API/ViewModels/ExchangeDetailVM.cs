@@ -11,8 +11,6 @@ namespace BTP_API.ViewModels
         public string BeforeStatusBook2 { get; set; }
         
         public string AfterStatusBook2 { get; set; }
-        
-        [Required]
-        public string Status { get; set; }
+       
     }
 }

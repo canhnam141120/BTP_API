@@ -242,7 +242,6 @@ namespace BTP_API.ServicesImpl
                 exchangeDetail.AfterStatusBook1 = exchangeDetailVM.AfterStatusBook1;
                 exchangeDetail.BeforeStatusBook2 = exchangeDetailVM.BeforeStatusBook2;
                 exchangeDetail.AfterStatusBook2 = exchangeDetailVM.AfterStatusBook2;
-                exchangeDetail.Status = exchangeDetailVM.Status;
                 
                 _context.Update(exchangeDetail);
                 await _context.SaveChangesAsync();
@@ -469,7 +468,6 @@ namespace BTP_API.ServicesImpl
             {
                 rentDetail.BeforeStatusBook = rentDetailVM.BeforeStatusBook;
                 rentDetail.AfterStatusBook = rentDetailVM.AfterStatusBook;
-                rentDetail.Status = rentDetailVM.Status;
                 _context.Update(rentDetail);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
