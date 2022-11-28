@@ -131,7 +131,6 @@ namespace BTP_API.ServicesImpl
             var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
             if(exchange != null)
             {
-                exchange.Status = exchangeVM.Status;
                 exchange.StorageStatus1 = exchangeVM.StorageStatus1;
                 exchange.StorageStatus2 = exchangeVM.StorageStatus2;
                 exchange.SendDate1 = exchangeVM.SendDate1;
@@ -142,26 +141,7 @@ namespace BTP_API.ServicesImpl
                 exchange.ReceiveDate2 = exchangeVM.ReceiveDate2;
                 exchange.RecallDate2 = exchangeVM.RecallDate2;
                 exchange.RefundDate2 = exchangeVM.RefundDate2;
-                if (exchangeVM.Status == Status.Trading.ToString())
-                {
-                    var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Waiting.ToString()).ToListAsync();
-                    foreach (var detail in exchangeDetails)
-                    {
-                        detail.Status = exchangeVM.Status;
-                    }
-                }
-                if(exchangeVM.Status == Status.Complete.ToString())
-                {
-                    var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Trading.ToString()).ToListAsync();
-                    foreach (var detail in exchangeDetails)
-                    {
-                        detail.Status = exchangeVM.Status;
-                    }
-                    var user1 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId1);
-                    var user2 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId2);
-                    user1.NumberOfTransaction += exchangeDetails.Count;
-                    user2.NumberOfTransaction += exchangeDetails.Count;
-                }
+                
                 _context.Update(exchange);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
@@ -174,6 +154,62 @@ namespace BTP_API.ServicesImpl
                 Message = Message.EXCHANGE_NOT_EXIST.ToString()
             };
         }
+
+        public async Task<ApiMessage> tradingExchangeAsync(int exchangeId)
+        {
+            var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
+            if (exchange != null)
+            {
+                exchange.Status = Status.Trading.ToString();
+                    var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Waiting.ToString()).ToListAsync();
+                    foreach (var detail in exchangeDetails)
+                    {
+                        detail.Status = Status.Trading.ToString();
+                }
+                
+                _context.Update(exchange);
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.UPDATE_SUCCESS.ToString()
+                };
+            }
+            return new ApiMessage
+            {
+                Message = Message.EXCHANGE_NOT_EXIST.ToString()
+            };
+        }
+
+        public async Task<ApiMessage> completeExchangeAsync(int exchangeId)
+        {
+            var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
+            if (exchange != null)
+            {
+                exchange.Status = Status.Complete.ToString();
+
+                    var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Trading.ToString()).ToListAsync();
+                    foreach (var detail in exchangeDetails)
+                    {
+                        detail.Status = Status.Complete.ToString();
+               }
+                    var user1 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId1);
+                    var user2 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId2);
+                    user1.NumberOfTransaction += exchangeDetails.Count;
+                    user2.NumberOfTransaction += exchangeDetails.Count;
+                
+                _context.Update(exchange);
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.UPDATE_SUCCESS.ToString()
+                };
+            }
+            return new ApiMessage
+            {
+                Message = Message.EXCHANGE_NOT_EXIST.ToString()
+            };
+        }
+
         public async Task<ApiMessage> updateExchangeDetailAsync(int exchangeDetailId, ExchangeDetailVM exchangeDetailVM)
         {
             var exchangeDetail = await _context.ExchangeDetails.SingleOrDefaultAsync(b => b.Id == exchangeDetailId);
@@ -320,31 +356,64 @@ namespace BTP_API.ServicesImpl
             var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentId);
             if (rent != null)
             {
-               
-                if (rentVM.Status == Status.Trading.ToString())
-                {
-                    var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId && b.Status == Status.Waiting.ToString()).ToListAsync();
-                    foreach (var detail in rentDetails)
-                    {
-                        detail.Status = rentVM.Status;
-                    }
-                }
-                if (rentVM.Status == Status.Complete.ToString())
-                {
-                    var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId && b.Status == Status.Trading.ToString()).ToListAsync();
-                    foreach (var detail in rentDetails)
-                    {
-                        detail.Status = rentVM.Status;
-                    }
-                    var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == rent.OwnerId);
-                    user.NumberOfTransaction += rentDetails.Count;
-                }
-                rent.Status = rentVM.Status;
                 rent.StorageStatus = rentVM.StorageStatus;
                 rent.SendDate = rentVM.SendDate;
                 rent.ReceiveDate = rentVM.ReceiveDate;
                 rent.RecallDate = rentVM.RecallDate;
                 rent.RefundDate = rentVM.RefundDate;
+                _context.Update(rent);
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.UPDATE_SUCCESS.ToString()
+                };
+            }
+            return new ApiMessage
+            {
+                Message = Message.RENT_NOT_EXIST.ToString()
+            };
+        }
+
+        public async Task<ApiMessage> tradingRentAsync(int rentId)
+        {
+            var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentId);
+            if (rent != null)
+            {
+                rent.Status = Status.Trading.ToString();
+                var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId && b.Status == Status.Waiting.ToString()).ToListAsync();
+                    foreach (var detail in rentDetails)
+                    {
+                        detail.Status = Status.Trading.ToString();
+                }
+                _context.Update(rent);
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.UPDATE_SUCCESS.ToString()
+                };
+            }
+            return new ApiMessage
+            {
+                Message = Message.RENT_NOT_EXIST.ToString()
+            };
+        }
+
+        public async Task<ApiMessage> completeRentAsync(int rentId)
+        {
+            var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentId);
+            if (rent != null)
+            {
+                rent.Status = Status.Complete.ToString();
+
+                    var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId && b.Status == Status.Trading.ToString()).ToListAsync();
+                    foreach (var detail in rentDetails)
+                    {
+                        detail.Status = Status.Complete.ToString();
+                }
+                    var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == rent.OwnerId);
+                    user.NumberOfTransaction += rentDetails.Count;
+                
+                
                 _context.Update(rent);
                 await _context.SaveChangesAsync();
                 return new ApiMessage

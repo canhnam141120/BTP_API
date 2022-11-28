@@ -149,6 +149,34 @@
             }
         }
 
+        [HttpPut("exchange/trading/{id}")]
+        public async Task<IActionResult> tradingExchange([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _manageTransactionRepository.tradingExchangeAsync(id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
+            }
+        }
+
+        [HttpPut("exchange/complete/{id}")]
+        public async Task<IActionResult> completeExchange([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _manageTransactionRepository.completeExchangeAsync(id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
+            }
+        }
+
         [HttpPut("exchange-detail/update-status/{id}")]
         public async Task<IActionResult> updateExchangeDetail([FromRoute] int id, [FromForm] ExchangeDetailVM exchangeDetailVM)
         {
@@ -298,6 +326,34 @@
             catch
             {
                 return BadRequest(new ApiMessage{Message = Message.UPDATE_FAILED.ToString() });
+            }
+        }
+
+        [HttpPut("rent/trading/{id}")]
+        public async Task<IActionResult> tradingRent([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _manageTransactionRepository.tradingRentAsync(id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
+            }
+        }
+
+        [HttpPut("rent/complete/{id}")]
+        public async Task<IActionResult> completeRent([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _manageTransactionRepository.completeRentAsync(id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 

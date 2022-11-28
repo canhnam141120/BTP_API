@@ -22,8 +22,5 @@ namespace BTP_API.ViewModels
         public DateOnly? RecallDate2 { get; set; }
 
         public DateOnly? RefundDate2 { get; set; }
-
-        [Required]
-        public string Status { get; set; }
     }
 }

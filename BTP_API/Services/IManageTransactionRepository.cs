@@ -12,6 +12,8 @@
         public Task<ApiResponse> getAllExchangeDetailAsync(int exchangeId);
         public Task<ApiResponse> getAllExchangeBillAsync(int exchangeId);
         public Task<ApiMessage> updateStatusExchangeAsync(int exchangeId, ExchangeVM exchangeVM);
+        public Task<ApiMessage> tradingExchangeAsync(int exchangeId);
+        public Task<ApiMessage> completeExchangeAsync(int exchangeId);
         public Task<ApiMessage> updateExchangeDetailAsync(int exchangeDetailId, ExchangeDetailVM exchangeDetailVM);
         public Task<ApiResponse> getAllRentAsync(int page = 1);
         public Task<ApiResponse> getRentByIDAsync(int rentId);
@@ -23,6 +25,8 @@
         public Task<ApiResponse> getAllRentDetailAsync(int rentId);
         public Task<ApiResponse> getAllRentBillAsync(int rentId);
         public Task<ApiMessage> updateStatusRentAsync(int rentId, RentVM rentVM);
+        public Task<ApiMessage> tradingRentAsync(int rentId);
+        public Task<ApiMessage> completeRentAsync(int rentId);
         public Task<ApiMessage> updateRentDetailAsync(int rentDetailId, RentDetailVM rentDetailVM);
     }
 }
