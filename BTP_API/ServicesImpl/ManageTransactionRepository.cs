@@ -107,7 +107,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> getAllExchangeDetailAsync(int exchangeId)
         {
-            var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId).ToListAsync();
+            var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId).OrderByDescending(b => b.Id).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -353,7 +353,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> getAllRentDetailAsync(int rentId)
         {
-            var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId).ToListAsync();
+            var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId).OrderByDescending(b => b.Id).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
