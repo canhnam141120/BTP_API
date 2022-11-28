@@ -133,15 +133,38 @@ namespace BTP_API.ServicesImpl
             {
                 exchange.StorageStatus1 = exchangeVM.StorageStatus1;
                 exchange.StorageStatus2 = exchangeVM.StorageStatus2;
-                exchange.SendDate1 = exchangeVM.SendDate1;
-                exchange.ReceiveDate1 = exchangeVM.ReceiveDate1;
-                exchange.RecallDate1 = exchangeVM.RecallDate1;
-                exchange.RefundDate1 = exchangeVM.RefundDate1;
-                exchange.SendDate2 = exchangeVM.SendDate2;
-                exchange.ReceiveDate2 = exchangeVM.ReceiveDate2;
-                exchange.RecallDate2 = exchangeVM.RecallDate2;
-                exchange.RefundDate2 = exchangeVM.RefundDate2;
-                
+                if(exchangeVM.SendDate1 != null)
+                {
+                    exchange.SendDate1 = DateOnly.Parse(exchangeVM.SendDate1);
+                }
+                if (exchangeVM.ReceiveDate1 != null)
+                {
+                    exchange.ReceiveDate1 = DateOnly.Parse(exchangeVM.ReceiveDate1);
+                }
+                if (exchangeVM.RecallDate1 != null)
+                {
+                    exchange.RecallDate1 = DateOnly.Parse(exchangeVM.RecallDate1);
+                }
+                if (exchangeVM.RefundDate1 != null)
+                {
+                    exchange.RefundDate1 = DateOnly.Parse(exchangeVM.RefundDate1);
+                }
+                if (exchangeVM.SendDate2 != null)
+                {
+                    exchange.SendDate2 = DateOnly.Parse(exchangeVM.SendDate2);
+                }
+                if (exchangeVM.ReceiveDate2 != null)
+                {
+                    exchange.ReceiveDate2 = DateOnly.Parse(exchangeVM.ReceiveDate2);
+                }
+                if (exchangeVM.RecallDate2 != null)
+                {
+                    exchange.RecallDate2 = DateOnly.Parse(exchangeVM.RecallDate2);
+                }
+                if (exchangeVM.RefundDate2 != null)
+                {
+                    exchange.RefundDate2 = DateOnly.Parse(exchangeVM.RefundDate2);
+                }                
                 _context.Update(exchange);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
@@ -357,10 +380,22 @@ namespace BTP_API.ServicesImpl
             if (rent != null)
             {
                 rent.StorageStatus = rentVM.StorageStatus;
-                rent.SendDate = rentVM.SendDate;
-                rent.ReceiveDate = rentVM.ReceiveDate;
-                rent.RecallDate = rentVM.RecallDate;
-                rent.RefundDate = rentVM.RefundDate;
+                if(rentVM.SendDate != null)
+                {
+                    rent.SendDate = DateOnly.Parse(rentVM.SendDate);
+                }
+                if (rentVM.ReceiveDate != null)
+                {
+                    rent.ReceiveDate = DateOnly.Parse(rentVM.ReceiveDate);
+                }
+                if (rentVM.RecallDate != null)
+                {
+                    rent.RecallDate = DateOnly.Parse(rentVM.RecallDate);
+                }
+                if (rentVM.RefundDate != null)
+                {
+                    rent.RefundDate = DateOnly.Parse(rentVM.RefundDate);
+                }
                 _context.Update(rent);
                 await _context.SaveChangesAsync();
                 return new ApiMessage

@@ -8,19 +8,19 @@ namespace BTP_API.ViewModels
         
         public string StorageStatus2 { get; set; }
 
-        public DateOnly? SendDate1 { get; set; }
+        public string SendDate1 { get; set; }
 
-        public DateOnly? ReceiveDate1 { get; set; }
+        public string ReceiveDate1 { get; set; }
 
-        public DateOnly? RecallDate1 { get; set; }
+        public string RecallDate1 { get; set; }
 
-        public DateOnly? RefundDate1 { get; set; }
-        public DateOnly? SendDate2 { get; set; }
+        public string RefundDate1 { get; set; }
+        public string SendDate2 { get; set; }
 
-        public DateOnly? ReceiveDate2 { get; set; }
+        public string ReceiveDate2 { get; set; }
 
-        public DateOnly? RecallDate2 { get; set; }
+        public string RecallDate2 { get; set; }
 
-        public DateOnly? RefundDate2 { get; set; }
+        public string RefundDate2 { get; set; }
     }
 }
