@@ -79,7 +79,7 @@
             }
         }
 
-        [HttpGet("exchange/search")]
+        [HttpPost("exchange/search")]
         public async Task<IActionResult> searchExchange([FromForm] int? id, [FromQuery] int page = 1)
         {
             try
@@ -217,7 +217,7 @@
             }
         }
 
-        [HttpGet("rent/search")]
+        [HttpPost("rent/search")]
         public async Task<IActionResult> searchRent([FromForm] int? id, [FromQuery] int page = 1)
         {
             try
