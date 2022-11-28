@@ -200,6 +200,24 @@
                     .HasMaxLength(50)
                     .HasComment("Trạng thái");
 
+                entity.Property(e => e.StorageStatus1)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("Trạng thái1");
+
+                entity.Property(e => e.StorageStatus2)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("Trạng thái2");
+
+                entity.Property(e => e.RecallDate).HasComment("Ngày thu hồi");
+
+                entity.Property(e => e.ReceiveDate).HasComment("Ngày nhận");
+
+                entity.Property(e => e.RefundDate).HasComment("Ngày hoàn trả");
+
+                entity.Property(e => e.SendDate).HasComment("Ngày gửi");
+
                 entity.Property(e => e.UserId1)
                     .HasColumnName("UserID1")
                     .HasComment("Mã người dùng 1");
@@ -247,8 +265,6 @@
                     .HasColumnName("FeeID3")
                     .HasComment("Mã phí 3");
 
-                entity.Property(e => e.Flag).HasComment("Cờ");
-
                 entity.Property(e => e.IsPaid).HasComment("Đã thanh toán?");
 
                 entity.Property(e => e.PaidDate)
@@ -258,14 +274,6 @@
                 entity.Property(e => e.Payments)
                     .HasMaxLength(50)
                     .HasComment("Phương thức thanh toán");
-
-                entity.Property(e => e.RecallDate).HasComment("Ngày thu hồi");
-
-                entity.Property(e => e.ReceiveDate).HasComment("Ngày nhận");
-
-                entity.Property(e => e.RefundDate).HasComment("Ngày hoàn trả");
-
-                entity.Property(e => e.SendDate).HasComment("Ngày gửi");
 
                 entity.Property(e => e.TotalAmount).HasComment("Tổng tiền");
 
@@ -335,8 +343,6 @@
 
                 entity.Property(e => e.ExpiredDate).HasComment("Ngày hết hạn");
 
-                entity.Property(e => e.Flag).HasComment("Cờ");
-
                 entity.Property(e => e.RequestTime)
                     .HasColumnType("timestamp without time zone")
                     .HasComment("Thời gian tạo");
@@ -345,16 +351,6 @@
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasComment("Trạng thái chi tiết giao dịch");
-
-                entity.Property(e => e.StorageStatusBook1)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasComment("Trạng thái lưu trữ sách1");
-
-                entity.Property(e => e.StorageStatusBook2)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasComment("Trạng thái lưu trữ sách 2");
 
                 entity.HasOne(d => d.Book1)
                     .WithMany(p => p.ExchangeDetailBook1s)
@@ -695,6 +691,19 @@
                     .HasMaxLength(50)
                     .HasComment("Trạng thái giao dịch");
 
+                entity.Property(e => e.StorageStatus)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("Trạng thái vận chuyển");
+
+                entity.Property(e => e.RecallDate).HasComment("Ngày thu hồi");
+
+                entity.Property(e => e.ReceiveDate).HasComment("Ngày nhận");
+
+                entity.Property(e => e.RefundDate).HasComment("Ngày hoàn trả");
+
+                entity.Property(e => e.SendDate).HasComment("Ngày gửi");
+
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.RentOwners)
                     .HasForeignKey(d => d.OwnerId)
@@ -730,8 +739,6 @@
                     .HasColumnName("FeeID3")
                     .HasComment("Mã phí 3");
 
-                entity.Property(e => e.Flag).HasComment("Cờ");
-
                 entity.Property(e => e.IsPaid).HasComment("Đã thanh toán?");
 
                 entity.Property(e => e.PaidDate)
@@ -742,19 +749,11 @@
                     .HasMaxLength(50)
                     .HasComment("Phương thức thanh toán");
 
-                entity.Property(e => e.RecallDate).HasComment("Ngày thu hồi");
-
-                entity.Property(e => e.ReceiveDate).HasComment("Ngày nhận");
-
-                entity.Property(e => e.RefundDate).HasComment("Ngày hoàn trả");
-
                 entity.Property(e => e.RentFee).HasComment("Phí thuê");
 
                 entity.Property(e => e.RentId)
                     .HasColumnName("RentID")
                     .HasComment("Mã giao dịch thuê");
-
-                entity.Property(e => e.SendDate).HasComment("Ngày gửi");
 
                 entity.Property(e => e.TotalAmount).HasComment("Tổng tiền");
 
@@ -812,8 +811,6 @@
 
                 entity.Property(e => e.ExpiredDate).HasComment("Ngày hết hạn");
 
-                entity.Property(e => e.Flag).HasComment("Cờ");
-
                 entity.Property(e => e.RentId)
                     .HasColumnName("RentID")
                     .HasComment("Mã giao dịch thuê");
@@ -826,11 +823,6 @@
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasComment("Trạng thái chi tiết giao dịch");
-
-                entity.Property(e => e.StorageStatusBook)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasComment("Trạng thái lưu trữ sách");
 
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.RentDetails)

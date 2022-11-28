@@ -52,22 +52,6 @@ namespace BTP_API.Models
         /// </summary>
         public int? FeeId3 { get; set; }
         /// <summary>
-        /// Ngày gửi
-        /// </summary>
-        public DateOnly? SendDate { get; set; }
-        /// <summary>
-        /// Ngày nhận
-        /// </summary>
-        public DateOnly? ReceiveDate { get; set; }
-        /// <summary>
-        /// Ngày thu hồi
-        /// </summary>
-        public DateOnly? RecallDate { get; set; }
-        /// <summary>
-        /// Ngày hoàn trả
-        /// </summary>
-        public DateOnly? RefundDate { get; set; }
-        /// <summary>
         /// Đã thanh toán?
         /// </summary>
         [Required]
@@ -80,12 +64,6 @@ namespace BTP_API.Models
         /// Phương thức thanh toán
         /// </summary>
         public string Payments { get; set; }
-        /// <summary>
-        /// Cờ
-        /// </summary>
-        [Required]
-        public bool Flag { get; set; }
-
         public virtual Exchange Exchange { get; set; }
         public virtual Fee FeeId1Navigation { get; set; }
         public virtual Fee FeeId2Navigation { get; set; }

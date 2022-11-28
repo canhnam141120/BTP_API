@@ -39,6 +39,32 @@ namespace BTP_API.Models
         /// </summary>
         [Required]
         public string Status { get; set; }
+        /// <summary>
+        /// Trạng thái
+        /// </summary>
+        [Required]
+        public string StorageStatus1 { get; set; }
+        /// <summary>
+        /// Trạng thái
+        /// </summary>
+        [Required]
+        public string StorageStatus2 { get; set; }
+        /// <summary>
+        /// Ngày gửi
+        /// </summary>
+        public DateOnly? SendDate { get; set; }
+        /// <summary>
+        /// Ngày nhận
+        /// </summary>
+        public DateOnly? ReceiveDate { get; set; }
+        /// <summary>
+        /// Ngày thu hồi
+        /// </summary>
+        public DateOnly? RecallDate { get; set; }
+        /// <summary>
+        /// Ngày hoàn trả
+        /// </summary>
+        public DateOnly? RefundDate { get; set; }
 
         public virtual User UserId1Navigation { get; set; }
         public virtual User UserId2Navigation { get; set; }

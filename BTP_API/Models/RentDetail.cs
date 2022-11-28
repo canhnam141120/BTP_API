@@ -31,11 +31,6 @@ namespace BTP_API.Models
         /// </summary>
         public string AfterStatusBook { get; set; }
         /// <summary>
-        /// Trạng thái lưu trữ sách
-        /// </summary>
-        [Required]
-        public string StorageStatusBook { get; set; }
-        /// <summary>
         /// Thời gian yêu cầu
         /// </summary>
         [Required]
@@ -50,11 +45,6 @@ namespace BTP_API.Models
         /// </summary>
         [Required]
         public string Status { get; set; }
-        /// <summary>
-        /// Cờ
-        /// </summary>
-        [Required]
-        public bool Flag { get; set; }
 
         public virtual Book Book { get; set; }
         public virtual Rent Rent { get; set; }

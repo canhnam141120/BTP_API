@@ -122,11 +122,11 @@
         }
 
         [HttpPut("exchange/update-status/{id}")]
-        public async Task<IActionResult> updateStatusExchange([FromRoute] int id, [FromForm] string status)
+        public async Task<IActionResult> updateStatusExchange([FromRoute] int id, [FromForm] ExchangeVM exchangeVM)
         {
             try
             {
-                var apiMessage = await _manageTransactionRepository.updateStatusExchangeAsync(id, status);
+                var apiMessage = await _manageTransactionRepository.updateStatusExchangeAsync(id, exchangeVM);
                     return Ok(apiMessage);
             }
             catch
@@ -260,11 +260,11 @@
         }
 
         [HttpPut("rent/update-status/{id}")]
-        public async Task<IActionResult> updateStatusRent([FromRoute] int id, [FromForm] string status)
+        public async Task<IActionResult> updateStatusRent([FromRoute] int id, [FromForm] RentVM rentVM)
         {
             try
             {
-                var apiMessage = await _manageTransactionRepository.updateStatusRentAsync(id, status);
+                var apiMessage = await _manageTransactionRepository.updateStatusRentAsync(id, rentVM);
                     return Ok(apiMessage);
             }
             catch

@@ -31,11 +31,6 @@ namespace BTP_API.Models
         /// </summary>
         public string AfterStatusBook1 { get; set; }
         /// <summary>
-        /// Trạng thái lưu trữ sách1
-        /// </summary>
-        [Required]
-        public string StorageStatusBook1 { get; set; }
-        /// <summary>
         /// Mã sách 2
         /// </summary>
         [Required]
@@ -48,11 +43,6 @@ namespace BTP_API.Models
         /// Trạng thái sách 2 sau giao dịch
         /// </summary>
         public string AfterStatusBook2 { get; set; }
-        /// <summary>
-        /// Trạng thái lưu trữ sách 2
-        /// </summary>
-        [Required]
-        public string StorageStatusBook2 { get; set; }
         /// <summary>
         /// Thời gian tạo
         /// </summary>
@@ -68,11 +58,6 @@ namespace BTP_API.Models
         /// </summary>
         [Required]
         public string Status { get; set; }
-        /// <summary>
-        /// Cờ
-        /// </summary>
-        [Required]
-        public bool Flag { get; set; }
 
         public virtual Book Book1 { get; set; }
         public virtual Book Book2 { get; set; }

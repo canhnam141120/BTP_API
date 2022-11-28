@@ -185,6 +185,8 @@
                 UserId2 = book2.UserId,
                 Date = DateOnly.FromDateTime(DateTime.Today),
                 Status = Status.Waiting.ToString(),
+                StorageStatus1 = StorageStatus.Waiting.ToString(),
+                StorageStatus2 = StorageStatus.Waiting.ToString(),
             };
 
             int numberOfDays = 0;
@@ -215,13 +217,10 @@
                     {
                         ExchangeId = exchange.Id,
                         Book1Id = book1.Id,
-                        StorageStatusBook1 = StorageStatus.Waiting.ToString(),
                         Book2Id = book2.Id,
-                        StorageStatusBook2 = StorageStatus.Waiting.ToString(),
                         RequestTime = DateTime.Now,
                         ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(numberOfDays)),
                         Status = Status.Waiting.ToString(),
-                        Flag = true
                     };
                     _context.Add(newExchangeDetail);
 
@@ -235,7 +234,6 @@
                         FeeId1 = calculateFee.feeShipID(book1.Weight),
                         FeeId2 = calculateFee.feeServiceID(1),
                         IsPaid = false,
-                        Flag = true
                     };
 
                     newBillUser1.TotalAmount = calculateFee.totalAmountExchange(newBillUser1);
@@ -250,7 +248,6 @@
                         FeeId1 = calculateFee.feeShipID(book2.Weight),
                         FeeId2 = calculateFee.feeServiceID(1),
                         IsPaid = false,
-                        Flag = true
                     };
                     newBillUser2.TotalAmount = calculateFee.totalAmountExchange(newBillUser2);
 
@@ -268,13 +265,10 @@
                     {
                         ExchangeId = check1.Id,
                         Book1Id = book1.Id,
-                        StorageStatusBook1 = StorageStatus.Waiting.ToString(),
                         Book2Id = book2.Id,
-                        StorageStatusBook2 = StorageStatus.Waiting.ToString(),
                         RequestTime = DateTime.Now,
                         ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(numberOfDays)),
                         Status = Status.Waiting.ToString(),
-                        Flag = true
                     };
 
                     double totalWeightBook1 = 0;
@@ -315,13 +309,10 @@
                     {
                         ExchangeId = check2.Id,
                         Book1Id = book2.Id,
-                        StorageStatusBook1 = StorageStatus.Waiting.ToString(),
                         Book2Id = book1.Id,
-                        StorageStatusBook2 = StorageStatus.Waiting.ToString(),
                         RequestTime = DateTime.Now,
                         ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(numberOfDays)),
                         Status = Status.Waiting.ToString(),
-                        Flag = true
                     };
 
                     double totalWeightBook1 = 0;
@@ -447,6 +438,7 @@
                 RenterId = userId,
                 Date = DateOnly.FromDateTime(DateTime.Today),
                 Status = Status.Waiting.ToString(),
+                StorageStatus = Status.Waiting.ToString()
             };
 
             var check = await _context.Rents.SingleOrDefaultAsync(r => r.OwnerId == book.UserId && r.RenterId == userId && r.Date == rentNew.Date);
@@ -468,11 +460,9 @@
                 {
                     RentId = rent.Id,
                     BookId = bookId,
-                    StorageStatusBook = StorageStatus.Waiting.ToString(),
                     RequestTime = DateTime.Now,
                     ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(book.NumberOfDays)),
                     Status = Status.Waiting.ToString(),
-                    Flag = true
                 };
                 _context.Add(rentDetail);
 
@@ -486,7 +476,6 @@
                     FeeId1 = calculateFee.feeShipID(book.Weight),
                     FeeId2 = calculateFee.feeServiceID(1),
                     IsPaid = false,
-                    Flag = true
                 };
                 newBillOwner.TotalAmount = calculateFee.totalAmountRent(newBillOwner);
 
@@ -500,7 +489,6 @@
                     FeeId1 = calculateFee.feeShipID(book.Weight),
                     FeeId2 = calculateFee.feeServiceID(1),
                     IsPaid = false,
-                    Flag = true
                 };
                 newBillRenter.TotalAmount = calculateFee.totalAmountRent(newBillRenter);
                 _context.Add(newBillOwner);
@@ -514,11 +502,9 @@
                 {
                     RentId = check.Id,
                     BookId = bookId,
-                    StorageStatusBook = StorageStatus.Waiting.ToString(),
                     RequestTime = DateTime.Now,
                     ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(book.NumberOfDays)),
                     Status = Status.Waiting.ToString(),
-                    Flag = true
                 };
 
                 double totalWeightBook = 0;

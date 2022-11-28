@@ -1,4 +1,7 @@
-﻿namespace BTP_API.ServicesImpl
+﻿using BTP_API.Models;
+using BTP_API.ViewModels;
+
+namespace BTP_API.ServicesImpl
 {
     public class ManageTransactionRepository : IManageTransactionRepository
     {
@@ -110,26 +113,32 @@
                 NumberOfRecords = exchangeBills.Count
             };
         }
-        public async Task<ApiMessage> updateStatusExchangeAsync(int exchangeId, string status)
+        public async Task<ApiMessage> updateStatusExchangeAsync(int exchangeId, ExchangeVM exchangeVM)
         {
             var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
             if(exchange != null)
             {
-                exchange.Status = status.ToString();
-                if(status == Status.Trading.ToString())
+                exchange.Status = exchangeVM.Status;
+                exchange.StorageStatus1 = exchangeVM.StorageStatus1;
+                exchange.StorageStatus2 = exchangeVM.StorageStatus2;
+                exchange.SendDate = exchangeVM.SendDate;
+                exchange.ReceiveDate = exchangeVM.ReceiveDate;
+                exchange.RecallDate = exchangeVM.RecallDate;
+                exchange.RefundDate = exchangeVM.RefundDate;
+                if (exchangeVM.Status == Status.Trading.ToString())
                 {
                     var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Waiting.ToString()).ToListAsync();
                     foreach (var detail in exchangeDetails)
                     {
-                        detail.Status = status;
+                        detail.Status = exchangeVM.Status;
                     }
                 }
-                if(status == Status.Complete.ToString())
+                if(exchangeVM.Status == Status.Complete.ToString())
                 {
                     var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId && b.Status == Status.Trading.ToString()).ToListAsync();
                     foreach (var detail in exchangeDetails)
                     {
-                        detail.Status = status;
+                        detail.Status = exchangeVM.Status;
                     }
                     var user1 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId1);
                     var user2 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId2);
@@ -155,10 +164,8 @@
             {
                 exchangeDetail.BeforeStatusBook1 = exchangeDetailVM.BeforeStatusBook1;
                 exchangeDetail.AfterStatusBook1 = exchangeDetailVM.AfterStatusBook1;
-                exchangeDetail.StorageStatusBook1 = exchangeDetailVM.StorageStatusBook1;
                 exchangeDetail.BeforeStatusBook2 = exchangeDetailVM.BeforeStatusBook2;
                 exchangeDetail.AfterStatusBook2 = exchangeDetailVM.AfterStatusBook2;
-                exchangeDetail.StorageStatusBook2 = exchangeDetailVM.StorageStatusBook2;
                 exchangeDetail.Status = exchangeDetailVM.Status;
                 
                 _context.Update(exchangeDetail);
@@ -280,30 +287,36 @@
             };
         }
 
-        public async Task<ApiMessage> updateStatusRentAsync(int rentId, string status)
+        public async Task<ApiMessage> updateStatusRentAsync(int rentId, RentVM rentVM)
         {
             var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentId);
             if (rent != null)
             {
-                if (status == Status.Trading.ToString())
+               
+                if (rentVM.Status == Status.Trading.ToString())
                 {
                     var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId && b.Status == Status.Waiting.ToString()).ToListAsync();
                     foreach (var detail in rentDetails)
                     {
-                        detail.Status = status;
+                        detail.Status = rentVM.Status;
                     }
                 }
-                if (status == Status.Complete.ToString())
+                if (rentVM.Status == Status.Complete.ToString())
                 {
                     var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId && b.Status == Status.Trading.ToString()).ToListAsync();
                     foreach (var detail in rentDetails)
                     {
-                        detail.Status = status;
+                        detail.Status = rentVM.Status;
                     }
                     var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == rent.OwnerId);
                     user.NumberOfTransaction += rentDetails.Count;
                 }
-                rent.Status = status.ToString();
+                rent.Status = rentVM.Status;
+                rent.StorageStatus = rentVM.StorageStatus;
+                rent.SendDate = rentVM.SendDate;
+                rent.ReceiveDate = rentVM.ReceiveDate;
+                rent.RecallDate = rentVM.RecallDate;
+                rent.RefundDate = rentVM.RefundDate;
                 _context.Update(rent);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
@@ -324,7 +337,6 @@
             {
                 rentDetail.BeforeStatusBook = rentDetailVM.BeforeStatusBook;
                 rentDetail.AfterStatusBook = rentDetailVM.AfterStatusBook;
-                rentDetail.StorageStatusBook = rentDetailVM.StorageStatusBook;
                 rentDetail.Status = rentDetailVM.Status;
                 _context.Update(rentDetail);
                 await _context.SaveChangesAsync();

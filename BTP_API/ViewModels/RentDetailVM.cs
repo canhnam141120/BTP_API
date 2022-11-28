@@ -9,9 +9,6 @@ namespace BTP_API.ViewModels
         public string AfterStatusBook { get; set; }
         
         [Required]
-        public string StorageStatusBook { get; set; }
-        
-        [Required]
         public string Status { get; set; }
     }
 }
