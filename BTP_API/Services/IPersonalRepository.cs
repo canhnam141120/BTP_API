@@ -12,6 +12,8 @@ namespace BTP_API.Services
         public Task<ApiResponse> getBookApprovedAsync(int userId, int page = 1);
         public Task<ApiResponse> getBookDeniedAsync(int userId, int page = 1);
         public Task<ApiResponse> getBookWaitingAsync(int userId, int page = 1);
+        public Task<ApiResponse> searchBookAsync(int userId, string search, int page = 1);
+        public Task<ApiResponse> searchPostAsync(int userId, string search, int page = 1);
         public Task<ApiResponse> getAllPostAsync(int userId, int page = 1);
         public Task<ApiResponse> getPostApprovedAsync(int userId, int page = 1);
         public Task<ApiResponse> getPostDeniedAsync(int userId, int page = 1);

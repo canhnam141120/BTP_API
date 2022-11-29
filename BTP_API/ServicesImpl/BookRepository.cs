@@ -129,6 +129,26 @@ namespace BTP_API.Services
             };
         }
 
+        public async Task<ApiResponse> searchBookOfUserAsync(int userId, string search, int page = 1)
+        {
+            List<Book> books;
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+                books = await _context.Books.Where(b => b.Title.ToLower().Contains(search) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString() && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                books = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = books.Skip(10 * (page - 1)).Take(10),
+                NumberOfRecords = books.Count
+            };
+        }
+
         public async Task<ApiResponse> searchBookByTitleAsync(string search, int page = 1)
         {
             List<Book> books;

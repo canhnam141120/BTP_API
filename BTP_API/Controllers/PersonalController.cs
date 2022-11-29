@@ -128,6 +128,34 @@
             }
         }
 
+        [HttpPost("search-my-book")]
+        public async Task<IActionResult> searchBook([FromForm] int userId, [FromForm] string search, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _personalRepository.searchBookAsync(userId, search, page);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
+        [HttpPost("search-my-post")]
+        public async Task<IActionResult> searchPost([FromForm] int userId, [FromForm] string search, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _personalRepository.searchPostAsync(userId, search, page);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
         [HttpPost("my-post-list")]
         public async Task<IActionResult> getAllPost([FromForm] int userId, [FromQuery] int page = 1)
         {

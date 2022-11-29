@@ -10,6 +10,7 @@
         public Task<ApiResponse> getBookByCategoryAsync(int categoryId, int page = 1);
         public Task<ApiResponse> get6BookByCategoryAsync(int categoryId);
         public Task<ApiResponse> getBookByUserAsync(int userId, int page = 1);
+        public Task<ApiResponse> searchBookOfUserAsync(int userId, string search, int page = 1);
         public Task<ApiResponse> get6BookByUserAsync(int userId);
         public Task<ApiResponse> searchBookByTitleAsync(string search, int page = 1);
         public Task<ApiResponse> createBookAsync(int userId, BookVM bookVM);

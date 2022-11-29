@@ -8,6 +8,7 @@
         public Task<ApiResponse> getAllPostAsync(int page = 1);
         public Task<ApiResponse> getPostByIdAsync(int postId);
         public Task<ApiResponse> getCommentInPostAsync(int postId, int page = 1);
+        public Task<ApiResponse> searchPostOfUserAsync(int userId, string search, int page = 1);
         public Task<ApiResponse> searchPostAsync(string search, int page = 1);
         public Task<ApiResponse> createPostAsync(int userId, PostVM postVM);
         public Task<ApiMessage> commentPostAsync(int userId, int postId, CommentVM commentVM);

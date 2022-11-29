@@ -164,6 +164,20 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
+        [HttpPost("search-book-user/user{id}")]
+        public async Task<IActionResult> searchBookOfUser([FromRoute] int id, [FromForm] string search, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.searchBookOfUserAsync(id, search, page);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.SEARCH_FAILED.ToString() });
+            }
+        }
+
         [HttpPost("search-by-title")]
         public async Task<IActionResult> searchBookByTitle([FromForm] string search, [FromQuery] int page = 1)
         {

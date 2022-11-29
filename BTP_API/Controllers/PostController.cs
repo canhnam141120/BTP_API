@@ -98,6 +98,20 @@
             }
         }
 
+        [HttpPost("search/user{id}")]
+        public async Task<IActionResult> searchPostOfUser([FromRoute] int id, [FromForm] string search, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _postRepository.searchPostOfUserAsync(id, search, page);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.SEARCH_FAILED.ToString() });
+            }
+        }
+
         [HttpPost("search")]
         public async Task<IActionResult> searchPost([FromForm] string search, [FromQuery] int page = 1)
         {

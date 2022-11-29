@@ -79,6 +79,29 @@
                 NumberOfRecords = count
             };
         }
+
+        public async Task<ApiResponse> searchPostOfUserAsync(int userId, string search, int page = 1)
+        {
+            List<Post> posts;
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+                posts = await _context.Posts.Include(b => b.User).Where(b => b.Title.ToLower().Contains(search) && b.Status == StatusRequest.Approved.ToString() && b.IsHide == false && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                posts = await _context.Posts.Include(p => p.User).Where(p => p.Status == StatusRequest.Approved.ToString() && p.IsHide == false && p.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            }
+
+            //var result = PaginatedList<Post>.Create(posts, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = posts.Skip(6 * (page - 1)).Take(6),
+                NumberOfRecords = posts.Count
+            };
+        }
+
         public async Task<ApiResponse> searchPostAsync(string search, int page = 1)
         {
             List<Post> posts;

@@ -112,6 +112,53 @@
                 NumberOfRecords = count
             };
         }
+
+        public async Task<ApiResponse> searchBookAsync(int userId, string search, int page = 1)
+        {
+            List<Book> books;
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+                books = await _context.Books.Where(b => b.Title.ToLower().Contains(search) && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                books = await _context.Books.Include(b => b.User).Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            }
+
+            //var result = PaginatedList<Book>.Create(books, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = books.Skip(6 * (page - 1)).Take(6),
+                NumberOfRecords = books.Count
+            };
+        }
+
+        public async Task<ApiResponse> searchPostAsync(int userId, string search, int page = 1)
+        {
+            List<Post> post;
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+                post = await _context.Posts.Where(b => b.Title.ToLower().Contains(search) && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            }
+            else
+            {
+                post = await _context.Posts.Include(b => b.User).Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+            }
+
+            //var result = PaginatedList<Book>.Create(books, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = post.Skip(5 * (page - 1)).Take(5),
+                NumberOfRecords = post.Count
+            };
+        }
+
+
+
         public async Task<ApiResponse> getAllPostAsync(int userId, int page = 1)
         {
             var posts = await _context.Posts.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
