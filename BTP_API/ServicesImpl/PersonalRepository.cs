@@ -209,7 +209,7 @@
         }
         public async Task<ApiResponse> getBookByFavoritesAsync(int userId, int page = 1)
         {
-            var favoriteBooks = await _context.FavoriteBookLists.Include(f => f.Book).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var favoriteBooks = await _context.FavoriteBookLists.Include(f => f.Book.User).Include(f => f.Book.Category).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
             var count = await _context.FavoriteBookLists.Where(f => f.UserId == userId).CountAsync();
             //var result = PaginatedList<FavoriteBookList>.Create(favoriteBooks, page, 6);
             return new ApiResponse
@@ -280,7 +280,7 @@
         public async Task<ApiResponse> getPostByFavoritesAsync(int userId, int page = 1)
         {
  
-            var favoritePosts = await _context.FavoritePostLists.Include(f => f.Post).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
+            var favoritePosts = await _context.FavoritePostLists.Include(f => f.Post.User).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).Skip(5 * (page - 1)).Take(5).ToListAsync();
             var count = await _context.FavoritePostLists.Where(f => f.UserId == userId).CountAsync();
             //var result = PaginatedList<FavoritePostList>.Create(favoritePosts, page, 6);
             return new ApiResponse
