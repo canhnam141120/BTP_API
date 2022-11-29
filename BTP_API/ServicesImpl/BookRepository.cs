@@ -244,6 +244,7 @@ namespace BTP_API.Services
                 book.CoverPrice = bookVM.CoverPrice;
                 book.DepositPrice = bookVM.DepositPrice;
                 book.StatusBook = bookVM.StatusBook;
+				book.Image = bookVM.Image;
                 book.IsExchange = bookVM.IsExchange;
                 book.IsRent = bookVM.IsRent;
                 book.RentFee = bookVM.RentFee;
