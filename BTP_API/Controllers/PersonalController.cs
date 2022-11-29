@@ -91,7 +91,7 @@
         {
             try
             {
-                var apiResponse = await _personalRepository.getAllBookAsync(userId, page);
+                var apiResponse = await _personalRepository.getBookApprovedAsync(userId, page);
                     return Ok(apiResponse);
             }
             catch
