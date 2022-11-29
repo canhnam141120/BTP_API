@@ -144,7 +144,7 @@
             }
         }
 
-        [HttpPost("update/{id}")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> updatePost([FromRoute] int id, [FromForm] PostVM postVM)
         {
             try
