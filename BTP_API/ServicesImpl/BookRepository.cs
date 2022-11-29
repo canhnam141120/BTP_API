@@ -229,7 +229,7 @@ namespace BTP_API.Services
 
         public async Task<ApiMessage> updateBookAsync(int bookId, BookVM bookVM)
         {
-            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true );
+            var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId);
             if (book != null)
             {
                 book.CategoryId = bookVM.CategoryId;
@@ -247,6 +247,10 @@ namespace BTP_API.Services
                 book.IsExchange = bookVM.IsExchange;
                 book.IsRent = bookVM.IsRent;
                 book.RentFee = bookVM.RentFee;
+                book.IsReady = true;
+                book.IsTrade = false;
+                book.PostedDate = DateOnly.FromDateTime(DateTime.Today);
+                book.Status = StatusRequest.Waiting.ToString();
                 _context.Books.Update(book);
                 await _context.SaveChangesAsync();
                 return new ApiMessage { Message = Message.UPDATE_SUCCESS.ToString() };

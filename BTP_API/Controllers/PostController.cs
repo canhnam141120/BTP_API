@@ -144,6 +144,20 @@
             }
         }
 
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> updatePost([FromRoute] int id, [FromForm] PostVM postVM)
+        {
+            try
+            {
+                var apiResponse = await _postRepository.updatePostAsync(id, postVM);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
+            }
+        }
+
         [HttpPost("comment/create/{id}")]
         public async Task<IActionResult> commentPost([FromForm] int userId, [FromRoute] int id, [FromForm] CommentVM commentVM)
         {

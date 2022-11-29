@@ -11,6 +11,7 @@
         public Task<ApiResponse> searchPostOfUserAsync(int userId, string search, int page = 1);
         public Task<ApiResponse> searchPostAsync(string search, int page = 1);
         public Task<ApiResponse> createPostAsync(int userId, PostVM postVM);
+        public Task<ApiMessage> updatePostAsync(int postId, PostVM postVM);
         public Task<ApiMessage> commentPostAsync(int userId, int postId, CommentVM commentVM);
         public Task<ApiMessage> hidePostAsync(int postId);
         public Task<ApiMessage> showPostAsync(int postId);

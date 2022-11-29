@@ -1,4 +1,7 @@
-﻿namespace BTP_API.ServicesImpl
+﻿using System.ComponentModel;
+using static System.Net.Mime.MediaTypeNames;
+
+namespace BTP_API.ServicesImpl
 {
     public class PostRepository : IPostRepository
     {
@@ -146,6 +149,30 @@
                 NumberOfRecords = 1
             };
         }
+
+        public async Task<ApiMessage> updatePostAsync(int postId, PostVM postVM)
+        {
+            var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postId);
+
+            if (post != null)
+            {
+                post.Title = postVM.Title;
+                post.Content = postVM.Content;
+                post.Image = postVM.Image;
+                post.IsHide = false;
+                post.CreatedDate = DateTime.Now;
+                post.Status = Status.Waiting.ToString();
+                _context.Posts.Update(post);
+                await _context.SaveChangesAsync();
+                return new ApiMessage { Message = Message.UPDATE_SUCCESS.ToString() };
+            }
+            else
+            {
+                return new ApiMessage { Message = Message.BOOK_NOT_EXIST.ToString() };
+            }
+        }
+
+
         public async Task<ApiMessage> commentPostAsync(int userId, int postId, CommentVM commentVM)
         {
             var post = await _context.Posts.SingleOrDefaultAsync(p => p.Id == postId && p.Status == StatusRequest.Approved.ToString() && p.IsHide == false);
