@@ -66,7 +66,7 @@
         }
         public async Task<ApiResponse> getAllBookAsync(int userId, int page = 1)
         {
-            var books = await _context.Books.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Skip(6*(page-1)).Take(6).ToListAsync();
+            var books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Skip(6*(page-1)).Take(6).ToListAsync();
             var count = await _context.Books.Where(b => b.UserId == userId).CountAsync();
             //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
@@ -78,7 +78,7 @@
         }
         public async Task<ApiResponse> getBookApprovedAsync(int userId, int page = 1)
         {
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
             var count = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).CountAsync();
             //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
@@ -90,7 +90,7 @@
         }
         public async Task<ApiResponse> getBookDeniedAsync(int userId, int page = 1)
         {
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
             var count = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Denied.ToString()).CountAsync();
             //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
@@ -102,7 +102,7 @@
         }
         public async Task<ApiResponse> getBookWaitingAsync(int userId, int page = 1)
         {
-            var books = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
             var count = await _context.Books.Where(b => b.UserId == userId && b.Status == StatusRequest.Waiting.ToString()).CountAsync();
             //var result = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
@@ -119,11 +119,11 @@
             if (search != null)
             {
                 search = search.ToLower().Trim();
-                books = await _context.Books.Where(b => b.Title.ToLower().Contains(search) && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+                books = await _context.Books.Include(b => b.Category).Where(b => b.Title.ToLower().Contains(search) && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             }
             else
             {
-                books = await _context.Books.Include(b => b.User).Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+                books = await _context.Books.Include(b => b.Category).Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             }
 
             //var result = PaginatedList<Book>.Create(books, page, 9);
@@ -145,7 +145,7 @@
             }
             else
             {
-                post = await _context.Posts.Include(b => b.User).Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+                post = await _context.Posts.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
             }
 
             //var result = PaginatedList<Book>.Create(books, page, 9);
