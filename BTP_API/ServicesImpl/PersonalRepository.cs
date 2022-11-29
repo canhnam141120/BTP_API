@@ -412,7 +412,7 @@
                 };
             }
             user.Fullname = userVM.Fullname;
-            user.Age = userVM.Age;
+            user.Phone = userVM.Phone;
             user.AddressMain = userVM.AddressMain;
             user.Avatar = userVM.Avatar;
             await _context.SaveChangesAsync();
@@ -431,6 +431,7 @@
                     Message = Message.USER_NOT_EXIST.ToString()
                 };
             }
+
             bool isValid = BCrypt.Net.BCrypt.Verify(changePasswordVM.OldPassword, user.Password);
             if (!isValid)
             {
