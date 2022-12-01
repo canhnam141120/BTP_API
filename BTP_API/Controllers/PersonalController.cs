@@ -58,7 +58,7 @@
         }
 
 
-        [HttpDelete("notification/mark-read/{id}")]
+        [HttpPut("notification/mark-read/{id}")]
         public async Task<IActionResult> markReadNotification([FromForm] int userId, [FromRoute] int id)
         {
             try
@@ -72,7 +72,7 @@
             }
         }
 
-        [HttpDelete("notification/mark-read-all")]
+        [HttpPut("notification/mark-read-all")]
         public async Task<IActionResult> markReadNotificationAll([FromForm] int userId)
         {
             try
