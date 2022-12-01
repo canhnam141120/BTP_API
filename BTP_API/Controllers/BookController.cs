@@ -65,7 +65,7 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
-        [HttpGet("by-filter")]
+        [HttpPost("by-filter")]
         public async Task<IActionResult> getBookByFilter([FromForm] string filter1, [FromForm] int filter2, [FromForm] string filter3, [FromForm] string filter4, [FromQuery] int page = 1)
         {
             try
