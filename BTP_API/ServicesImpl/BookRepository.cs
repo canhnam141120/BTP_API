@@ -62,7 +62,7 @@ namespace BTP_API.Services
         public async Task<ApiResponse> getAllBookIsExchangeAsync(int page = 1)
         {
             var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
-            var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
+            var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).CountAsync();
             //var books = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
@@ -75,7 +75,7 @@ namespace BTP_API.Services
         public async Task<ApiResponse> getAllBookIsRentAsync(int page = 1)
         {
             var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
-            var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
+            var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true).CountAsync();
             //var books = PaginatedList<Book>.Create(books, page, 9);
             return new ApiResponse
             {
