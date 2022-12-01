@@ -233,6 +233,7 @@
                         DepositFee = book2.DepositPrice,
                         FeeId1 = calculateFee.feeShipID(book1.Weight),
                         FeeId2 = calculateFee.feeServiceID(1),
+						FeeId3 = 0,
                         IsPaid = false,
                     };
 
@@ -247,6 +248,7 @@
                         DepositFee = book1.DepositPrice,
                         FeeId1 = calculateFee.feeShipID(book2.Weight),
                         FeeId2 = calculateFee.feeServiceID(1),
+						FeeId3 = 0
                         IsPaid = false,
                     };
                     newBillUser2.TotalAmount = calculateFee.totalAmountExchange(newBillUser2);
@@ -475,6 +477,7 @@
                     RentFee = 0,
                     FeeId1 = calculateFee.feeShipID(book.Weight),
                     FeeId2 = calculateFee.feeServiceID(1),
+					FeeId3 = 0,
                     IsPaid = false,
                 };
                 newBillOwner.TotalAmount = calculateFee.totalAmountRent(newBillOwner);
@@ -488,6 +491,7 @@
                     RentFee = book.RentFee,
                     FeeId1 = calculateFee.feeShipID(book.Weight),
                     FeeId2 = calculateFee.feeServiceID(1),
+					FeeId3 = 0,
                     IsPaid = false,
                 };
                 newBillRenter.TotalAmount = calculateFee.totalAmountRent(newBillRenter);
