@@ -56,11 +56,11 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("rent-detail/cancel/{id}")]
-        public async Task<IActionResult> cancelRentDetail([FromForm] int userId, [FromRoute] int id)
+        public async Task<IActionResult> cancelRentDetail([FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _transactionRepository.cancelRentDetailAsync(userId, id);
+                var apiMessage = await _transactionRepository.cancelRentDetailAsync(id);
                     return Ok(apiMessage);
             }
             catch

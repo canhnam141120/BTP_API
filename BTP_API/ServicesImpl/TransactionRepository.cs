@@ -180,7 +180,7 @@ namespace BTP_API.ServicesImpl
             };
         }
 
-        public async Task<ApiMessage> cancelRentDetailAsync(int userId, int rentDetailId)
+        public async Task<ApiMessage> cancelRentDetailAsync(int rentDetailId)
         {
 
             CalculateFee calculateFee = new CalculateFee(_context);
@@ -232,7 +232,7 @@ namespace BTP_API.ServicesImpl
                 }
             }
 
-            var billRenter = await _context.RentBills.SingleOrDefaultAsync(b => b.RentId == rentDetail.RentId && b.UserId == userId);
+            var billRenter = await _context.RentBills.SingleOrDefaultAsync(b => b.RentId == rentDetail.RentId && b.UserId != book.UserId);
             if (billRenter != null)
             {
                 if (listBook.Count == 1)
