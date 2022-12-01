@@ -64,7 +64,7 @@ namespace BTP_API.Services
             //1234
             if(filter1 == "All" && filter2 == 0 && filter3 == "All" && filter4 == "All")
             {
-                var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                 var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
                 return new ApiResponse
                 {
@@ -76,7 +76,7 @@ namespace BTP_API.Services
             //123
             if (filter1 == "All" && filter2 == 0 && filter3 == "All" && filter4 != "All")
             {
-                var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                 var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.Language == filter4).CountAsync();
                 return new ApiResponse
                 {
@@ -89,7 +89,7 @@ namespace BTP_API.Services
             if (filter1 == "All" && filter2 == 0 && filter3 != "All" && filter4 == "All")
             {
                 var price = filter3.Split("-"); 
-                var books = await _context.Books.Include(b => b.User)
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category)
                     .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]))
                     .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                 var count = await _context.Books
@@ -104,7 +104,7 @@ namespace BTP_API.Services
             //134
             if (filter1 == "All" && filter2 != 0 && filter3 == "All" && filter4 == "All")
             {
-                var books = await _context.Books.Include(b => b.User)
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category)
                     .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2)
                     .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                 var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2).CountAsync();
@@ -120,7 +120,7 @@ namespace BTP_API.Services
             {
                 if(filter1 == "Exchange")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).CountAsync();
                     return new ApiResponse
                     {
@@ -131,7 +131,7 @@ namespace BTP_API.Services
                 }
                 if (filter1 == "Rent")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true).CountAsync();
                     return new ApiResponse
                     {
@@ -145,7 +145,7 @@ namespace BTP_API.Services
             if (filter1 == "All" && filter2 == 0 && filter3 != "All" && filter4 != "All")
             {
                 var price = filter3.Split("-");
-                var books = await _context.Books.Include(b => b.User)
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category)
                     .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]) && b.Language == filter4)
                     .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                 var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]) && b.Language == filter4).CountAsync();
@@ -159,7 +159,7 @@ namespace BTP_API.Services
             //13
             if (filter1 == "All" && filter2 != 0 && filter3 == "All" && filter4 != "All")
             {
-                var books = await _context.Books.Include(b => b.User)
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category)
                     .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.Language == filter4)
                     .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                 var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.Language == filter4).CountAsync();
@@ -174,7 +174,7 @@ namespace BTP_API.Services
             if (filter1 == "All" && filter2 != 0 && filter3 != "All" && filter4 == "All")
             {
                 var price = filter3.Split("-");
-                var books = await _context.Books.Include(b => b.User)
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category)
                     .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]))
                     .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                 var count = await _context.Books
@@ -191,7 +191,7 @@ namespace BTP_API.Services
             {
                 if (filter1 == "Exchange")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4).CountAsync();
                     return new ApiResponse
                     {
@@ -202,7 +202,7 @@ namespace BTP_API.Services
                 }
                 if (filter1 == "Rent")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4).CountAsync();
                     return new ApiResponse
                     {
@@ -218,7 +218,7 @@ namespace BTP_API.Services
                 var price = filter3.Split("-");
                 if (filter1 == "Exchange")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
                     return new ApiResponse
                     {
@@ -229,7 +229,7 @@ namespace BTP_API.Services
                 }
                 if (filter1 == "Rent")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
                     return new ApiResponse
                     {
@@ -244,7 +244,7 @@ namespace BTP_API.Services
             {
                 if (filter1 == "Exchange")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2).CountAsync();
                     return new ApiResponse
                     {
@@ -255,7 +255,7 @@ namespace BTP_API.Services
                 }
                 if (filter1 == "Rent")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2).CountAsync();
                     return new ApiResponse
                     {
@@ -269,7 +269,7 @@ namespace BTP_API.Services
             if (filter1 == "All" && filter2 != 0 && filter3 != "All" && filter4 != "All")
             {
                 var price = filter3.Split("-");
-                var books = await _context.Books.Include(b => b.User)
+                var books = await _context.Books.Include(b => b.User).Include(b => b.Category)
                     .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]))
                     .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                 var count = await _context.Books
@@ -287,7 +287,7 @@ namespace BTP_API.Services
                 var price = filter3.Split("-");
                 if (filter1 == "Exchange")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
                     return new ApiResponse
                     {
@@ -298,7 +298,7 @@ namespace BTP_API.Services
                 }
                 if (filter1 == "Rent")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
                     return new ApiResponse
                     {
@@ -313,7 +313,7 @@ namespace BTP_API.Services
             {
                 if (filter1 == "Exchange")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.CategoryId == filter2).CountAsync();
                     return new ApiResponse
                     {
@@ -324,7 +324,7 @@ namespace BTP_API.Services
                 }
                 if (filter1 == "Rent")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.CategoryId == filter2).CountAsync();
                     return new ApiResponse
                     {
@@ -340,7 +340,7 @@ namespace BTP_API.Services
                 var price = filter3.Split("-");
                 if (filter1 == "Exchange")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
                     return new ApiResponse
                     {
@@ -351,7 +351,7 @@ namespace BTP_API.Services
                 }
                 if (filter1 == "Rent")
                 {
-                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
                     var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
                     return new ApiResponse
                     {
