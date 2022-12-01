@@ -601,7 +601,7 @@
         }
         public async Task<ApiResponse> myTransactionRentBillAsync(int userId, int rentId)
         {
-            var rentBill = await _context.RentBills.SingleOrDefaultAsync(b => b.RentId == rentId && b.UserId == userId);
+            var rentBill = await _context.RentBills.Include(b=>b.FeeId1Navigation).Include(b=>b.FeeId2Navigation).Include(b=>b.FeeId3Navigation).SingleOrDefaultAsync(b => b.RentId == rentId && b.UserId == userId);
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
