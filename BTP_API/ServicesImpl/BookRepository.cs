@@ -58,6 +58,33 @@ namespace BTP_API.Services
                 NumberOfRecords = count
             };
         }
+
+        public async Task<ApiResponse> getAllBookIsExchangeAsync(int page = 1)
+        {
+            var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+            var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
+            //var books = PaginatedList<Book>.Create(books, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = books,
+                NumberOfRecords = count
+            };
+        }
+
+        public async Task<ApiResponse> getAllBookIsRentAsync(int page = 1)
+        {
+            var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+            var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
+            //var books = PaginatedList<Book>.Create(books, page, 9);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = books,
+                NumberOfRecords = count
+            };
+        }
+
         public async Task<ApiResponse> getBookByIdAsync(int bookId)
         {
             var book = await _context.Books.Include(b => b.User).Include(b => b.Category).SingleOrDefaultAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);

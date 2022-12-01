@@ -65,6 +65,42 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
+        [HttpGet("allIsExchange")]
+        public async Task<IActionResult> getAllBooksIsExchange([FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.getAllBookIsExchangeAsync(page);
+                return Ok(apiResponse);
+
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
+        [HttpGet("allIsRent")]
+        public async Task<IActionResult> getAllBooksIsRent([FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.getAllBookIsRentAsync(page);
+                return Ok(apiResponse);
+
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> getBookById([FromRoute] int id)
         {
