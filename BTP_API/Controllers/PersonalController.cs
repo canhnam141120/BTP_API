@@ -29,6 +29,20 @@
             }
         }
 
+        [HttpPost("notification/notRead")]
+        public async Task<IActionResult> getAllNotificationNotRead([FromForm] int userId, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _personalRepository.getAllNotificationNotReadAsync(userId, page);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
+
         [HttpPost("notification/top10new")]
         public async Task<IActionResult> get10NewNotification([FromForm] int userId)
         {
@@ -44,13 +58,27 @@
         }
 
 
-        [HttpDelete("notification/mark-read")]
+        [HttpDelete("notification/mark-read/{id}")]
         public async Task<IActionResult> markReadNotification([FromForm] int userId, [FromRoute] int id)
         {
             try
             {
                 var apiMessage = await _personalRepository.markReadNotificationAsync(userId, id);
                     return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+            }
+        }
+
+        [HttpDelete("notification/mark-read-all")]
+        public async Task<IActionResult> markReadNotificationAll([FromForm] int userId)
+        {
+            try
+            {
+                var apiMessage = await _personalRepository.markReadNotificationAllAsync(userId);
+                return Ok(apiMessage);
             }
             catch
             {

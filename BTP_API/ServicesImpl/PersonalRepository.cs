@@ -24,6 +24,19 @@
             };
         }
 
+        public async Task<ApiResponse> getAllNotificationNotReadAsync(int userId, int page = 1)
+        {
+            var notifications = await _context.Notifications.Where(b => b.UserId == userId && b.IsRead == false).OrderByDescending(b => b.Id).Skip(20 * (page - 1)).Take(20).ToListAsync();
+            var count = await _context.Notifications.Where(b => b.UserId == userId && b.IsRead == false).CountAsync();
+            //var result = PaginatedList<Notification>.Create(notifications, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = notifications,
+                NumberOfRecords = count
+            };
+        }
+
         public async Task<ApiResponse> get10NewNotificationAsync(int userId)
         {
             var notifications = await _context.Notifications.Where(b => b.UserId == userId).OrderByDescending(b => b.Id).Take(10).ToListAsync();
@@ -52,6 +65,20 @@
             {
                 Message = Message.NOT_EXIST.ToString()
             };
+        }
+
+        public async Task<ApiMessage> markReadNotificationAllAsync(int userId)
+        {
+            var check = await _context.Notifications.Where(f => f.IsRead == false && f.UserId == userId).ToListAsync();
+                foreach(var item in check)
+                {
+                    item.IsRead = true;
+                }
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.SUCCESS.ToString()
+                };
         }
 
         public async Task<ApiResponse> getBookCanTradeAsync(int userId)
