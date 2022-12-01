@@ -59,6 +59,315 @@ namespace BTP_API.Services
             };
         }
 
+        public async Task<ApiResponse> getBookByFilterAsync(string filter1, int filter2, string filter3, string filter4, int page = 1)
+        {
+            //1234
+            if(filter1 == "All" && filter2 == 0 && filter3 == "All" && filter4 == "All")
+            {
+                var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).CountAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books,
+                    NumberOfRecords = count
+                };
+            }
+            //123
+            if (filter1 == "All" && filter2 == 0 && filter3 == "All" && filter4 != "All")
+            {
+                var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.Language == filter4).CountAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books,
+                    NumberOfRecords = count
+                };
+            }
+            //124
+            if (filter1 == "All" && filter2 == 0 && filter3 != "All" && filter4 == "All")
+            {
+                var price = filter3.Split("-"); 
+                var books = await _context.Books.Include(b => b.User)
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]))
+                    .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var count = await _context.Books
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books,
+                    NumberOfRecords = count
+                };
+            }
+            //134
+            if (filter1 == "All" && filter2 != 0 && filter3 == "All" && filter4 == "All")
+            {
+                var books = await _context.Books.Include(b => b.User)
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2)
+                    .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2).CountAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books,
+                    NumberOfRecords = count
+                };
+            }
+            //234
+            if (filter1 != "All" && filter2 == 0 && filter3 == "All" && filter4 == "All")
+            {
+                if(filter1 == "Exchange")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+                if (filter1 == "Rent")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+            }
+            //12
+            if (filter1 == "All" && filter2 == 0 && filter3 != "All" && filter4 != "All")
+            {
+                var price = filter3.Split("-");
+                var books = await _context.Books.Include(b => b.User)
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]) && b.Language == filter4)
+                    .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]) && b.Language == filter4).CountAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books,
+                    NumberOfRecords = count
+                };
+            }
+            //13
+            if (filter1 == "All" && filter2 != 0 && filter3 == "All" && filter4 != "All")
+            {
+                var books = await _context.Books.Include(b => b.User)
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.Language == filter4)
+                    .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.Language == filter4).CountAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books,
+                    NumberOfRecords = count
+                };
+            }
+            //14
+            if (filter1 == "All" && filter2 != 0 && filter3 != "All" && filter4 == "All")
+            {
+                var price = filter3.Split("-");
+                var books = await _context.Books.Include(b => b.User)
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]))
+                    .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var count = await _context.Books
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books,
+                    NumberOfRecords = count
+                };
+            }
+            //23
+            if (filter1 != "All" && filter2 == 0 && filter3 == "All" && filter4 != "All")
+            {
+                if (filter1 == "Exchange")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+                if (filter1 == "Rent")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+            }
+            //24
+            if (filter1 != "All" && filter2 == 0 && filter3 != "All" && filter4 == "All")
+            {
+                var price = filter3.Split("-");
+                if (filter1 == "Exchange")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+                if (filter1 == "Rent")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+            }
+            //34
+            if (filter1 != "All" && filter2 != 0 && filter3 == "All" && filter4 == "All")
+            {
+                if (filter1 == "Exchange")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+                if (filter1 == "Rent")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+            }
+            //1
+            if (filter1 == "All" && filter2 != 0 && filter3 != "All" && filter4 != "All")
+            {
+                var price = filter3.Split("-");
+                var books = await _context.Books.Include(b => b.User)
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1]))
+                    .OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                var count = await _context.Books
+                    .Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.CategoryId == filter2 && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books,
+                    NumberOfRecords = count
+                };
+            }
+            //2
+            if (filter1 != "All" && filter2 == 0 && filter3 != "All" && filter4 != "All")
+            {
+                var price = filter3.Split("-");
+                if (filter1 == "Exchange")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+                if (filter1 == "Rent")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+            }
+            //3
+            if (filter1 != "All" && filter2 != 0 && filter3 == "All" && filter4 != "All")
+            {
+                if (filter1 == "Exchange")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.Language == filter4 && b.CategoryId == filter2).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+                if (filter1 == "Rent")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.CategoryId == filter2).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.Language == filter4 && b.CategoryId == filter2).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+            }
+            //4
+            if (filter1 != "All" && filter2 != 0 && filter3 != "All" && filter4 == "All")
+            {
+                var price = filter3.Split("-");
+                if (filter1 == "Exchange")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+                if (filter1 == "Rent")
+                {
+                    var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();
+                    var count = await _context.Books.Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsRent == true && b.CategoryId == filter2 && b.DepositPrice > float.Parse(price[0]) && b.DepositPrice <= float.Parse(price[1])).CountAsync();
+                    return new ApiResponse
+                    {
+                        Message = Message.GET_SUCCESS.ToString(),
+                        Data = books,
+                        NumberOfRecords = count
+                    };
+                }
+            }
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = null
+            };
+        }
+
         public async Task<ApiResponse> getAllBookIsExchangeAsync(int page = 1)
         {
             var books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true && b.IsExchange == true).OrderByDescending(b => b.Id).Skip(9 * (page - 1)).Take(9).ToListAsync();

@@ -65,6 +65,24 @@ namespace BookTradingPlatform.Controllers
             }
         }
 
+        [HttpGet("by-filter")]
+        public async Task<IActionResult> getBookByFilter([FromForm] string filter1, [FromForm] int filter2, [FromForm] string filter3, [FromForm] string filter4, [FromQuery] int page = 1)
+        {
+            try
+            {
+                var apiResponse = await _bookRepository.getBookByFilterAsync(filter1, filter2, filter3, filter4, page);
+                return Ok(apiResponse);
+
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage
+                {
+                    Message = Message.GET_FAILED.ToString()
+                });
+            }
+        }
+
         [HttpGet("allIsExchange")]
         public async Task<IActionResult> getAllBooksIsExchange([FromQuery] int page = 1)
         {

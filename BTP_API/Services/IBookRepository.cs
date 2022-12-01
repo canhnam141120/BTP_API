@@ -5,6 +5,7 @@
         public Task<ApiResponse> getAllBookFromFavoriteUserAsync(int userId, int page = 1);
         public Task<ApiResponse> get6BookAsync();
         public Task<ApiResponse> getAllBookAsync(int page = 1);
+        public Task<ApiResponse> getBookByFilterAsync(string filter1, int filter2, string filter3, string filter4, int page = 1);
         public Task<ApiResponse> getAllBookIsExchangeAsync(int page = 1);
         public Task<ApiResponse> getAllBookIsRentAsync(int page = 1);
         public Task<ApiResponse> getBookByIdAsync(int bookId);
