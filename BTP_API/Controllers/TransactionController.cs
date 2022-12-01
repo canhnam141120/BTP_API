@@ -56,11 +56,11 @@ namespace BookTradingPlatform.Controllers
         }
 
         [HttpPut("rent-detail/cancel/{id}")]
-        public async Task<IActionResult> cancelRentDetail([FromForm] string token, [FromRoute] int id)
+        public async Task<IActionResult> cancelRentDetail([FromForm] int userId, [FromRoute] int id)
         {
             try
             {
-                var apiMessage = await _transactionRepository.cancelRentDetailAsync(token, id);
+                var apiMessage = await _transactionRepository.cancelRentDetailAsync(userId, id);
                     return Ok(apiMessage);
             }
             catch
@@ -91,6 +91,36 @@ namespace BookTradingPlatform.Controllers
             {
                 var apiMessage = await _transactionRepository.updatePayAsync(rs);
                     return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+            }
+
+        }
+
+        [HttpPost("paymentRent/{id}")]
+        public async Task<IActionResult> createURLPayRent([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _transactionRepository.createURLPayRentAsync(id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+            }
+
+        }
+
+        [HttpGet("paymentRent/update")]
+        public async Task<IActionResult> updatePayRent([FromQuery] ResultPayment rs)
+        {
+            try
+            {
+                var apiMessage = await _transactionRepository.updatePayRentAsync(rs);
+                return Ok(apiMessage);
             }
             catch
             {

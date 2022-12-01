@@ -180,18 +180,11 @@ namespace BTP_API.ServicesImpl
             };
         }
 
-        public async Task<ApiMessage> cancelRentDetailAsync(string token, int rentDetailId)
+        public async Task<ApiMessage> cancelRentDetailAsync(int userId, int rentDetailId)
         {
 
             CalculateFee calculateFee = new CalculateFee(_context);
-            Cookie cookie = new Cookie();
-            if (cookie.GetUserId(token) == 0)
-            {
-                return new ApiMessage
-                {
-                    Message = Message.NOT_YET_LOGIN.ToString()
-                };
-            }
+           
             var rentDetail = await _context.RentDetails.SingleOrDefaultAsync(b => b.Id == rentDetailId);
             if (rentDetail == null)
             {
@@ -239,7 +232,7 @@ namespace BTP_API.ServicesImpl
                 }
             }
 
-            var billRenter = await _context.RentBills.SingleOrDefaultAsync(b => b.RentId == rentDetail.RentId && b.UserId == cookie.GetUserId(token));
+            var billRenter = await _context.RentBills.SingleOrDefaultAsync(b => b.RentId == rentDetail.RentId && b.UserId == userId);
             if (billRenter != null)
             {
                 if (listBook.Count == 1)
@@ -336,6 +329,70 @@ namespace BTP_API.ServicesImpl
                 };
             }
            
+            return new ApiMessage
+            {
+                Message = Message.FAILED.ToString()
+            };
+        }
+
+        public async Task<ApiResponse> createURLPayRentAsync(int billId)
+        {
+            string vnp_Returnurl = _appSettings.vnp_Returnurl; //URL nhan ket qua tra ve 
+            string vnp_Url = _appSettings.vnp_Url; //URL thanh toan cua VNPAY 
+            string vnp_TmnCode = _appSettings.vnp_TmnCode; //Ma website
+            string vnp_HashSecret = _appSettings.vnp_HashSecret; //Chuoi bi mat
+            var bill = await _context.RentBills.SingleOrDefaultAsync(b => b.Id == billId);
+            if (bill == null)
+            {
+                return new ApiResponse
+                {
+                    Message = Message.CREATE_FAILED.ToString()
+                };
+            }
+            //Build URL for VNPAY
+            VnPayLibrary vnpay = new VnPayLibrary();
+            vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (bill.TotalAmount * 100).ToString());
+
+            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", "Khách hàng: " + bill.UserId + " Thanh toán đơn hàng: " + bill.Id);
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
+            vnpay.AddRequestData("vnp_TxnRef", bill.Id.ToString());
+            string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
+            return new ApiResponse
+            {
+                Message = Message.CREATE_SUCCESS.ToString(),
+                Data = paymentUrl,
+            };
+        }
+
+        public async Task<ApiMessage> updatePayRentAsync(ResultPayment rs)
+        {
+            if (rs.vnp_ResponseCode == "00" && rs.vnp_TransactionStatus == "00")
+            {
+                var bill = await _context.RentBills.SingleOrDefaultAsync(b => b.Id == rs.vnp_TxnRef);
+                if (bill == null)
+                {
+                    return new ApiMessage
+                    {
+                        Message = Message.BILL_NOT_EXIST.ToString()
+                    };
+                }
+                bill.IsPaid = true;
+                bill.PaidDate = DateTime.Now;
+                bill.Payment = rs.vnp_CardType + " " + rs.vnp_BankCode;
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.SUCCESS.ToString()
+                };
+            }
+
             return new ApiMessage
             {
                 Message = Message.FAILED.ToString()
