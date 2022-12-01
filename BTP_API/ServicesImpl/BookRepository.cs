@@ -491,11 +491,11 @@ namespace BTP_API.Services
             if (search != null)
             {
                 search = search.ToLower().Trim();
-                books = await _context.Books.Include(b => b.User).Where(b => b.Title.ToLower().Contains(search) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
+                books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Title.ToLower().Contains(search) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
             }
             else
             {
-                books = await _context.Books.Include(b => b.User).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
+                books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
             }
 
             //var result = PaginatedList<Book>.Create(books, page, 9);
