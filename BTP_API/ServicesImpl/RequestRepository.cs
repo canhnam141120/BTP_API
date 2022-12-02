@@ -248,7 +248,7 @@
                         DepositFee = book1.DepositPrice,
                         FeeId1 = calculateFee.feeShipID(book2.Weight),
                         FeeId2 = calculateFee.feeServiceID(1),
-						FeeId3 = 0
+						FeeId3 = 0,
                         IsPaid = false,
                     };
                     newBillUser2.TotalAmount = calculateFee.totalAmountExchange(newBillUser2);
