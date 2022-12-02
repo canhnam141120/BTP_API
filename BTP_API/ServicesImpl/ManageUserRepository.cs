@@ -50,7 +50,7 @@
 
         public async Task<ApiResponse> getTopUserLikeAsync()
         {
-            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == true && b.IsVerify == true).OrderByDescending(b => b.LikeNumber).Take(5).ToListAsync();
+            var users = await _context.Users.Where(b => b.RoleId == 3 && b.IsActive == true && b.IsVerify == true).OrderByDescending(b => b.LikeNumber).Take(6).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
