@@ -4,6 +4,10 @@ namespace BTP_API.Services
 {
     public interface IPersonalRepository
     {
+
+        public Task<ApiMessage> checkUserLikeAsync(int userid, int id);
+        public Task<ApiMessage> checkBookLikeAsync(int userid, int id);
+        public Task<ApiMessage> checkPostLikeAsync(int userid, int id);
         public Task<ApiResponse> getAllNotificationAsync(int userId, int page = 1);
         public Task<ApiResponse> getAllNotificationNotReadAsync(int userId, int page = 1);
         public Task<ApiResponse> get10NewNotificationAsync(int userId);

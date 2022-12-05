@@ -1,4 +1,6 @@
-﻿namespace BTP_API.ServicesImpl
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace BTP_API.ServicesImpl
 {
     public class PersonalRepository : IPersonalRepository
     {
@@ -385,6 +387,61 @@
                 Message = Message.NOT_EXIST.ToString()
             };
         }
+
+        public async Task<ApiMessage> checkUserLikeAsync(int userId, int id)
+        {
+            var check = "FALSE";
+            var favoriteUsers = await _context.FavoriteUserLists.Where(f => f.UserId == userId).ToListAsync();
+
+            foreach(var item in favoriteUsers)
+            {
+                if(id == item.FavoriteUserId)
+                {
+                    check = "TRUE";
+                }
+            }
+            return new ApiMessage
+            {
+                Message = check
+            };
+        }
+
+        public async Task<ApiMessage> checkBookLikeAsync(int userId, int id)
+        {
+            var check = "FALSE";
+            var favoriteUsers = await _context.FavoriteBookLists.Where(f => f.UserId == userId).ToListAsync();
+
+            foreach (var item in favoriteUsers)
+            {
+                if (id == item.BookId)
+                {
+                    check = "TRUE";
+                }
+            }
+            return new ApiMessage
+            {
+                Message = check
+            };
+        }
+
+        public async Task<ApiMessage> checkPostLikeAsync(int userId, int id)
+        {
+            var check = "FALSE";
+            var favoriteUsers = await _context.FavoritePostLists.Where(f => f.UserId == userId).ToListAsync();
+
+            foreach (var item in favoriteUsers)
+            {
+                if (id == item.PostId)
+                {
+                    check = "TRUE";
+                }
+            }
+            return new ApiMessage
+            {
+                Message = check
+            };
+        }
+
         public async Task<ApiResponse> getUserByFavoritesAsync(int userId, int page = 1)
         {
             var favoriteUsers = await _context.FavoriteUserLists.Include(f => f.FavoriteUser).Where(f => f.UserId == userId).OrderByDescending(b => b.Id).Skip(8*(page-1)).Take(8).ToListAsync();

@@ -327,6 +327,48 @@
             }
         }
 
+        [HttpPost("checkUserLike/{id}")]
+        public async Task<IActionResult> checkUserLike([FromForm] int userId, [FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _personalRepository.checkUserLikeAsync(userId, id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = "FALSE" });
+            }
+        }
+
+        [HttpPost("checkBookLike/{id}")]
+        public async Task<IActionResult> checkBookLike([FromForm] int userId, [FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _personalRepository.checkBookLikeAsync(userId, id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = "FALSE" });
+            }
+        }
+
+        [HttpPost("checkPostLike/{id}")]
+        public async Task<IActionResult> checkPostLike([FromForm] int userId, [FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _personalRepository.checkPostLikeAsync(userId, id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = "FALSE" });
+            }
+        }
+
 
         [HttpPost("my-favorites-user")]
         public async Task<IActionResult> getUserByFavorites([FromForm] int userId, [FromQuery] int page = 1)
