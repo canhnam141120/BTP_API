@@ -179,5 +179,18 @@
                 Message = Message.COMMENT_NOT_EXIST.ToString()
             };
         }
+
+        public async Task<ApiResponse> totalBookAndUserAsync()
+        {
+            var countBook = await _context.Books.Where(p => p.Status == StatusRequest.Approved.ToString()).CountAsync();
+            var countUser = await _context.Users.Where(b => b.RoleId == 3 && b.IsVerify == true).CountAsync();
+            //var result = PaginatedList<Feedback>.Create(feedbacks, page, 10);
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = countBook,
+                NumberOfRecords = countUser
+            };
+        }
     }
 }

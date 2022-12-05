@@ -480,5 +480,123 @@ namespace BTP_API.ServicesImpl
                 Message = Message.RENT_DETAIL_NOT_EXIST.ToString()
             };
         }
+
+        public async Task<ApiResponse> dashboardAsync(int quarter)
+        {
+            int count = 0;
+            float total = 0;
+            float exchange = 0;
+            float rent = 0;
+            var year = DateTime.Now.Year;
+            switch (quarter)
+            {
+                case 1:
+                    var dateStart1 = new DateOnly(year, 1, 1);
+                    var dateEnd1 = new DateOnly(year, 3, 31);
+                    var listExchange1 = await _context.Exchanges.Where(b => b.Date >= dateStart1 && b.Date <= dateEnd1 && b.Status == Status.Complete.ToString()).Select(b => b.Id).ToListAsync();
+                    var listRent1 = await _context.Rents.Where(b => b.Date >= dateStart1 && b.Date <= dateEnd1 && b.Status == Status.Complete.ToString()).Select(b => b.Id).ToListAsync();
+                    foreach(var i in listExchange1)
+                    {
+                        var listBills = await _context.ExchangeBills.Where(b => b.ExchangeId == i).ToListAsync();
+                        foreach(var y in listBills)
+                        {
+                            exchange += (y.TotalAmount - y.DepositFee);
+                        }
+                    }
+
+                    foreach (var i in listRent1)
+                    {
+                        var listBills = await _context.RentBills.Where(b => b.RentId == i).ToListAsync();
+                        foreach (var y in listBills)
+                        {
+                            rent += (y.TotalAmount - y.DepositFee - y.RentFee);
+                        }
+                    }
+                    total = exchange + rent;
+                    count = listExchange1.Count + listRent1.Count;
+                    break;
+                case 2:
+                    var dateStart2 = new DateOnly(year, 4, 1);
+                    var dateEnd2 = new DateOnly(year, 6, 30);
+                    var listExchange2 = await _context.Exchanges.Where(b => b.Date >= dateStart2 && b.Date <= dateEnd2 && b.Status == Status.Complete.ToString()).Select(b => b.Id).ToListAsync();
+                    var listRent2 = await _context.Rents.Where(b => b.Date >= dateStart2 && b.Date <= dateEnd2 && b.Status == Status.Complete.ToString()).Select(b => b.Id).ToListAsync();
+                    foreach (var i in listExchange2)
+                    {
+                        var listBills = await _context.ExchangeBills.Where(b => b.ExchangeId == i).ToListAsync();
+                        foreach (var y in listBills)
+                        {
+                            exchange += (y.TotalAmount - y.DepositFee);
+                        }
+                    }
+
+                    foreach (var i in listRent2)
+                    {
+                        var listBills = await _context.RentBills.Where(b => b.RentId == i).ToListAsync();
+                        foreach (var y in listBills)
+                        {
+                            rent += (y.TotalAmount - y.DepositFee - y.RentFee);
+                        }
+                    }
+                    total = exchange + rent;
+                    count = listExchange2.Count + listRent2.Count;
+                    break;
+                case 3:
+                    var dateStart3 = new DateOnly(year, 7, 1);
+                    var dateEnd3 = new DateOnly(year, 9, 31);
+                    var listExchange3 = await _context.Exchanges.Where(b => b.Date >= dateStart3 && b.Date <= dateEnd3 && b.Status == Status.Complete.ToString()).Select(b => b.Id).ToListAsync();
+                    var listRent3 = await _context.Rents.Where(b => b.Date >= dateStart3 && b.Date <= dateEnd3 && b.Status == Status.Complete.ToString()).Select(b => b.Id).ToListAsync();
+                    foreach (var i in listExchange3)
+                    {
+                        var listBills = await _context.ExchangeBills.Where(b => b.ExchangeId == i).ToListAsync();
+                        foreach (var y in listBills)
+                        {
+                            exchange += (y.TotalAmount - y.DepositFee);
+                        }
+                    }
+
+                    foreach (var i in listRent3)
+                    {
+                        var listBills = await _context.RentBills.Where(b => b.RentId == i).ToListAsync();
+                        foreach (var y in listBills)
+                        {
+                            rent += (y.TotalAmount - y.DepositFee - y.RentFee);
+                        }
+                    }
+                    total = exchange + rent;
+                    count = listExchange3.Count + listRent3.Count;
+                    break;
+                case 4:
+                    var dateStart4 = new DateOnly(year, 10, 1);
+                    var dateEnd4 = new DateOnly(year, 12, 30);
+                    var listExchange4 = await _context.Exchanges.Where(b => b.Date >= dateStart4 && b.Date <= dateEnd4 && b.Status == Status.Complete.ToString()).Select(b => b.Id).ToListAsync();
+                    var listRent4 = await _context.Rents.Where(b => b.Date >= dateStart4 && b.Date <= dateEnd4 && b.Status == Status.Complete.ToString()).Select(b => b.Id).ToListAsync();
+                    foreach (var i in listExchange4)
+                    {
+                        var listBills = await _context.ExchangeBills.Where(b => b.ExchangeId == i).ToListAsync();
+                        foreach (var y in listBills)
+                        {
+                            exchange += (y.TotalAmount - y.DepositFee);
+                        }
+                    }
+
+                    foreach (var i in listRent4)
+                    {
+                        var listBills = await _context.RentBills.Where(b => b.RentId == i).ToListAsync();
+                        foreach (var y in listBills)
+                        {
+                            rent += (y.TotalAmount - y.DepositFee - y.RentFee);
+                        }
+                    }
+                    total = exchange + rent;
+                    count = listExchange4.Count + listRent4.Count;
+                    break;
+            }
+            return new ApiResponse
+            {
+                Message = Message.GET_SUCCESS.ToString(),
+                Data = total,
+                NumberOfRecords = count
+            };
+        }
     }
 }

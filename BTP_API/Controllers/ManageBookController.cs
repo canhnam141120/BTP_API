@@ -150,5 +150,19 @@
                 return BadRequest(new ApiMessage { Message = Message.DELETE_FAILED.ToString() });
             }
         }
+
+        [HttpGet("dashBoard")]
+        public async Task<IActionResult> totalBookAndUser()
+        {
+            try
+            {
+                var apiResponse = await _manageBookRepository.totalBookAndUserAsync();
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
     }
 }

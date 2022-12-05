@@ -371,5 +371,19 @@
             }
         }
 
+
+        [HttpPost("dashBoard")]
+        public async Task<IActionResult> dashboard([FromForm] int id)
+        {
+            try
+            {
+                var apiResponse = await _manageTransactionRepository.dashboardAsync(id);
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
+            }
+        }
     }
 }

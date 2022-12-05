@@ -2,417 +2,718 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="BTP_API.Context.BTPContext" Collapsed="true">
     <Position X="14.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAIhACAAAEI0AAAABAAKAACAkgAAEAAACAMQAACAIAA=</HashCode>
+      <FileName>Context\BTPContext.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.BookController" Collapsed="true">
     <Position X="9.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>wAACQAAAAIAApEAAAAAAAWEEAAgEAAAARAIAQAAAAAA=</HashCode>
+      <FileName>Controllers\BookController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.ManageAdminController" Collapsed="true">
     <Position X="11" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABAAAAAAAIAQAAAAAgAAAAA=</HashCode>
+      <FileName>Controllers\ManageAdminController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.ManageBillController" Collapsed="true">
     <Position X="14.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAgAAAAAAAQAAIAAAAAAAAAAAEAACA=</HashCode>
+      <FileName>Controllers\ManageBillController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.ManageBookController" Collapsed="true">
     <Position X="0.5" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAIACAAAAgAAAAAAAQCAAAAAACAAASAACAAAACQA=</HashCode>
+      <FileName>Controllers\ManageBookController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.ManageCategoryController" Collapsed="true">
     <Position X="4" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAACoCAAAAAAAAAAJAQAA=</HashCode>
+      <FileName>Controllers\ManageCategoryController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.ManageFeeController" Collapsed="true">
     <Position X="7.5" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAQAAAAAAAAAAAAAAAAAAAAAAAAEIAAAA=</HashCode>
+      <FileName>Controllers\ManageFeeController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.ManagePostController" Collapsed="true">
     <Position X="11" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAEAABQARABQAEAAAAAAAAAAgCAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\ManagePostController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.ManageTransactionController" Collapsed="true">
     <Position X="14.5" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>EACYAIgAHBBAAQAAAAABAAEQAAAAEAAECSCQAIAQAAM=</HashCode>
+      <FileName>Controllers\ManageTransactionController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.ManageUserController" Collapsed="true">
     <Position X="0.5" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAgEAAAAAIQAAAABAAAgCAAAAAAAIIAAAAAAIAAAAAA=</HashCode>
+      <FileName>Controllers\ManageUserController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.PersonalController" Collapsed="true">
     <Position X="7.5" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>EAAiCdADAoAAhAYRCAQERASgACAAMAGoAIAhAihBAAA=</HashCode>
+      <FileName>Controllers\PersonalController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.PostController" Collapsed="true">
     <Position X="12.75" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAgAQAQIAQAEAQCAAAAAAAgAAAAAAAEgKA=</HashCode>
+      <FileName>Controllers\PostController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.RequestController" Collapsed="true">
     <Position X="14.5" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAIUAAAAAQAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\RequestController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.TransactionController" Collapsed="true">
     <Position X="11" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAIAEAAAAIABAAAAAAAgAAEAAAAAIAAAAUAAAAAAAAA=</HashCode>
+      <FileName>Controllers\TransactionController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BookTradingPlatform.Controllers.UserController" Collapsed="true">
     <Position X="0.5" Y="8.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAhAAACAQAAAAAAAAAAAAACAAAAAQEAAAAAEAA=</HashCode>
+      <FileName>Controllers\UserController.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.ApiMessage" Collapsed="true">
     <Position X="0.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Helpers\ApiMessage.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.ApiResponse" Collapsed="true">
     <Position X="2.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAgIAAAAAA=</HashCode>
+      <FileName>Helpers\ApiResponse.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.ApplicationMapper" Collapsed="true">
     <Position X="4" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ApplicationMapper.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.AppSettings" Collapsed="true">
     <Position X="5.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAACAAAAAAAAAAAAAAAgIAAAAQAAAAAAAA=</HashCode>
+      <FileName>Helpers\AppSettings.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.ConvertUnixTimeToDateTime" Collapsed="true">
     <Position X="9.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ConvertUnixTimeToDateTime.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.CreateRandomToken" Collapsed="true">
     <Position X="12.75" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Helpers\CreateRandomToken.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.DateOnlyJsonConverter" Collapsed="true">
     <Position X="14.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Helpers\DateOnlyJsonConverter.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.EnumVariable" Collapsed="true">
     <Position X="16.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\EnumVariable.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Helpers.PaginatedList&lt;T&gt;" Collapsed="true">
     <Position X="5.75" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\PaginatedList.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Book" Collapsed="true">
     <Position X="7.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADgABEDAEwAkAAiACKAAgABmBAABgACAIAAAAAiAI=</HashCode>
+      <FileName>Models\Book.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Category" Collapsed="true">
     <Position X="0.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAASAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Category.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Comment" Collapsed="true">
     <Position X="5.75" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAgAAAAEAAAAAAAgACAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Models\Comment.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Exchange" Collapsed="true">
     <Position X="0.5" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAmAAAEAEAAkCAAAAggAAAABAIAAAABABEAAAgAAAA=</HashCode>
+      <FileName>Models\Exchange.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.ExchangeBill" Collapsed="true">
     <Position X="2.25" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAABUAAAAAAAAAQgAAAAAAQAABAAQAABRAAA=</HashCode>
+      <FileName>Models\ExchangeBill.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.ExchangeDetail" Collapsed="true">
     <Position X="5.75" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAACAgAEAAAAEAAAAQAAAAKAAAACAAAAEAAQBgABCAA=</HashCode>
+      <FileName>Models\ExchangeDetail.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.ExchangeRequest" Collapsed="true">
     <Position X="9.25" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAACCAAEQAAAAABAEAAAAAiAAAACAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ExchangeRequest.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.FavoriteBookList" Collapsed="true">
     <Position X="12.75" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADCAAAAAAAAABAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FavoriteBookList.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.FavoritePostList" Collapsed="true">
     <Position X="14.5" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAAAAEAAAAAAAgACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FavoritePostList.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.FavoriteUserList" Collapsed="true">
     <Position X="16.25" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>EAADAIAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FavoriteUserList.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Fee" Collapsed="true">
     <Position X="0.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAACAAACAQAAAAAQEAAgAAQAAAAAAAAAEAAEAAAAAAA=</HashCode>
+      <FileName>Models\Fee.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Feedback" Collapsed="true">
     <Position X="2.25" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADCAAAAgAAAABAAAAAAAgAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Models\Feedback.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Notification" Collapsed="true">
     <Position X="4" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAgAAAAAAAAAAEAgAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Models\Notification.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Post" Collapsed="true">
     <Position X="11" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADAAAEAgAAAEAAAAAAgAiAAAAAABAAAgAAAAAAIAA=</HashCode>
+      <FileName>Models\Post.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.RefreshToken" Collapsed="true">
     <Position X="0.5" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>BAATAAAAAAAgAAAAAAAAAAoAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\RefreshToken.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Rent" Collapsed="true">
     <Position X="4" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAmAACMAAAAACAEAAgAAAABAAAAAAIRAAIAAAAAAAA=</HashCode>
+      <FileName>Models\Rent.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.RentBill" Collapsed="true">
     <Position X="5.75" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAUAAAAAIAAAQgAACAAAQEABAAAAABQAAA=</HashCode>
+      <FileName>Models\RentBill.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.RentDetail" Collapsed="true">
     <Position X="9.25" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AEACCAAEIAAAAABAAAAAAAIAACACAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\RentDetail.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.Role" Collapsed="true">
     <Position X="4" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Role.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.ShipInfo" Collapsed="true">
     <Position X="5.75" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAABAAAABAgAIoAAAAIAAAwAAAAAAAICkAIAAAAAEAA=</HashCode>
+      <FileName>Models\ShipInfo.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Models.User" Collapsed="true">
     <Position X="16.25" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAIiEAIAAGIgAAQAFEQKAACAgQAAAAACAQMAogAAIAA=</HashCode>
+      <FileName>Models\User.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ServicesImpl.ManageTransactionRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="16.25" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AiCQBRAAQAIAhBAQIAAAAAgAAABAAKIRIIAAAAAFCAA=</HashCode>
+      <FileName>ServicesImpl\ManageTransactionRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.ServicesImpl.ManageUserRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="2.25" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAEBAAJAAAQBAAAAAAAAAAAIAAAAAgAECAAAAAAAAA=</HashCode>
+      <FileName>ServicesImpl\ManageUserRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.ServicesImpl.PersonalRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="9.25" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAklEogAAgDGpAAIEAQAhACJABMAIAQMgYBAgAAIABA=</HashCode>
+      <FileName>ServicesImpl\PersonalRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.ServicesImpl.PostRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="14.5" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AQACAAAAEAAABAAAAAAABAADAAAAIUIAiAAAAAAgBAA=</HashCode>
+      <FileName>ServicesImpl\PostRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.ServicesImpl.RequestRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="16.25" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABIAAABgAAAAAAAAAAQAAAAAAAAAQAAA=</HashCode>
+      <FileName>ServicesImpl\RequestRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.ServicesImpl.TransactionRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="12.75" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>ACAAAAIAAEEABAkAAAAAAAAAAAAAAAAAAAAAgBCAAAA=</HashCode>
+      <FileName>ServicesImpl\TransactionRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Services.BookRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="11" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAABkAAAAASQEgoAAgAICAAAIQAAEAABAg=</HashCode>
+      <FileName>ServicesImpl\BookRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Services.ManageAdminRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="12.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAEAAAAABAAAAAAAIAAAAA=</HashCode>
+      <FileName>ServicesImpl\ManageAdminRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Services.ManageBillRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="16.25" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>ABEAAAAAAAQABAQAAAABAAAAAAAAAAIAAAAAAQAAAAA=</HashCode>
+      <FileName>ServicesImpl\ManageBillRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Services.ManageBookRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="2.25" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>QAAAAAgAAAAAJAAABAAAQAAAAAAAgAAAAIAAARAAAAA=</HashCode>
+      <FileName>ServicesImpl\ManageBookRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Services.ManageCategoryRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="5.75" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABABCABAAAAAEBAkAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>ServicesImpl\ManageCategoryRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Services.ManageFeeRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="9.25" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAACAAABAAAAAAAAAAAAAAAAABAAAAQ=</HashCode>
+      <FileName>ServicesImpl\ManageFeeRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Services.ManagePostRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="12.75" Y="4.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAEBAABAQAEAAABAAJAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ServicesImpl\ManagePostRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Services.UserRepository" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="2.25" Y="8.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAIAAIAEBAABAAAAAAAAAAIAAAAAIAACAAAIBAAAAA=</HashCode>
+      <FileName>ServicesImpl\UserRepository.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BTP_API.Ultils.CalculateFee" Collapsed="true">
     <Position X="16.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>EgAAAAAAAAgABAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ultils\CalculateFee.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Ultils.Cookie" Collapsed="true">
     <Position X="11" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ultils\Cookie.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Ultils.Jwt" Collapsed="true">
     <Position X="7.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAEAABAAAAAAAAAAAAAAAAAAAAAAAABCAAAA=</HashCode>
+      <FileName>Ultils\Jwt.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Ultils.UploadFile" Collapsed="true">
     <Position X="14.5" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ultils\UploadFile.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Ultils.VnPayLibrary" Collapsed="true">
     <Position X="9.25" Y="8.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAQAAIAAAAAACAAEAAAAAAAAgAAAIAAACAAAAAAAAAg=</HashCode>
+      <FileName>Ultils\VnPayLibrary.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Ultils.Utils" Collapsed="true">
     <Position X="5.75" Y="8.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Ultils\VnPayLibrary.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.Ultils.VnPayCompare" Collapsed="true">
     <Position X="7.5" Y="8.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Ultils\VnPayLibrary.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="BTP_API.ViewModels.BookVM" Collapsed="true">
     <Position X="12.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAADAEwAkAAiAAAAAAAAGAAABgAAAIAAAAAgAA=</HashCode>
+      <FileName>ViewModels\BookVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.CategoryVM" Collapsed="true">
     <Position X="2.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\CategoryVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.ChangePasswordVM" Collapsed="true">
     <Position X="4" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ChangePasswordVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.CommentVM" Collapsed="true">
     <Position X="7.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\CommentVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.ExchangeBillVM" Collapsed="true">
     <Position X="4" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAQAABAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ExchangeBillVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.ExchangeDetailVM" Collapsed="true">
     <Position X="7.5" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAEAAAAAAAAAAAAAAAAAAAAAAABgAAAAA=</HashCode>
+      <FileName>ViewModels\ExchangeDetailVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.ExchangeVM" Collapsed="true">
     <Position X="11" Y="2.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAkCAAAAgAAAAAAAIAAAAAABAAAAgAAAA=</HashCode>
+      <FileName>ViewModels\ExchangeVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.FeedbackVM" Collapsed="true">
     <Position X="4" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\FeedbackVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.FeeVM" Collapsed="true">
     <Position X="5.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\FeeVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.LoginVM" Collapsed="true">
     <Position X="9.25" Y="3.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\LoginVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.PostVM" Collapsed="true">
     <Position X="16.25" Y="5.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAEAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\PostVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.RegisterVM" Collapsed="true">
     <Position X="2.25" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAACAAAAAAAAAAAAAAAAAAAAACAAAAIAAAAAA=</HashCode>
+      <FileName>ViewModels\RegisterVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.RentBillVM" Collapsed="true">
     <Position X="7.5" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAQAABAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\RentBillVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.RentDetailVM" Collapsed="true">
     <Position X="11" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\RentDetailVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.RentVM" Collapsed="true">
     <Position X="12.75" Y="6.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAACAEAAgAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\RentVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.ResetPasswordVM" Collapsed="true">
     <Position X="0.5" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAABAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>ViewModels\ResetPasswordVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.ResultPayment" Collapsed="true">
     <Position X="2.25" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAKAFAAAgACAAAACAAJAAABAAAAAAEgAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ResultPayment.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.ShipInfoVM" Collapsed="true">
     <Position X="7.5" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAIoAAAAIAAAQAAAAAAAICkAIAAAAAEAA=</HashCode>
+      <FileName>ViewModels\ShipInfoVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.TokenModel" Collapsed="true">
     <Position X="9.25" Y="7.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\TokenModel.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Class Name="BTP_API.ViewModels.UserVM" Collapsed="true">
     <Position X="4" Y="8.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>ViewModels\UserVM.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="BTP_API.ServicesImpl.IBookRepository" Collapsed="true">
     <Position X="0.5" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAkAAAAASQEgoAAgAACAAAIQAAEAABAg=</HashCode>
+      <FileName>Services\IBookRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.ServicesImpl.IManageAdminRepository" Collapsed="true">
     <Position X="2.25" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAABAAAAAAAIAAAAA=</HashCode>
+      <FileName>Services\IManageAdminRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.ServicesImpl.IManageBillRepository" Collapsed="true">
     <Position X="4" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>ABEAAAAAAAQAAAQAAAAAAAAAAAAAAAIAAAAAAQAAAAA=</HashCode>
+      <FileName>Services\IManageBillRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.ServicesImpl.IManageBookRepository" Collapsed="true">
     <Position X="5.75" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>QAAAAAgAAAAAIAAABAAAQAAAAAAAgAAAAIAAARAAAAA=</HashCode>
+      <FileName>Services\IManageBookRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.ServicesImpl.IManageCategoryRepository" Collapsed="true">
     <Position X="7.5" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABABCAAAAAAAEAAkAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Services\IManageCategoryRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.ServicesImpl.IManageFeeRepository" Collapsed="true">
     <Position X="9.25" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAABAAAAQ=</HashCode>
+      <FileName>Services\IManageFeeRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.ServicesImpl.IManagePostRepository" Collapsed="true">
     <Position X="11" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAEBAABAQAEAAABAAJAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\IManagePostRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.Services.IManageTransactionRepository" Collapsed="true">
     <Position X="12.75" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AiCQBRAAQAIAgBAQIAAAAAgAAABAAKIRIIAAAAAFCAA=</HashCode>
+      <FileName>Services\IManageTransactionRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.Services.IManageUserRepository" Collapsed="true">
     <Position X="14.5" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAEBAAJAAAQAAAAAAAAAAAAIAAAAAgAECAAAAAAAAA=</HashCode>
+      <FileName>Services\IManageUserRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.Services.IPersonalRepository" Collapsed="true">
     <Position X="16.25" Y="9.75" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAklEogAAgDGpAAIEAQAhACJABMAAAQMgYBAgAAIABA=</HashCode>
+      <FileName>Services\IPersonalRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.Services.IPostRepository" Collapsed="true">
     <Position X="0.5" Y="10.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AQACAAAAEAAAAAAAAAAABAADAAAAAUIAiAAAAAAgBAA=</HashCode>
+      <FileName>Services\IPostRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.Services.IRequestRepository" Collapsed="true">
     <Position X="2.25" Y="10.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAABgAAAAAAAAAAQAAAAAAAAAQAAA=</HashCode>
+      <FileName>Services\IRequestRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.Services.ITransactionRepository" Collapsed="true">
     <Position X="4" Y="10.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>ACAAAAIAAEEAAAkAAAAAAAAAAAAAAAAAAAAAgACAAAA=</HashCode>
+      <FileName>Services\ITransactionRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Interface Name="BTP_API.Services.IUserRepository" Collapsed="true">
     <Position X="5.75" Y="10.5" Width="1.5" />
-    <TypeIdentifier />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAEBAAAAAAAAAAAAAIAAAAAIAACAAAIAAAAAA=</HashCode>
+      <FileName>Services\IUserRepository.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

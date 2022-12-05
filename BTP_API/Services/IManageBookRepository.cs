@@ -14,5 +14,6 @@ namespace BTP_API.ServicesImpl
         public Task<ApiMessage> deniedBookAsync(int bookId);
         public Task<ApiResponse> getFeedbackInBookAsync(int bookId);
         public Task<ApiMessage> deleteFeedbackAsync(int feedbackId);
+        public Task<ApiResponse> totalBookAndUserAsync();
     }
 }
