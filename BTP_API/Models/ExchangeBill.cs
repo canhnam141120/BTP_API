@@ -64,6 +64,11 @@ namespace BTP_API.Models
         /// Phương thức thanh toán
         /// </summary>
         public string Payments { get; set; }
+
+        [Required]
+        public bool IsRefund { get; set; }
+
+        public DateOnly? RefundDate { get; set; }
         public virtual Exchange Exchange { get; set; }
         public virtual Fee FeeId1Navigation { get; set; }
         public virtual Fee FeeId2Navigation { get; set; }

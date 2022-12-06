@@ -275,6 +275,10 @@
 
                 entity.Property(e => e.IsPaid).HasComment("Đã thanh toán?");
 
+                entity.Property(e => e.IsRefund);
+
+                entity.Property(e => e.RefundDate);
+
                 entity.Property(e => e.PaidDate)
                     .HasColumnType("timestamp without time zone")
                     .HasComment("Ngày thanh toán");
@@ -748,6 +752,10 @@
                     .HasComment("Mã phí 3");
 
                 entity.Property(e => e.IsPaid).HasComment("Đã thanh toán?");
+
+                entity.Property(e => e.IsRefund);
+
+                entity.Property(e => e.RefundDate);
 
                 entity.Property(e => e.PaidDate)
                     .HasColumnType("timestamp without time zone")

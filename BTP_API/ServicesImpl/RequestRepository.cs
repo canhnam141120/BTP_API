@@ -155,7 +155,7 @@
                     var notification = new Notification
                     {
                         UserId = bookOffer.UserId,
-                        Content = @"Yêu cầu đổi sách """ + bookOffer.Title + @""" của bạn lấy sách """ + book1.Title +  @""" của" + book1.User.Fullname + " không được chấp nhận!",
+                        Content = @"Yêu cầu đổi sách """ + bookOffer.Title + @""" của bạn lấy sách """ + book1.Title +  @""" của " + book1.User.Fullname + " không được chấp nhận!",
                         CreatedDate = DateTime.Now,
                         IsRead = false,
                     };
@@ -235,6 +235,7 @@
                         FeeId2 = calculateFee.feeServiceID(1),
 						FeeId3 = 0,
                         IsPaid = false,
+                        IsRefund = false
                     };
 
                     newBillUser1.TotalAmount = calculateFee.totalAmountExchange(newBillUser1);
@@ -250,6 +251,7 @@
                         FeeId2 = calculateFee.feeServiceID(1),
 						FeeId3 = 0,
                         IsPaid = false,
+                        IsRefund = false
                     };
                     newBillUser2.TotalAmount = calculateFee.totalAmountExchange(newBillUser2);
 
@@ -479,6 +481,7 @@
                     FeeId2 = calculateFee.feeServiceID(1),
 					FeeId3 = 0,
                     IsPaid = false,
+                    IsRefund = false
                 };
                 newBillOwner.TotalAmount = calculateFee.totalAmountRent(newBillOwner);
 
@@ -493,6 +496,7 @@
                     FeeId2 = calculateFee.feeServiceID(1),
 					FeeId3 = 0,
                     IsPaid = false,
+                    IsRefund = false
                 };
                 newBillRenter.TotalAmount = calculateFee.totalAmountRent(newBillRenter);
                 _context.Add(newBillOwner);

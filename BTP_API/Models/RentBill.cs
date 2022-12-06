@@ -70,6 +70,11 @@ namespace BTP_API.Models
         /// </summary>
         public string Payment { get; set; }
 
+        [Required]
+        public bool IsRefund { get; set; }
+
+        public DateOnly? RefundDate { get; set; }
+
         public virtual Fee FeeId1Navigation { get; set; }
         public virtual Fee FeeId2Navigation { get; set; }
         public virtual Fee FeeId3Navigation { get; set; }
