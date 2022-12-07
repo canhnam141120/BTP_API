@@ -37,8 +37,8 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> getPostByUserAsync(int userId, int page = 1)
         {
-            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
-            var count = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString()).CountAsync();
+            var posts = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && p.IsHide == false).OrderByDescending(b => b.Id).Skip(6 * (page - 1)).Take(6).ToListAsync();
+            var count = await _context.Posts.Where(b => b.UserId == userId && b.Status == StatusRequest.Approved.ToString() && p.IsHide == false).CountAsync();
             //var result = PaginatedList<Book>.Create(books, page, 6);
             return new ApiResponse
             {
