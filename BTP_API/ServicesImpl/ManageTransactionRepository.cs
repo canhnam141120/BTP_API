@@ -628,6 +628,11 @@ namespace BTP_API.ServicesImpl
                 if (listBill[0].IsPaid && listBill[1].IsPaid)
                 {
                     ex.Status = Status.Trading.ToString();
+                    var exDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == ex.Id && b.Status == Status.Waiting.ToString()).ToListAsync();
+                    foreach (var detail in exDetails)
+                    {
+                        detail.Status = Status.Trading.ToString();
+                    }
                 }
                 if (!listBill[0].IsPaid)
                 {
@@ -679,6 +684,11 @@ namespace BTP_API.ServicesImpl
                 if (listBill[0].IsPaid && listBill[1].IsPaid)
                 {
                     ex.Status = Status.Trading.ToString();
+                    var rentDetails = await _context.RentDetails.Where(b => b.RentId == ex.Id && b.Status == Status.Waiting.ToString()).ToListAsync();
+                    foreach (var detail in rentDetails)
+                    {
+                        detail.Status = Status.Trading.ToString();
+                    }
                 }
                 if (!listBill[0].IsPaid)
                 {
