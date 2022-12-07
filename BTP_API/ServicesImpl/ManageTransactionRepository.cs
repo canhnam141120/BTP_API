@@ -615,6 +615,13 @@ namespace BTP_API.ServicesImpl
         {
             var listExchange = await _context.Exchanges.Where(e => e.Status == Status.Waiting.ToString()).ToListAsync();
 
+			if(listExchange == null)
+			{
+				return new ApiMessage
+				{
+					Message = Message.EXCHANGE_NOT_EXIST.ToString()
+				};
+			}				
             foreach(var ex in listExchange)
             {
                 var listBill = await _context.ExchangeBills.Where(e => e.ExchangeId == ex.Id).ToListAsync();
@@ -635,6 +642,14 @@ namespace BTP_API.ServicesImpl
         public async Task<ApiMessage> autoTradingRentAsync()
         {
             var listRent = await _context.Rents.Where(e => e.Status == Status.Waiting.ToString()).ToListAsync();
+
+			if(listRent == null)
+			{
+				return new ApiMessage
+				{
+					Message = Message.RENT_NOT_EXIST.ToString()
+				};
+			}
 
             foreach (var ex in listRent)
             {
