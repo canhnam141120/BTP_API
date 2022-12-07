@@ -629,9 +629,31 @@ namespace BTP_API.ServicesImpl
                 {
                     ex.Status = Status.Trading.ToString();
                 }
+                if (!listBill[0].IsPaid)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = listBill[0].UserId,
+                        Content = "Nhắc nhở: Bạn chưa thanh toán giao dịch số " + ex.Id,
+                        CreatedDate = DateTime.Now,
+                        IsRead = false,
+                    };
+                    _context.Add(notification);
+                }
+                if (!listBill[1].IsPaid)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = listBill[1].UserId,
+                        Content = "Nhắc nhở: Vui lòng thanh toán giao dịch số " + ex.Id,
+                        CreatedDate = DateTime.Now,
+                        IsRead = false,
+                    };
+                    _context.Add(notification);
+                }
             }
 
-            _context.Update(listExchange);
+           
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
@@ -658,9 +680,30 @@ namespace BTP_API.ServicesImpl
                 {
                     ex.Status = Status.Trading.ToString();
                 }
+                if (!listBill[0].IsPaid)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = listBill[0].UserId,
+                        Content = "Nhắc nhở: Vui lòng thanh toán giao dịch số " + ex.Id,
+                        CreatedDate = DateTime.Now,
+                        IsRead = false,
+                    };
+                    _context.Add(notification);
+                }
+                if (!listBill[1].IsPaid)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = listBill[1].UserId,
+                        Content = "Nhắc nhở: Vui lòng thanh toán giao dịch số " + ex.Id,
+                        CreatedDate = DateTime.Now,
+                        IsRead = false,
+                    };
+                    _context.Add(notification);
+                }
             }
-
-            _context.Update(listRent);
+           
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
