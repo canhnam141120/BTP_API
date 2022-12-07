@@ -337,7 +337,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> createURLPayRentAsync(int billId)
         {
-            string vnp_Returnurl = _appSettings.vnp_Returnurl; //URL nhan ket qua tra ve 
+            string vnp_ReturnurlRent = _appSettings.vnp_ReturnurlRent; //URL nhan ket qua tra ve 
             string vnp_Url = _appSettings.vnp_Url; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = _appSettings.vnp_TmnCode; //Ma website
             string vnp_HashSecret = _appSettings.vnp_HashSecret; //Chuoi bi mat
@@ -360,7 +360,7 @@ namespace BTP_API.ServicesImpl
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_Locale", "vn");
             vnpay.AddRequestData("vnp_OrderInfo", "Khách hàng: " + bill.UserId + " Thanh toán đơn hàng: " + bill.Id);
-            vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnurlRent);
             vnpay.AddRequestData("vnp_TxnRef", bill.Id.ToString());
             string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
