@@ -221,7 +221,11 @@ namespace BTP_API.ServicesImpl
                     foreach (var detail in exchangeDetails)
                     {
                         detail.Status = Status.Complete.ToString();
-               }
+                        var book1 = await _context.Books.SingleOrDefaultAsync(b => b.Id == detail.Book1Id);
+                        book1.IsTrade = false;
+                        var book2 = await _context.Books.SingleOrDefaultAsync(b => b.Id == detail.Book2Id);
+                        book2.IsTrade = false;
+                    }
                     var user1 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId1);
                     var user2 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId2);
                     user1.NumberOfTransaction += exchangeDetails.Count;
@@ -455,7 +459,9 @@ namespace BTP_API.ServicesImpl
                     foreach (var detail in rentDetails)
                     {
                         detail.Status = Status.Complete.ToString();
-                }
+                    var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == detail.BookId);
+                    book.IsTrade = false;
+                    }
                     var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == rent.OwnerId);
                     user.NumberOfTransaction += rentDetails.Count;
                 
