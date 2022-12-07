@@ -29,5 +29,7 @@
         public Task<ApiMessage> completeRentAsync(int rentId);
         public Task<ApiMessage> updateRentDetailAsync(int rentDetailId, RentDetailVM rentDetailVM);
         public Task<ApiResponse> dashboardAsync(int quarter);
+        public Task<ApiMessage> autoTradingExchangeAsync();
+        public Task<ApiMessage> autoTradingRentAsync();
     }
 }

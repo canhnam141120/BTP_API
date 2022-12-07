@@ -385,5 +385,33 @@
                 return BadRequest(new ApiMessage { Message = Message.GET_FAILED.ToString() });
             }
         }
+
+        [HttpPut("autoTradingExchange")]
+        public async Task<IActionResult> autoTradingExchange()
+        {
+            try
+            {
+                var apiResponse = await _manageTransactionRepository.autoTradingExchangeAsync();
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+            }
+        }
+
+        [HttpPut("autoTradingRent")]
+        public async Task<IActionResult> autoTradingRent()
+        {
+            try
+            {
+                var apiResponse = await _manageTransactionRepository.autoTradingRentAsync();
+                return Ok(apiResponse);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.FAILED.ToString() });
+            }
+        }
     }
 }

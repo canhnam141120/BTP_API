@@ -1,5 +1,6 @@
 ﻿using BTP_API.Models;
 using BTP_API.ViewModels;
+using System.Net.WebSockets;
 
 namespace BTP_API.ServicesImpl
 {
@@ -129,7 +130,9 @@ namespace BTP_API.ServicesImpl
         public async Task<ApiMessage> updateStatusExchangeAsync(int exchangeId, ExchangeVM exchangeVM)
         {
             var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
-            if(exchange != null)
+            var bill1 = await _context.ExchangeBills.SingleOrDefaultAsync(x => x.ExchangeId == exchangeId && x.UserId == exchange.UserId1);
+            var bill2 = await _context.ExchangeBills.SingleOrDefaultAsync(x => x.ExchangeId == exchangeId && x.UserId == exchange.UserId2);
+            if (exchange != null)
             {
                 exchange.StorageStatus1 = exchangeVM.StorageStatus1;
                 exchange.StorageStatus2 = exchangeVM.StorageStatus2;
@@ -147,6 +150,8 @@ namespace BTP_API.ServicesImpl
                 }
                 if (exchangeVM.RefundDate1 != null)
                 {
+                    bill1.IsRefund = true;
+                    bill1.RefundDate = DateOnly.Parse(exchangeVM.RefundDate1);
                     exchange.RefundDate1 = DateOnly.Parse(exchangeVM.RefundDate1);
                 }
                 if (exchangeVM.SendDate2 != null)
@@ -163,6 +168,8 @@ namespace BTP_API.ServicesImpl
                 }
                 if (exchangeVM.RefundDate2 != null)
                 {
+                    bill2.IsRefund = true;
+                    bill2.RefundDate = DateOnly.Parse(exchangeVM.RefundDate2);
                     exchange.RefundDate2 = DateOnly.Parse(exchangeVM.RefundDate2);
                 }                
                 _context.Update(exchange);
@@ -350,7 +357,6 @@ namespace BTP_API.ServicesImpl
             };
         }
 
-
         public async Task<ApiResponse> getAllRentDetailAsync(int rentId)
         {
             var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId).OrderByDescending(b => b.Id).ToListAsync();
@@ -376,6 +382,8 @@ namespace BTP_API.ServicesImpl
         public async Task<ApiMessage> updateStatusRentAsync(int rentId, RentVM rentVM)
         {
             var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentId);
+            var billOwner = await _context.RentBills.SingleOrDefaultAsync(x => x.RentId == rentId && x.UserId == rent.OwnerId);
+            var billRenter = await _context.RentBills.SingleOrDefaultAsync(x => x.RentId == rentId && x.UserId == rent.RenterId);
             if (rent != null)
             {
                 rent.StorageStatus = rentVM.StorageStatus;
@@ -389,10 +397,14 @@ namespace BTP_API.ServicesImpl
                 }
                 if (rentVM.RecallDate != null)
                 {
+                    billRenter.IsRefund = true;
+                    billRenter.RefundDate = DateOnly.Parse(rentVM.RecallDate);
                     rent.RecallDate = DateOnly.Parse(rentVM.RecallDate);
                 }
                 if (rentVM.RefundDate != null)
                 {
+                    billOwner.IsRefund = true;
+                    billOwner.RefundDate = DateOnly.Parse(rentVM.RefundDate);
                     rent.RefundDate = DateOnly.Parse(rentVM.RefundDate);
                 }
                 _context.Update(rent);
@@ -598,5 +610,48 @@ namespace BTP_API.ServicesImpl
                 NumberOfRecords = count
             };
         }
+
+        public async Task<ApiMessage> autoTradingExchangeAsync()
+        {
+            var listExchange = await _context.Exchanges.Where(e => e.Status == Status.Waiting.ToString()).ToListAsync();
+
+            foreach(var ex in listExchange)
+            {
+                var listBill = await _context.ExchangeBills.Where(e => e.ExchangeId == ex.Id).ToListAsync();
+                if (listBill[0].IsPaid && listBill[1].IsPaid)
+                {
+                    ex.Status = Status.Trading.ToString();
+                }
+            }
+
+            _context.Update(listExchange);
+            await _context.SaveChangesAsync();
+            return new ApiMessage
+            {
+                Message = Message.SUCCESS.ToString()
+            };
+        }
+
+        public async Task<ApiMessage> autoTradingRentAsync()
+        {
+            var listRent = await _context.Rents.Where(e => e.Status == Status.Waiting.ToString()).ToListAsync();
+
+            foreach (var ex in listRent)
+            {
+                var listBill = await _context.RentBills.Where(e => e.RentId == ex.Id).ToListAsync();
+                if (listBill[0].IsPaid && listBill[1].IsPaid)
+                {
+                    ex.Status = Status.Trading.ToString();
+                }
+            }
+
+            _context.Update(listRent);
+            await _context.SaveChangesAsync();
+            return new ApiMessage
+            {
+                Message = Message.SUCCESS.ToString()
+            };
+        }
+
     }
 }
