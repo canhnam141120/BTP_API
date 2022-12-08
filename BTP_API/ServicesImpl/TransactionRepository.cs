@@ -297,7 +297,7 @@ namespace BTP_API.ServicesImpl
             vnpay.AddRequestData("vnp_Locale", "vn");
             vnpay.AddRequestData("vnp_OrderInfo", "Khách hàng: " + bill.UserId + " Thanh toán đơn hàng: " + bill.Id);
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
-            vnpay.AddRequestData("vnp_TxnRef", bill.Id.ToString());
+            vnpay.AddRequestData("vnp_TxnRef", "10" + bill.Id.ToString());
             string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
             return new ApiResponse
@@ -311,8 +311,11 @@ namespace BTP_API.ServicesImpl
         {
             if(rs.vnp_ResponseCode == "00" && rs.vnp_TransactionStatus == "00")
             {
-                var bill = await _context.ExchangeBills.SingleOrDefaultAsync(b => b.Id == rs.vnp_TxnRef);
-                if(bill == null)
+
+                var billId = rs.vnp_TxnRef.ToString().Substring(2);
+
+                var bill = await _context.ExchangeBills.SingleOrDefaultAsync(b => b.Id == Int16.Parse(billId));
+                if (bill == null)
                 {
                     return new ApiMessage
                     {
@@ -361,7 +364,7 @@ namespace BTP_API.ServicesImpl
             vnpay.AddRequestData("vnp_Locale", "vn");
             vnpay.AddRequestData("vnp_OrderInfo", "Khách hàng: " + bill.UserId + " Thanh toán đơn hàng: " + bill.Id);
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnurlRent);
-            vnpay.AddRequestData("vnp_TxnRef", bill.Id.ToString());
+            vnpay.AddRequestData("vnp_TxnRef", "20" + bill.Id.ToString());
             string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
             return new ApiResponse
@@ -375,7 +378,9 @@ namespace BTP_API.ServicesImpl
         {
             if (rs.vnp_ResponseCode == "00" && rs.vnp_TransactionStatus == "00")
             {
-                var bill = await _context.RentBills.SingleOrDefaultAsync(b => b.Id == rs.vnp_TxnRef);
+                var billId =  rs.vnp_TxnRef.ToString().Substring(2);
+
+                var bill = await _context.RentBills.SingleOrDefaultAsync(b => b.Id == Int16.Parse(billId));
                 if (bill == null)
                 {
                     return new ApiMessage
