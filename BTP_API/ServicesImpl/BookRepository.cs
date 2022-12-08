@@ -500,11 +500,13 @@ namespace BTP_API.Services
             {
                 search = search.ToLower().Trim();
 
+                search = search.RemoveAccents();
+
                 var listStr = search.Split(' ');
 
                 foreach (var s in listStr)
                 {
-                    var bookResult = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Title.ToLower().Contains(s) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).ToListAsync();
+                    var bookResult = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Title.ToLower().RemoveAccents().Contains(s) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).ToListAsync();
                     books.AddRange(bookResult);
                     books.OrderBy(b => b.Title);
                 }
