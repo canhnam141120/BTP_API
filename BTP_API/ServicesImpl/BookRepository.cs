@@ -510,7 +510,16 @@ namespace BTP_API.Services
                     var bookResult = _context.Books.Include(b => b.User).Include(b => b.Category).AsEnumerable().Where(b => b.Title.ToLower().RemoveAccents().Contains(s) & b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).ToList();
 
                     /*var bookResult = await _context.Books.Include(b => b.User).Include(b => b.Category).AsAsyncEnumerable().Where(b => b.Title.ToLower().RemoveAccents().Contains(s) & b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).ToListAsync();*/
-                    books.AddRange(bookResult);
+
+                    foreach(var book in bookResult)
+                    {
+                        var check = books.SingleOrDefault(b => b.Id == book.Id);
+                        if (check == null)
+                        {
+                            books.Add(book);
+                        }
+                    }
+                   
                     books.OrderBy(b => b.Title);
                 }
             }
