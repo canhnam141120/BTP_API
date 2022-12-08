@@ -467,11 +467,19 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> searchBookOfUserAsync(int userId, string search, int page = 1)
         {
-            List<Book> books;
+            List<Book> books = new List<Book>();
             if (search != null)
             {
+
                 search = search.ToLower().Trim();
-                books = await _context.Books.Where(b => b.Title.ToLower().Contains(search) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString() && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+                
+                var listStr = search.Split(' ');
+
+                foreach(var s in listStr)
+                {
+                    var bookResult = await _context.Books.Where(b => b.Title.ToLower().Contains(s) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString() && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+                    books.AddRange(bookResult);
+                }
             }
             else
             {
@@ -487,11 +495,18 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> searchBookByTitleAsync(string search, int page = 1)
         {
-            List<Book> books;
+            List<Book> books = new List<Book>();
             if (search != null)
             {
                 search = search.ToLower().Trim();
-                books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Title.ToLower().Contains(search) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
+
+                var listStr = search.Split(' ');
+
+                foreach (var s in listStr)
+                {
+                    var bookResult = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Title.ToLower().Contains(s) && b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).OrderByDescending(b => b.Id).ToListAsync();
+                    books.AddRange(bookResult);
+                }
             }
             else
             {
