@@ -108,7 +108,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> getAllExchangeDetailAsync(int exchangeId)
         {
-            var exchangeDetails = await _context.ExchangeDetails.Where(b => b.ExchangeId == exchangeId).OrderByDescending(b => b.Id).ToListAsync();
+            var exchangeDetails = await _context.ExchangeDetails.Include(b => b.Book1).Include(b => b.Book2).Where(b => b.ExchangeId == exchangeId).OrderByDescending(b => b.Id).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -363,7 +363,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> getAllRentDetailAsync(int rentId)
         {
-            var rentDetails = await _context.RentDetails.Where(b => b.RentId == rentId).OrderByDescending(b => b.Id).ToListAsync();
+            var rentDetails = await _context.RentDetails.Include(b => b.Book).Where(b => b.RentId == rentId).OrderByDescending(b => b.Id).ToListAsync();
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
@@ -607,7 +607,7 @@ namespace BTP_API.ServicesImpl
                     }
                     total = exchange + rent;
                     count = listExchange4.Count + listRent4.Count;
-                    break;
+                     break;
             }
             return new ApiResponse
             {
