@@ -353,7 +353,7 @@
             var notificationOk = new Notification
             {
                 UserId = book2.UserId,
-                Content = @"Yêu cầu đổi sách """ + book2.Title + @""" của bạn lấy sách """ + book1.Title + @""" của" + book1.User.Fullname + " được chấp nhận!",
+                Content = @"Yêu cầu đổi sách """ + book2.Title + @""" của bạn lấy sách """ + book1.Title + @""" của " + book1.User.Fullname + " được chấp nhận!",
                 CreatedDate = DateTime.Now,
                 IsRead = false,
             };
@@ -396,7 +396,7 @@
             var notification = new Notification
             {
                 UserId = bookOffer.UserId,
-                Content = @"Yêu cầu đổi sách """ + bookOffer.Title + @""" của bạn lấy sách """ + book.Title + @""" của" + book.User.Fullname + " không được chấp nhận!",
+                Content = @"Yêu cầu đổi sách """ + bookOffer.Title + @""" của bạn lấy sách """ + book.Title + @""" của " + book.User.Fullname + " không được chấp nhận!",
                 CreatedDate = DateTime.Now,
                 IsRead = false,
             };

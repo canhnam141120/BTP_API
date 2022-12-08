@@ -128,15 +128,17 @@ namespace BTP_API.ServicesImpl
         }
         public async Task<ApiResponse> createPostAsync(int userId, PostVM postVM)
         {
-/*            UploadFile uploadFile = new UploadFile();
-            string fileImageName = uploadFile.UploadPostImage(postVM, _environment);*/
+            /*            UploadFile uploadFile = new UploadFile();
+                        string fileImageName = uploadFile.UploadPostImage(postVM, _environment);*/
+
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var post = new Post
             {
                 UserId = userId,
                 Title = postVM.Title,
                 Content = postVM.Content,
                 Image = postVM.Image,
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),/**/
                 IsHide = false,
                 Status = Status.Waiting.ToString()
             };
