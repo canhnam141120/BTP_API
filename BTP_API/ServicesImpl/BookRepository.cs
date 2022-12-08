@@ -519,22 +519,24 @@ namespace BTP_API.Services
                             books.Add(book);
                         }
                     }
-                   
-                    books.OrderBy(b => b.Title);
                 }
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books.OrderBy(b => b.Title).Skip(9 * (page - 1)).Take(9),
+                    NumberOfRecords = books.Count
+                };
             }
             else
             {
                 books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.Status == StatusRequest.Approved.ToString() && b.IsReady == true).OrderByDescending(b => b.Id).ToListAsync();
-            }
-
-            //var result = PaginatedList<Book>.Create(books, page, 9);
-            return new ApiResponse
-            {
-                Message = Message.GET_SUCCESS.ToString(),
-                Data = books.Skip(9*(page-1)).Take(9),
-                NumberOfRecords = books.Count
-            };
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books.Skip(9 * (page - 1)).Take(9),
+                    NumberOfRecords = books.Count
+                };
+            }   
         }
 
         public async Task<ApiResponse> createBookAsync(int userId, BookVM bookVM)
