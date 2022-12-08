@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿using BTP_API.Models;
+using BTP_API.ViewModels;
+using Microsoft.Extensions.Options;
+using System;
 
 namespace BTP_API.ServicesImpl
 {
@@ -14,7 +17,7 @@ namespace BTP_API.ServicesImpl
         }
         public async Task<ApiMessage> cancelExchangeAsync(int exchangeId)
         {
-
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
             if (exchange != null)
             {
@@ -37,6 +40,24 @@ namespace BTP_API.ServicesImpl
                 }
 
                 exchange.Status = Status.Cancel.ToString();
+
+                var notification = new Notification
+                {
+                    UserId = exchange.UserId1,
+                    Content = "Rất tiếc! Giao dịch đổi số " + exchange.Id + " của bạn đã bị hủy do không hợp lệ!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+                var notification1 = new Notification
+                {
+                    UserId = exchange.UserId2,
+                    Content = "Rất tiếc! Giao dịch đổi số " + exchange.Id + " của bạn đã bị hủy do không hợp lệ!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification1);
+
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -51,6 +72,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> cancelExchangeDetailAsync(int exchangeDetailId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             CalculateFee calculateFee = new CalculateFee(_context);
             var exchangeDetail = await _context.ExchangeDetails.SingleOrDefaultAsync(b => b.Id == exchangeDetailId);
             if (exchangeDetail == null)
@@ -136,6 +158,25 @@ namespace BTP_API.ServicesImpl
 
             exchangeDetail.Status = Status.Cancel.ToString();
 
+            var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeDetail.ExchangeId);
+
+            var notification = new Notification
+            {
+                UserId = exchange.UserId1,
+                Content = "Rất tiếc! Chi tiết giao dịch đổi số " + exchangeDetail.Id + " thuộc giao dịch đổi số " + exchangeDetail.ExchangeId + " của bạn đã bị hủy do không hợp lệ!",
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                IsRead = false,
+            };
+            _context.Add(notification);
+            var notification1 = new Notification
+            {
+                UserId = exchange.UserId2,
+                Content = "Rất tiếc! Chi tiết giao dịch đổi số " + exchangeDetail.Id + " thuộc giao dịch đổi số " + exchangeDetail.ExchangeId + " của bạn đã bị hủy do không hợp lệ!",
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                IsRead = false,
+            };
+            _context.Add(notification1);
+
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
@@ -173,6 +214,26 @@ namespace BTP_API.ServicesImpl
             }
 
             rent.Status = Status.Cancel.ToString();
+
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
+            var notification = new Notification
+            {
+                UserId = rent.OwnerId,
+                Content = "Rất tiếc! Giao dịch thuê số " + rent.Id + " của bạn đã bị hủy do không hợp lệ!",
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                IsRead = false,
+            };
+            _context.Add(notification);
+            var notification1 = new Notification
+            {
+                UserId = rent.RenterId,
+                Content = "Rất tiếc! Giao dịch thuê số " + rent.Id + " của bạn đã bị hủy do không hợp lệ!",
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                IsRead = false,
+            };
+            _context.Add(notification1);
+
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
@@ -264,6 +325,26 @@ namespace BTP_API.ServicesImpl
                 }
             }
             rentDetail.Status = Status.Cancel.ToString();
+
+            var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentDetail.RentId);
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            var notification = new Notification
+            {
+                UserId = rent.OwnerId,
+                Content = "Rất tiếc! Chi tiết giao dịch thuê số " + rentDetail.Id + " thuộc giao dịch thuê số " + rentDetail.RentId + " của bạn đã bị hủy do không hợp lệ!",
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                IsRead = false,
+            };
+            _context.Add(notification);
+            var notification1 = new Notification
+            {
+                UserId = rent.RenterId,
+                Content = "Rất tiếc! Chi tiết giao dịch thuê số " + rentDetail.Id + " thuộc giao dịch thuê số " + rentDetail.RentId + " của bạn đã bị hủy do không hợp lệ!",
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                IsRead = false,
+            };
+            _context.Add(notification1);
+
             await _context.SaveChangesAsync();
             return new ApiMessage
             {
@@ -273,6 +354,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> createURLPayAsync(int billId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             string vnp_Returnurl = _appSettings.vnp_Returnurl; //URL nhan ket qua tra ve 
             string vnp_Url = _appSettings.vnp_Url; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = _appSettings.vnp_TmnCode; //Ma website
@@ -292,7 +374,7 @@ namespace BTP_API.ServicesImpl
             vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
             vnpay.AddRequestData("vnp_Amount", (bill.TotalAmount * 100).ToString());
 
-            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CreateDate", TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo).ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_Locale", "vn");
             vnpay.AddRequestData("vnp_OrderInfo", "Khách hàng: " + bill.UserId + " Thanh toán đơn hàng: " + bill.Id);
@@ -309,7 +391,8 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> updatePayAsync(ResultPayment rs)
         {
-            if(rs.vnp_ResponseCode == "00" && rs.vnp_TransactionStatus == "00")
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            if (rs.vnp_ResponseCode == "00" && rs.vnp_TransactionStatus == "00")
             {
 
                 var billId = rs.vnp_TxnRef.ToString().Substring(2);
@@ -323,8 +406,18 @@ namespace BTP_API.ServicesImpl
                     };
                 }
                 bill.IsPaid = true;
-                bill.PaidDate = DateTime.Now;
+                bill.PaidDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
                 bill.Payments = rs.vnp_CardType + " " + rs.vnp_BankCode;
+
+                var notification = new Notification
+                {
+                    UserId = bill.UserId,
+                    Content = "Hóa đơn đổi số " + bill.Id + " của bạn được thanh toán thành công!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -340,6 +433,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> createURLPayRentAsync(int billId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             string vnp_ReturnurlRent = _appSettings.vnp_ReturnurlRent; //URL nhan ket qua tra ve 
             string vnp_Url = _appSettings.vnp_Url; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = _appSettings.vnp_TmnCode; //Ma website
@@ -359,7 +453,7 @@ namespace BTP_API.ServicesImpl
             vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
             vnpay.AddRequestData("vnp_Amount", (bill.TotalAmount * 100).ToString());
 
-            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CreateDate", TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo).ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_Locale", "vn");
             vnpay.AddRequestData("vnp_OrderInfo", "Khách hàng: " + bill.UserId + " Thanh toán đơn hàng: " + bill.Id);
@@ -376,6 +470,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> updatePayRentAsync(ResultPayment rs)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             if (rs.vnp_ResponseCode == "00" && rs.vnp_TransactionStatus == "00")
             {
                 var billId =  rs.vnp_TxnRef.ToString().Substring(2);
@@ -389,8 +484,18 @@ namespace BTP_API.ServicesImpl
                     };
                 }
                 bill.IsPaid = true;
-                bill.PaidDate = DateTime.Now;
+                bill.PaidDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
                 bill.Payment = rs.vnp_CardType + " " + rs.vnp_BankCode;
+
+                var notification = new Notification
+                {
+                    UserId = bill.UserId,
+                    Content = "Hóa đơn thuê số " + bill.Id + " của bạn được thanh toán thành công!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {

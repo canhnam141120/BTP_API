@@ -138,7 +138,7 @@ namespace BTP_API.ServicesImpl
                 Title = postVM.Title,
                 Content = postVM.Content,
                 Image = postVM.Image,
-                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),/**/
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 IsHide = false,
                 Status = Status.Waiting.ToString()
             };
@@ -155,14 +155,14 @@ namespace BTP_API.ServicesImpl
         public async Task<ApiMessage> updatePostAsync(int postId, PostVM postVM)
         {
             var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postId);
-
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             if (post != null)
             {
                 post.Title = postVM.Title;
                 post.Content = postVM.Content;
                 post.Image = postVM.Image;
                 post.IsHide = false;
-                post.CreatedDate = DateTime.Now;
+                post.CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
                 post.Status = Status.Waiting.ToString();
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync();
@@ -178,6 +178,7 @@ namespace BTP_API.ServicesImpl
         public async Task<ApiMessage> commentPostAsync(int userId, int postId, CommentVM commentVM)
         {
             var post = await _context.Posts.SingleOrDefaultAsync(p => p.Id == postId && p.Status == StatusRequest.Approved.ToString() && p.IsHide == false);
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             if (post != null)
             {
                 var comment = new Comment
@@ -185,7 +186,7 @@ namespace BTP_API.ServicesImpl
                     PostId = postId,
                     UserId = userId,
                     Content = commentVM.Content,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 };
                 _context.Comments.Add(comment);
                 await _context.SaveChangesAsync();
@@ -193,6 +194,7 @@ namespace BTP_API.ServicesImpl
             }
             return new ApiMessage { Message = Message.POST_NOT_EXIST.ToString() };
         }
+
         public async Task<ApiMessage> hidePostAsync(int postId)
         {
             var post = await _context.Posts.SingleOrDefaultAsync(u => u.Id == postId && u.Status == StatusRequest.Approved.ToString());

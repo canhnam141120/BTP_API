@@ -90,6 +90,7 @@
 
         public async Task<ApiMessage> approvedBookAsync(int bookId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId);
             if (book != null)
             {
@@ -99,7 +100,7 @@
                 {
                     UserId = book.UserId,
                     Content = @"Sách """ + book.Title + @""" của bạn đã được duyệt!",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                     IsRead = false,
                 };
                 _context.Add(notification);
@@ -117,6 +118,7 @@
         public async Task<ApiMessage> deniedBookAsync(int bookId)
         {
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId);
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             if (book != null)
             {
                 book.Status = StatusRequest.Denied.ToString();
@@ -125,7 +127,7 @@
                 {
                     UserId = book.UserId,
                     Content = @"Sách """ + book.Title + @""" của bạn không được duyệt!",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                     IsRead = false,
                 };
                 _context.Add(notification);
@@ -157,6 +159,7 @@
         public async Task<ApiMessage> deleteFeedbackAsync(int feedbackId)
         {
             var feedback = await _context.Feedbacks.SingleOrDefaultAsync(b => b.Id == feedbackId);
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             if (feedback != null)
             {
                 _context.Remove(feedback);
@@ -164,7 +167,7 @@
                 {
                     UserId = feedback.UserId,
                     Content = @"Đánh giá """ + feedback.Content + @""" của bạn bị xóa vì vi phạm nội quy!",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                     IsRead = false,
                 };
                 _context.Add(notification);

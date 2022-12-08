@@ -1,5 +1,6 @@
 ﻿using BTP_API.Models;
 using BTP_API.ViewModels;
+using System;
 using System.Net.WebSockets;
 
 namespace BTP_API.ServicesImpl
@@ -129,6 +130,8 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> updateStatusExchangeAsync(int exchangeId, ExchangeVM exchangeVM)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
             var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
             var bill1 = await _context.ExchangeBills.SingleOrDefaultAsync(x => x.ExchangeId == exchangeId && x.UserId == exchange.UserId1);
             var bill2 = await _context.ExchangeBills.SingleOrDefaultAsync(x => x.ExchangeId == exchangeId && x.UserId == exchange.UserId2);
@@ -171,14 +174,34 @@ namespace BTP_API.ServicesImpl
                     bill2.IsRefund = true;
                     bill2.RefundDate = DateOnly.Parse(exchangeVM.RefundDate2);
                     exchange.RefundDate2 = DateOnly.Parse(exchangeVM.RefundDate2);
-                }                
+                }        
+
                 _context.Update(exchange);
+
+                var notification = new Notification
+                {
+                    UserId = exchange.UserId1,
+                    Content = "Có cập nhật mới từ giao dịch đổi số " + exchange.Id + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+                var notification1 = new Notification
+                {
+                    UserId = exchange.UserId2,
+                    Content = "Có cập nhật mới từ giao dịch đổi số " + exchange.Id + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification1);
+
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
                     Message = Message.UPDATE_SUCCESS.ToString()
                 };
             }
+
             return new ApiMessage
             {
                 Message = Message.EXCHANGE_NOT_EXIST.ToString()
@@ -212,6 +235,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> completeExchangeAsync(int exchangeId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeId);
             if (exchange != null)
             {
@@ -230,7 +254,25 @@ namespace BTP_API.ServicesImpl
                     var user2 = await _context.Users.SingleOrDefaultAsync(u => u.Id == exchange.UserId2);
                     user1.NumberOfTransaction += exchangeDetails.Count;
                     user2.NumberOfTransaction += exchangeDetails.Count;
-                
+
+                var notification = new Notification
+                {
+                    UserId = exchange.UserId1,
+                    Content = "Giao dịch đổi số " + exchange.Id + " của bạn đã kết thúc! Bạn có thể vào chi tiết giao dịch để đánh giá sách!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+                var notification1 = new Notification
+                {
+                    UserId = exchange.UserId2,
+                    Content = "Giao dịch đổi số " + exchange.Id + " của bạn đã kết thúc! Bạn có thể vào chi tiết giao dịch để đánh giá sách!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification1);
+
+
                 _context.Update(exchange);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
@@ -246,15 +288,36 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> updateExchangeDetailAsync(int exchangeDetailId, ExchangeDetailVM exchangeDetailVM)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var exchangeDetail = await _context.ExchangeDetails.SingleOrDefaultAsync(b => b.Id == exchangeDetailId);
             if (exchangeDetail != null)
             {
+                var exchange = await _context.Exchanges.SingleOrDefaultAsync(b => b.Id == exchangeDetail.ExchangeId);
+
                 exchangeDetail.BeforeStatusBook1 = exchangeDetailVM.BeforeStatusBook1;
                 exchangeDetail.AfterStatusBook1 = exchangeDetailVM.AfterStatusBook1;
                 exchangeDetail.BeforeStatusBook2 = exchangeDetailVM.BeforeStatusBook2;
                 exchangeDetail.AfterStatusBook2 = exchangeDetailVM.AfterStatusBook2;
                 
                 _context.Update(exchangeDetail);
+
+                var notification = new Notification
+                {
+                    UserId = exchange.UserId1,
+                    Content = "Có cập nhật mới từ chi tiết giao dịch đổi số " + exchangeDetail.Id + " thuộc giao dịch đổi số " + exchangeDetail.ExchangeId + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+                var notification1 = new Notification
+                {
+                    UserId = exchange.UserId2,
+                    Content = "Có cập nhật mới từ chi tiết giao dịch đổi số " + exchangeDetail.Id + " thuộc giao dịch đổi số " + exchangeDetail.ExchangeId + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification1);
+
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -385,6 +448,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> updateStatusRentAsync(int rentId, RentVM rentVM)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentId);
             var billOwner = await _context.RentBills.SingleOrDefaultAsync(x => x.RentId == rentId && x.UserId == rent.OwnerId);
             var billRenter = await _context.RentBills.SingleOrDefaultAsync(x => x.RentId == rentId && x.UserId == rent.RenterId);
@@ -412,6 +476,24 @@ namespace BTP_API.ServicesImpl
                     rent.RefundDate = DateOnly.Parse(rentVM.RefundDate);
                 }
                 _context.Update(rent);
+
+                var notification = new Notification
+                {
+                    UserId = rent.OwnerId,
+                    Content = "Có cập nhật mới từ giao dịch thuê số " + rent.Id + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+                var notification1 = new Notification
+                {
+                    UserId = rent.RenterId,
+                    Content = "Có cập nhật mới từ giao dịch thuê số " + rent.Id + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification1);
+
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -450,6 +532,7 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> completeRentAsync(int rentId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentId);
             if (rent != null)
             {
@@ -464,8 +547,23 @@ namespace BTP_API.ServicesImpl
                     }
                     var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == rent.OwnerId);
                     user.NumberOfTransaction += rentDetails.Count;
-                
-                
+
+                var notification = new Notification
+                {
+                    UserId = rent.RenterId,
+                    Content = "Giao dịch thuê số " + rent.Id + " của bạn đã kết thúc! Bạn có thể vào chi tiết giao dịch để đánh giá sách!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+                var notification1 = new Notification
+                {
+                    UserId = rent.OwnerId,
+                    Content = "Giao dịch đổi số " + rent.Id + " của bạn đã kết thúc!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+
                 _context.Update(rent);
                 await _context.SaveChangesAsync();
                 return new ApiMessage
@@ -481,12 +579,33 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiMessage> updateRentDetailAsync(int rentDetailId, RentDetailVM rentDetailVM)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var rentDetail = await _context.RentDetails.SingleOrDefaultAsync(b => b.Id == rentDetailId);
             if (rentDetail != null)
             {
+                var rent = await _context.Rents.SingleOrDefaultAsync(b => b.Id == rentDetail.RentId);
+
                 rentDetail.BeforeStatusBook = rentDetailVM.BeforeStatusBook;
                 rentDetail.AfterStatusBook = rentDetailVM.AfterStatusBook;
                 _context.Update(rentDetail);
+
+                var notification = new Notification
+                {
+                    UserId = rent.OwnerId,
+                    Content = "Có cập nhật mới từ chi tiết giao dịch thuê số " + rentDetail.Id + " thuộc giao dịch thuê số " + rentDetail.RentId + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+                var notification1 = new Notification
+                {
+                    UserId = rent.RenterId,
+                    Content = "Có cập nhật mới từ chi tiết giao dịch thuê số " + rentDetail.Id + " thuộc giao dịch thuê số " + rentDetail.RentId + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification1);
+
                 await _context.SaveChangesAsync();
                 return new ApiMessage
                 {
@@ -505,7 +624,8 @@ namespace BTP_API.ServicesImpl
             float total = 0;
             float exchange = 0;
             float rent = 0;
-            var year = DateTime.Now.Year;
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            var year = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo).Year;
             switch (quarter)
             {
                 case 1:
@@ -620,8 +740,8 @@ namespace BTP_API.ServicesImpl
         public async Task<ApiMessage> autoTradingExchangeAsync()
         {
             var listExchange = await _context.Exchanges.Where(e => e.Status == Status.Waiting.ToString()).ToListAsync();
-
-			if(listExchange == null)
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            if (listExchange == null)
 			{
 				return new ApiMessage
 				{
@@ -638,6 +758,23 @@ namespace BTP_API.ServicesImpl
                     foreach (var detail in exDetails)
                     {
                         detail.Status = Status.Trading.ToString();
+
+                        var notification = new Notification
+                        {
+                            UserId = ex.UserId1,
+                            Content = "Giao dịch đổi của bạn đã được duyệt với mã giao dịch là: " + ex.Id + "!",
+                            CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                            IsRead = false,
+                        };
+                        _context.Add(notification);
+                        var notification1 = new Notification
+                        {
+                            UserId = ex.UserId2,
+                            Content = "Giao dịch đổi của bạn đã được duyệt với mã giao dịch là: " + ex.Id + "!",
+                            CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                            IsRead = false,
+                        };
+                        _context.Add(notification1);
                     }
                 }
                 if (!listBill[0].IsPaid)
@@ -646,7 +783,7 @@ namespace BTP_API.ServicesImpl
                     {
                         UserId = listBill[0].UserId,
                         Content = "Nhắc nhở: Bạn chưa thanh toán giao dịch số " + ex.Id,
-                        CreatedDate = DateTime.Now,
+                        CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                         IsRead = false,
                     };
                     _context.Add(notification);
@@ -657,7 +794,7 @@ namespace BTP_API.ServicesImpl
                     {
                         UserId = listBill[1].UserId,
                         Content = "Nhắc nhở: Vui lòng thanh toán giao dịch số " + ex.Id,
-                        CreatedDate = DateTime.Now,
+                        CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                         IsRead = false,
                     };
                     _context.Add(notification);
@@ -675,8 +812,8 @@ namespace BTP_API.ServicesImpl
         public async Task<ApiMessage> autoTradingRentAsync()
         {
             var listRent = await _context.Rents.Where(e => e.Status == Status.Waiting.ToString()).ToListAsync();
-
-			if(listRent == null)
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            if (listRent == null)
 			{
 				return new ApiMessage
 				{
@@ -694,6 +831,22 @@ namespace BTP_API.ServicesImpl
                     foreach (var detail in rentDetails)
                     {
                         detail.Status = Status.Trading.ToString();
+                        var notification = new Notification
+                        {
+                            UserId = ex.RenterId,
+                            Content = "Giao dịch thuê của bạn đã được duyệt với mã giao dịch là: " + ex.Id + "!",
+                            CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                            IsRead = false,
+                        };
+                        _context.Add(notification);
+                        var notification1 = new Notification
+                        {
+                            UserId = ex.OwnerId,
+                            Content = "Giao dịch thuê của bạn đã được duyệt với mã giao dịch là: " + ex.Id + "!",
+                            CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                            IsRead = false,
+                        };
+                        _context.Add(notification1);
                     }
                 }
                 if (!listBill[0].IsPaid)
@@ -702,7 +855,7 @@ namespace BTP_API.ServicesImpl
                     {
                         UserId = listBill[0].UserId,
                         Content = "Nhắc nhở: Vui lòng thanh toán giao dịch số " + ex.Id,
-                        CreatedDate = DateTime.Now,
+                        CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                         IsRead = false,
                     };
                     _context.Add(notification);
@@ -713,7 +866,7 @@ namespace BTP_API.ServicesImpl
                     {
                         UserId = listBill[1].UserId,
                         Content = "Nhắc nhở: Vui lòng thanh toán giao dịch số " + ex.Id,
-                        CreatedDate = DateTime.Now,
+                        CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                         IsRead = false,
                     };
                     _context.Add(notification);

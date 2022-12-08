@@ -1,4 +1,6 @@
-﻿namespace BTP_API.Services
+﻿using System;
+
+namespace BTP_API.Services
 {
     public class ManagePostRepository : IManagePostRepository
     {
@@ -96,6 +98,7 @@
 
         public async Task<ApiMessage> approvedPostAsync(int postID)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postID);
             if (post != null)
             {
@@ -105,7 +108,7 @@
                 {
                     UserId = post.UserId,
                     Content = @"Bài đăng """ + post.Title + @""" của bạn đã được duyệt!",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                     IsRead = false,
                 };
                 _context.Add(notification);
@@ -123,6 +126,7 @@
 
         public async Task<ApiMessage> deniedPostAsync(int postID)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var post = await _context.Posts.SingleOrDefaultAsync(b => b.Id == postID);
             if (post != null)
             {
@@ -132,7 +136,7 @@
                 {
                     UserId = post.UserId,
                     Content = @"Bài đăng """ + post.Title + @""" của bạn không được duyệt!",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                     IsRead = false,
                 };
                 _context.Add(notification);
@@ -163,6 +167,7 @@
 
         public async Task<ApiMessage> deleteCommentAsync(int commentId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var comment = await _context.Comments.SingleOrDefaultAsync(b => b.Id == commentId);
             if(comment != null)
             {
@@ -171,7 +176,7 @@
                 {
                     UserId = comment.UserId,
                     Content = @"Bình luận """ + comment.Content + @""" của bạn bị xóa vì vi phạm nội quy!",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                     IsRead = false,
                 };
                 _context.Add(notification);

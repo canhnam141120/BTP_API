@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 
 namespace BTP_API.ServicesImpl
 {
@@ -321,6 +322,7 @@ namespace BTP_API.ServicesImpl
         }
         public async Task<ApiMessage> addPostByFavoritesAsync(int userId, int postId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             var post = await _context.Posts.Include(f => f.User).SingleOrDefaultAsync(f => f.Id == postId);
@@ -351,7 +353,7 @@ namespace BTP_API.ServicesImpl
             {
                 UserId = post.UserId,
                 Content = user.Fullname + @" đã yêu thích bài đăng """ + post.Title  + @""" của bạn!",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 IsRead = false,
             };
             _context.Add(notification);
@@ -457,7 +459,7 @@ namespace BTP_API.ServicesImpl
         public async Task<ApiMessage> addUserByFavoritesAsync(int userId, int favoriteUserId)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
-
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var userFavorite = await _context.Users.SingleOrDefaultAsync(f => f.Id == favoriteUserId);
             if (userFavorite == null)
             {
@@ -486,7 +488,7 @@ namespace BTP_API.ServicesImpl
             {
                 UserId = userFavorite.Id,
                 Content = user.Fullname + " đã yêu thích bạn!",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 IsRead = false,
             };
             _context.Add(notification);

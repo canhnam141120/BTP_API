@@ -509,6 +509,7 @@ namespace BTP_API.Services
 
         public async Task<ApiResponse> createBookAsync(int userId, BookVM bookVM)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var book = new Book
             {
                 UserId = userId,
@@ -525,7 +526,7 @@ namespace BTP_API.Services
                 DepositPrice = bookVM.DepositPrice,
                 StatusBook = bookVM.StatusBook,
                 Image = bookVM.Image,
-                PostedDate = DateOnly.FromDateTime(DateTime.Today),
+                PostedDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Today, timeZoneInfo)),
                 IsExchange = bookVM.IsExchange,
                 IsRent = bookVM.IsRent,
                 RentFee = bookVM.RentFee,
@@ -547,6 +548,7 @@ namespace BTP_API.Services
         public async Task<ApiMessage> feedbackBookAsync(int userId, int bookId, FeedbackVM feedbackVM)
         {
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId && b.Status == StatusRequest.Approved.ToString() && b.IsReady == true);
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             if (book != null)
             {
                 var feedback = new Feedback
@@ -554,7 +556,7 @@ namespace BTP_API.Services
                     BookId = bookId,
                     UserId = userId,
                     Content = feedbackVM.Content,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 };
                 _context.Feedbacks.Add(feedback);
                 await _context.SaveChangesAsync();
@@ -565,6 +567,7 @@ namespace BTP_API.Services
 
         public async Task<ApiMessage> updateBookAsync(int bookId, BookVM bookVM)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId);
             if (book != null)
             {
@@ -586,7 +589,7 @@ namespace BTP_API.Services
                 book.RentFee = bookVM.RentFee;
                 book.IsReady = true;
                 book.IsTrade = false;
-                book.PostedDate = DateOnly.FromDateTime(DateTime.Today);
+                book.PostedDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Today, timeZoneInfo));
                 book.Status = StatusRequest.Waiting.ToString();
                 _context.Books.Update(book);
                 await _context.SaveChangesAsync();

@@ -1,4 +1,6 @@
-﻿namespace BTP_API.ServicesImpl
+﻿using System;
+
+namespace BTP_API.ServicesImpl
 {
     public class RequestRepository : IRequestRepository
     {
@@ -10,6 +12,7 @@
         }
         public async Task<ApiMessage> createRequestAsync(int userId, int bookid, List<int> bookOffer)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var user = await _context.ShipInfos.SingleOrDefaultAsync(s => s.UserId == userId);
             if(user.IsUpdate == false)
             {
@@ -48,7 +51,7 @@
                     BookId = bookid,
                     BookOfferId = i,
                     IsAccept = false,
-                    RequestTime = DateTime.Now,
+                    RequestTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                     Status = StatusRequest.Waiting.ToString(),
                     IsNewest = true,
                     Flag = true
@@ -63,7 +66,7 @@
             {
                 UserId = bookCheck.UserId,
                 Content = userInfo.Fullname + @" đã yêu cầu đổi sách """ + bookCheck.Title + @""" của bạn - Vào danh sách yêu cầu để kiểm tra!",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 IsRead = false,
             };
             _context.Add(notification);
@@ -76,6 +79,7 @@
         }
         public async Task<ApiMessage> cancelRequestAsync(int userId, int requestId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
             {
@@ -104,7 +108,7 @@
             {
                 UserId = book.UserId,
                 Content = bookOffer.User.Fullname +  @" đã hủy yêu cầu đổi sách """ + bookOffer.Title  + @""" lấy sách """ + book.Title + @""" của bạn!",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 IsRead = false,
             };
             _context.Add(notification);
@@ -117,6 +121,7 @@
         }
         public async Task<ApiMessage> acceptRequestAsync(int userId, int requestId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             CalculateFee calculateFee = new CalculateFee(_context);
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
@@ -156,7 +161,7 @@
                     {
                         UserId = bookOffer.UserId,
                         Content = @"Yêu cầu đổi sách """ + bookOffer.Title + @""" của bạn lấy sách """ + book1.Title +  @""" của " + book1.User.Fullname + " không được chấp nhận!",
-                        CreatedDate = DateTime.Now,
+                        CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                         IsRead = false,
                     };
                     _context.Add(notification);
@@ -183,7 +188,7 @@
             {
                 UserId1 = book1.UserId,
                 UserId2 = book2.UserId,
-                Date = DateOnly.FromDateTime(DateTime.Today),
+                Date = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Today, timeZoneInfo)),
                 Status = Status.Waiting.ToString(),
                 StorageStatus1 = StorageStatus.Waiting.ToString(),
                 StorageStatus2 = StorageStatus.Waiting.ToString(),
@@ -218,8 +223,9 @@
                         ExchangeId = exchange.Id,
                         Book1Id = book1.Id,
                         Book2Id = book2.Id,
-                        RequestTime = DateTime.Now,
-                        ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(numberOfDays)),
+                        RequestTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+
+                        ExpiredDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Now.AddDays(numberOfDays), timeZoneInfo)),
                         Status = Status.Waiting.ToString(),
                     };
                     _context.Add(newExchangeDetail);
@@ -268,8 +274,8 @@
                         ExchangeId = check1.Id,
                         Book1Id = book1.Id,
                         Book2Id = book2.Id,
-                        RequestTime = DateTime.Now,
-                        ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(numberOfDays)),
+                        RequestTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                        ExpiredDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Now.AddDays(numberOfDays), timeZoneInfo)),
                         Status = Status.Waiting.ToString(),
                     };
 
@@ -312,8 +318,8 @@
                         ExchangeId = check2.Id,
                         Book1Id = book2.Id,
                         Book2Id = book1.Id,
-                        RequestTime = DateTime.Now,
-                        ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(numberOfDays)),
+                        RequestTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                        ExpiredDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Now.AddDays(numberOfDays), timeZoneInfo)),
                         Status = Status.Waiting.ToString(),
                     };
 
@@ -354,7 +360,7 @@
             {
                 UserId = book2.UserId,
                 Content = @"Yêu cầu đổi sách """ + book2.Title + @""" của bạn lấy sách """ + book1.Title + @""" của " + book1.User.Fullname + " được chấp nhận!",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 IsRead = false,
             };
             _context.Add(notificationOk);
@@ -367,6 +373,7 @@
 
         public async Task<ApiMessage> deniedRequestAsync(int userId, int requestId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var request = await _context.ExchangeRequests.SingleOrDefaultAsync(r => r.Id == requestId && r.Status == StatusRequest.Waiting.ToString());
             if (request == null)
             {
@@ -397,7 +404,7 @@
             {
                 UserId = bookOffer.UserId,
                 Content = @"Yêu cầu đổi sách """ + bookOffer.Title + @""" của bạn lấy sách """ + book.Title + @""" của " + book.User.Fullname + " không được chấp nhận!",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 IsRead = false,
             };
             _context.Add(notification);
@@ -411,6 +418,7 @@
 
         public async Task<ApiMessage> rentBookAsync(int userId, int bookId)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             CalculateFee calculateFee = new CalculateFee(_context);
 
             var user = await _context.ShipInfos.SingleOrDefaultAsync(s => s.UserId == userId);
@@ -438,7 +446,7 @@
             {
                 OwnerId = book.UserId,
                 RenterId = userId,
-                Date = DateOnly.FromDateTime(DateTime.Today),
+                Date = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Today, timeZoneInfo)),
                 Status = Status.Waiting.ToString(),
                 StorageStatus = Status.Waiting.ToString()
             };
@@ -462,8 +470,8 @@
                 {
                     RentId = rent.Id,
                     BookId = bookId,
-                    RequestTime = DateTime.Now,
-                    ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(book.NumberOfDays)),
+                    RequestTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    ExpiredDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Now.AddDays(book.NumberOfDays), timeZoneInfo)),
                     Status = Status.Waiting.ToString(),
                 };
                 _context.Add(rentDetail);
@@ -508,8 +516,8 @@
                 {
                     RentId = check.Id,
                     BookId = bookId,
-                    RequestTime = DateTime.Now,
-                    ExpiredDate = DateOnly.FromDateTime(DateTime.Now.AddDays(book.NumberOfDays)),
+                    RequestTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    ExpiredDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Now.AddDays(book.NumberOfDays), timeZoneInfo)),
                     Status = Status.Waiting.ToString(),
                 };
 
@@ -546,13 +554,15 @@
                 _context.Add(rentDetail);
                 await _context.SaveChangesAsync();
             }
+
             var notification = new Notification
             {
                 UserId = book.UserId,
-                Content = @"Sách """ + book.Title + @""" của bạn được " + userInfo.Fullname + " đặt thuê!",
-                CreatedDate = DateTime.Now,
+                Content = @"Sách """ + book.Title + @""" của bạn được " + userInfo.Fullname + " đặt thuê! Vui lòng thanh toán để giao dịch được bắt đầu!",
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
                 IsRead = false,
             };
+
             _context.Add(notification);
             await _context.SaveChangesAsync();
             return new ApiMessage

@@ -2,6 +2,7 @@
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.Text;
+using System;
 
 namespace BTP_API.Services
 {
@@ -258,6 +259,7 @@ namespace BTP_API.Services
         }
         public async Task<ApiResponse> renewTokenAsync(TokenModel tokenModel)
         {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
             ConvertUnixTimeToDateTime converDate = new ConvertUnixTimeToDateTime();
@@ -298,7 +300,7 @@ namespace BTP_API.Services
             var utcExpireDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
 
             var expireDate = converDate.Convert(utcExpireDate);
-            if (expireDate > DateTime.Now)
+            if (expireDate > TimeZoneInfo.ConvertTime(TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo), timeZoneInfo))
             {
                 return new ApiResponse
                 {
