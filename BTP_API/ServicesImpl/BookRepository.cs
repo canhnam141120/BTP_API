@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Npgsql;
 using System.Net.WebSockets;
+using System.Text.RegularExpressions;
 
 namespace BTP_API.Services
 {
@@ -502,28 +504,73 @@ namespace BTP_API.Services
 
                 search = search.RemoveAccents();
 
-                var listStr = search.Split(' ');
+                RegexOptions options = RegexOptions.None;
+                Regex regex = new Regex("[ ]{2,}", options);
 
-                foreach (var s in listStr)
+                search = regex.Replace(search, " ");
+
+                search = search.Replace(" ", "|");
+
+                string query = @"SELECT * FROM ""Book"" Where ""Status"" = 'Approved' AND ""IsReady""  AND title_tsv @@ to_tsquery('" + search + "') ORDER BY ts_rank(title_tsv, to_tsquery('" + search + "')) desc";
+
+                string sqlDataSource = "Host=ec2-3-214-57-29.compute-1.amazonaws.com:5432;Database=dr8bb7r6ai6bk;Username=pywgupxdwfpxrf;Password=72920fd6643b9123783422128cd07c8ab0381d206608988768d3e1be53fc3441;SSL Mode=Require;Trust Server Certificate=true";
+                
+                using (NpgsqlConnection myCon = new NpgsqlConnection(sqlDataSource))
                 {
-
-                    var bookResult = _context.Books.Include(b => b.User).Include(b => b.Category).AsEnumerable().Where(b => b.Title.ToLower().RemoveAccents().Contains(s) & b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).ToList();
-
-                    /*var bookResult = await _context.Books.Include(b => b.User).Include(b => b.Category).AsAsyncEnumerable().Where(b => b.Title.ToLower().RemoveAccents().Contains(s) & b.IsReady == true && b.Status == StatusRequest.Approved.ToString()).ToListAsync();*/
-
-                    foreach(var book in bookResult)
+                    myCon.Open();
+                    using(NpgsqlCommand myCommand = new NpgsqlCommand(query, myCon))
                     {
-                        var check = books.SingleOrDefault(b => b.Id == book.Id);
-                        if (check == null)
+                        using (var dataReader = myCommand.ExecuteReader())
                         {
-                            books.Add(book);
+                            while (dataReader.Read())
+                            {
+                                var values = new object[dataReader.FieldCount];
+                                for (int i = 0; i < dataReader.FieldCount; i++)
+                                {
+                                    values[i] = dataReader[i];
+                                }
+
+                                var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == Int16.Parse(values[1].ToString()));
+                                var category = await _context.Categories.SingleOrDefaultAsync(u => u.Id == Int16.Parse(values[2].ToString()));
+
+                                books.Add(new Book
+                                {
+                                    Id =  Int16.Parse(values[0].ToString()),
+                                    UserId = Int16.Parse(values[1].ToString()),
+                                    CategoryId = Int16.Parse(values[2].ToString()),
+                                    Title = values[3].ToString(),
+                                    Description = values[4].ToString(),
+                                    Author = values[5].ToString(),
+                                    Publisher = values[6].ToString(),
+                                    Year = Int16.Parse(values[7].ToString()),
+                                    Language = values[8].ToString(),
+                                    NumberOfPages = Int16.Parse(values[9].ToString()),
+                                    Weight = float.Parse(values[10].ToString()),
+                                    CoverPrice = float.Parse(values[11].ToString()),
+                                    DepositPrice = float.Parse(values[12].ToString()),
+                                    StatusBook = values[13].ToString(),
+                                    Image = values[14].ToString(),
+                                    PostedDate = DateOnly.FromDateTime(DateTime.Parse(values[15].ToString())),
+                                    IsExchange = bool.Parse(values[16].ToString()),
+                                    IsRent = bool.Parse(values[17].ToString()),
+                                    RentFee = float.Parse(values[18].ToString()),
+                                    NumberOfDays = Int16.Parse(values[19].ToString()),
+                                    IsReady = bool.Parse(values[20].ToString()),
+                                    IsTrade = bool.Parse(values[21].ToString()),
+                                    Status = values[22].ToString(),
+                                    User = user,
+                                    Category = category
+                                });
+                            }
                         }
+                        myCon.Close();
                     }
                 }
+
                 return new ApiResponse
                 {
                     Message = Message.GET_SUCCESS.ToString(),
-                    Data = books.OrderBy(b => b.Title).Skip(9 * (page - 1)).Take(9),
+                    Data = books.Skip(9 * (page - 1)).Take(9),
                     NumberOfRecords = books.Count
                 };
             }
