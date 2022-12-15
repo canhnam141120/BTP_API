@@ -40,27 +40,13 @@ namespace BTP_API.Ultils
 
             var token = jwtTokenHandler.CreateToken(tokenDescription);
             var accessToken = jwtTokenHandler.WriteToken(token);
-            var refreshToken = GenerateRefreshToken();
+           
 
-            //lưu database
-            var refreshTokenEntity = new RefreshToken
-            {
-                JwtId = token.Id,
-                UserId = user.Id,
-                Token = refreshToken,
-                IsUsed = false,
-                IsRevoked = false,
-                IssueDate = DateTime.Now,
-                ExpiredDate = DateTime.Now.AddDays(3)
-            };
-
-            _context.Add(refreshTokenEntity);
             _context.SaveChanges();
 
             return new TokenModel
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
+                AccessToken = accessToken
             };
         }
         public string GenerateRefreshToken()

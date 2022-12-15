@@ -25,7 +25,6 @@
         public virtual DbSet<Feedback> Feedbacks { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
-        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<Rent> Rents { get; set; }
         public virtual DbSet<RentBill> RentBills { get; set; }
         public virtual DbSet<RentDetail> RentDetails { get; set; }
@@ -368,19 +367,19 @@
                     .WithMany(p => p.ExchangeDetailBook1s)
                     .HasForeignKey(d => d.Book1Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExchanegDetail_Book1");
+                    .HasConstraintName("FK_ExchangeDetail_Book1");
 
                 entity.HasOne(d => d.Book2)
                     .WithMany(p => p.ExchangeDetailBook2s)
                     .HasForeignKey(d => d.Book2Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExchanegDetail_Book2");
+                    .HasConstraintName("FK_ExchangeDetail_Book2");
 
                 entity.HasOne(d => d.Exchange)
                     .WithMany(p => p.ExchangeDetails)
                     .HasForeignKey(d => d.ExchangeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExchanegDetail_Exchange");
+                    .HasConstraintName("FK_ExchangeDetaill_Exchange");
             });
 
             modelBuilder.Entity<ExchangeRequest>(entity =>
@@ -638,46 +637,6 @@
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notification_User");
-            });
-
-            modelBuilder.Entity<RefreshToken>(entity =>
-            {
-                entity.ToTable("RefreshToken");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasComment("Mã refresh token");
-
-                entity.Property(e => e.ExpiredDate)
-                    .HasColumnType("timestamp without time zone")
-                    .HasComment("Ngày hết hạn");
-
-                entity.Property(e => e.IsRevoked).HasComment("Đã hủy");
-
-                entity.Property(e => e.IsUsed).HasComment("Đã sử dụng?");
-
-                entity.Property(e => e.IssueDate)
-                    .HasColumnType("timestamp without time zone")
-                    .HasComment("Ngày đăng ký");
-
-                entity.Property(e => e.JwtId)
-                    .IsRequired()
-                    .HasColumnName("JwtID")
-                    .HasComment("Mã access token");
-
-                entity.Property(e => e.Token)
-                    .IsRequired()
-                    .HasComment("Chuỗi token");
-
-                entity.Property(e => e.UserId)
-                    .HasColumnName("UserID")
-                    .HasComment("Mã người dùng");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.RefreshTokens)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RefreshToken_User");
             });
 
             modelBuilder.Entity<Rent>(entity =>

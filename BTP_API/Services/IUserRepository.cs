@@ -8,6 +8,5 @@
         public Task<ApiMessage> verifyAsync(string verifyCode);
         public Task<ApiMessage> forgotPasswordAsync(string email);
         public Task<ApiMessage> resetPasswordAsync(ResetPasswordVM resetPasswordVM);
-        public Task<ApiResponse> renewTokenAsync(TokenModel tokenModel);
     }
 }

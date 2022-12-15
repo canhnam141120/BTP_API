@@ -25,10 +25,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\BookImage\" />
-    <Folder Include="wwwroot\PostImage\" />
-    <Folder Include="wwwroot\UserImage\" />
-  </ItemGroup>
-
 </Project>

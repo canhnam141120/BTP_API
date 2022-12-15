@@ -115,6 +115,7 @@ namespace BTP_API.Services
                 VerifyCode = random.CreateRandomCode4Byte(),
                 Fullname = registerVM.Fullname,
                 Phone = registerVM.Phone,
+				Avatar = "https://book-trading-platform.s3.ap-northeast-1.amazonaws.com/defaultAvatar.jpg",
                 AddressMain = registerVM.AddressMain,
                 IsActive = true,
                 LikeNumber = 0,
@@ -257,7 +258,7 @@ namespace BTP_API.Services
                 Message = Message.CHANGE_PASSWORD_SUCCESS.ToString()
             };
         }
-        public async Task<ApiResponse> renewTokenAsync(TokenModel tokenModel)
+        /*public async Task<ApiResponse> renewTokenAsync(TokenModel tokenModel)
         {
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -361,7 +362,7 @@ namespace BTP_API.Services
                 Data = token,
                 NumberOfRecords = 1
             };
-        }
+        }*/
     }
 }
 

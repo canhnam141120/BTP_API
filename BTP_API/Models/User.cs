@@ -20,7 +20,6 @@ namespace BTP_API.Models
             FavoriteUserListUsers = new HashSet<FavoriteUserList>();
             Feedbacks = new HashSet<Feedback>();
             Posts = new HashSet<Post>();
-            RefreshTokens = new HashSet<RefreshToken>();
             RentBills = new HashSet<RentBill>();
             RentOwners = new HashSet<Rent>();
             RentRenters = new HashSet<Rent>();
@@ -128,8 +127,6 @@ namespace BTP_API.Models
         public virtual ICollection<Post> Posts { get; set; }
         [JsonIgnore]
         public virtual ICollection<Notification> Notifications { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
         [JsonIgnore]
         public virtual ICollection<RentBill> RentBills { get; set; }
         [JsonIgnore]

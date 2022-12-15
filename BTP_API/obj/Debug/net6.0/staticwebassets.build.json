@@ -1,88 +1,11 @@
 {
   "Version": 1,
-  "Hash": "v4Blacz+Kcpb2cxhOv/bLWXejptuj81T7oUthSrIe38=",
+  "Hash": "i+dYxe9tvYBKhQQtLB2ZKB/BEANcIbbS5yYyTRr7TfE=",
   "Source": "BTP_API",
   "BasePath": "_content/BTP_API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [
-    {
-      "Name": "BTP_API\\wwwroot",
-      "Source": "BTP_API",
-      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
-      "BasePath": "_content/BTP_API",
-      "Pattern": "**"
-    }
-  ],
-  "Assets": [
-    {
-      "Identity": "F:\\BTP_API\\BTP_API\\wwwroot\\BookImage\\308435868_478829087537523_5680010429294618326_n.png",
-      "SourceId": "BTP_API",
-      "SourceType": "Discovered",
-      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
-      "BasePath": "_content/BTP_API",
-      "RelativePath": "BookImage/308435868_478829087537523_5680010429294618326_n.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\BookImage\\308435868_478829087537523_5680010429294618326_n.png"
-    },
-    {
-      "Identity": "F:\\BTP_API\\BTP_API\\wwwroot\\BookImage\\banvevanminh.jpg",
-      "SourceId": "BTP_API",
-      "SourceType": "Discovered",
-      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
-      "BasePath": "_content/BTP_API",
-      "RelativePath": "BookImage/banvevanminh.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\BookImage\\banvevanminh.jpg"
-    },
-    {
-      "Identity": "F:\\BTP_API\\BTP_API\\wwwroot\\PostImage\\banvevanminh.jpg",
-      "SourceId": "BTP_API",
-      "SourceType": "Discovered",
-      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
-      "BasePath": "_content/BTP_API",
-      "RelativePath": "PostImage/banvevanminh.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\PostImage\\banvevanminh.jpg"
-    },
-    {
-      "Identity": "F:\\BTP_API\\BTP_API\\wwwroot\\PostImage\\IMG_8518.JPG",
-      "SourceId": "BTP_API",
-      "SourceType": "Discovered",
-      "ContentRoot": "F:\\BTP_API\\BTP_API\\wwwroot\\",
-      "BasePath": "_content/BTP_API",
-      "RelativePath": "PostImage/IMG_8518.JPG",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\PostImage\\IMG_8518.JPG"
-    }
-  ]
+  "DiscoveryPatterns": [],
+  "Assets": []
 }

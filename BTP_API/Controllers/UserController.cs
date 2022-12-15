@@ -95,22 +95,6 @@
                 return BadRequest(new ApiMessage { Message = Message.CHANGE_PASSWORD_FAILED.ToString() });
             }
         }
-
-        [HttpPost("new-token")]
-        public async Task<IActionResult> RenewToken([FromHeader] TokenModel tokenModel)
-        {
-            try
-            {
-                var apiResponse = await _userRepository.renewTokenAsync(tokenModel);
-                    return Ok(apiResponse);
-            }
-            catch
-            {
-                return BadRequest(new ApiMessage { Message = Message.CREATE_FAILED.ToString() });
-            }
-
-        }
-
     }
 }
 
