@@ -666,6 +666,7 @@ namespace BTP_API.Services
                 book.IsExchange = bookVM.IsExchange;
                 book.IsRent = bookVM.IsRent;
                 book.RentFee = bookVM.RentFee;
+				book.NumberOfDays = (int)(Math.Ceiling((double)bookVM.NumberOfPages / 100) * 5);
                 book.IsReady = true;
                 book.IsTrade = false;
                 book.PostedDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Today, timeZoneInfo));
