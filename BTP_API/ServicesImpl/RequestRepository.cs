@@ -32,7 +32,16 @@ namespace BTP_API.ServicesImpl
                     Message = Message.BOOK_NOT_EXIST.ToString()
                 };
             }
-            foreach(var item in bookOffer)
+
+            if (bookCheck.IsTrade)
+            {
+                return new ApiMessage
+                {
+                    Message = Message.FAILED.ToString()
+                };
+            }
+
+            foreach (var item in bookOffer)
             {
                 var bookOfferCheck = await _context.Books.SingleOrDefaultAsync(b => b.Id == item);
                 if(bookOfferCheck == null)
