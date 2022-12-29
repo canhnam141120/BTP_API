@@ -149,6 +149,20 @@
             }
         }
 
+        [HttpPut("exchange/update-refund/{id}")]
+        public async Task<IActionResult> updateRefundExchange([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _manageTransactionRepository.updateRefundExchangeAsync(id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
+            }
+        }
+
         [HttpPut("exchange/trading/{id}")]
         public async Task<IActionResult> tradingExchange([FromRoute] int id)
         {
@@ -326,6 +340,20 @@
             catch
             {
                 return BadRequest(new ApiMessage{Message = Message.UPDATE_FAILED.ToString() });
+            }
+        }
+
+        [HttpPut("rent/update-refund/{id}")]
+        public async Task<IActionResult> updateRefundRent([FromRoute] int id)
+        {
+            try
+            {
+                var apiMessage = await _manageTransactionRepository.updateRefundRentAsync(id);
+                return Ok(apiMessage);
+            }
+            catch
+            {
+                return BadRequest(new ApiMessage { Message = Message.UPDATE_FAILED.ToString() });
             }
         }
 

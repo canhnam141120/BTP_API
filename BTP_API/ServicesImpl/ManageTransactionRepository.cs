@@ -153,8 +153,6 @@ namespace BTP_API.ServicesImpl
                 }
                 if (exchangeVM.RefundDate1 != null)
                 {
-                    bill1.IsRefund = true;
-                    bill1.RefundDate = DateOnly.Parse(exchangeVM.RefundDate1);
                     exchange.RefundDate1 = DateOnly.Parse(exchangeVM.RefundDate1);
                 }
                 if (exchangeVM.SendDate2 != null)
@@ -171,8 +169,6 @@ namespace BTP_API.ServicesImpl
                 }
                 if (exchangeVM.RefundDate2 != null)
                 {
-                    bill2.IsRefund = true;
-                    bill2.RefundDate = DateOnly.Parse(exchangeVM.RefundDate2);
                     exchange.RefundDate2 = DateOnly.Parse(exchangeVM.RefundDate2);
                 }        
 
@@ -330,6 +326,37 @@ namespace BTP_API.ServicesImpl
             };
         }
 
+        public async Task<ApiMessage> updateRefundExchangeAsync(int exchangeBillId)
+        {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            var bill = await _context.ExchangeBills.SingleOrDefaultAsync(x => x.Id == exchangeBillId);
+            if (bill != null)
+            {
+                bill.IsRefund = true;
+                bill.RefundDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Today, timeZoneInfo));
+                _context.Update(bill);
+
+                var notification = new Notification
+                {
+                    UserId = bill.UserId,
+                    Content = "Bạn đã được hoàn tiền từ giao dịch TD" + bill.ExchangeId + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.UPDATE_SUCCESS.ToString()
+                };
+            }
+            return new ApiMessage
+            {
+                Message = Message.BILL_NOT_EXIST.ToString()
+            };
+        }
+
         public async Task<ApiResponse> getAllRentAsync(int page = 1)
         {
             var rents = await _context.Rents.Include(e => e.Owner).Include(e => e.Renter).OrderByDescending(r => r.Id).Skip(10*(page-1)).Take(10).ToListAsync();
@@ -465,14 +492,10 @@ namespace BTP_API.ServicesImpl
                 }
                 if (rentVM.RecallDate != null)
                 {
-                    billRenter.IsRefund = true;
-                    billRenter.RefundDate = DateOnly.Parse(rentVM.RecallDate);
                     rent.RecallDate = DateOnly.Parse(rentVM.RecallDate);
                 }
                 if (rentVM.RefundDate != null)
                 {
-                    billOwner.IsRefund = true;
-                    billOwner.RefundDate = DateOnly.Parse(rentVM.RefundDate);
                     rent.RefundDate = DateOnly.Parse(rentVM.RefundDate);
                 }
                 _context.Update(rent);
@@ -503,6 +526,37 @@ namespace BTP_API.ServicesImpl
             return new ApiMessage
             {
                 Message = Message.RENT_NOT_EXIST.ToString()
+            };
+        }
+
+        public async Task<ApiMessage> updateRefundRentAsync(int rentBillId)
+        {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            var bill = await _context.RentBills.SingleOrDefaultAsync(x => x.Id == rentBillId);
+            if (bill != null)
+            {
+                bill.IsRefund = true;
+                bill.RefundDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTime.Today, timeZoneInfo));
+                _context.Update(bill);
+
+                var notification = new Notification
+                {
+                    UserId = bill.UserId,
+                    Content = "Bạn đã được hoàn tiền từ giao dịch T" + bill.RentId + "!",
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo),
+                    IsRead = false,
+                };
+                _context.Add(notification);
+
+                await _context.SaveChangesAsync();
+                return new ApiMessage
+                {
+                    Message = Message.UPDATE_SUCCESS.ToString()
+                };
+            }
+            return new ApiMessage
+            {
+                Message = Message.BILL_NOT_EXIST.ToString()
             };
         }
 
