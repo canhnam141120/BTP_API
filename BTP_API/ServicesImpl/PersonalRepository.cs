@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Npgsql;
 using System;
+using System.Text.RegularExpressions;
 
 namespace BTP_API.ServicesImpl
 {
@@ -145,8 +147,8 @@ namespace BTP_API.ServicesImpl
 
         public async Task<ApiResponse> searchBookAsync(int userId, string search, int page = 1)
         {
-            List<Book> books;
-            if (search != null)
+            //List<Book> books;
+            /*if (search != null)
             {
                 search = search.ToLower().Trim();
                 books = await _context.Books.Include(b => b.Category).Where(b => b.Title.ToLower().Contains(search) && b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
@@ -162,7 +164,97 @@ namespace BTP_API.ServicesImpl
                 Message = Message.GET_SUCCESS.ToString(),
                 Data = books.Skip(6 * (page - 1)).Take(6),
                 NumberOfRecords = books.Count
-            };
+            };*/
+
+
+            List<Book> books = new List<Book>();
+            if (search != null)
+            {
+                search = search.ToLower().Trim();
+
+                search = search.RemoveAccents();
+
+                RegexOptions options = RegexOptions.None;
+                Regex regex = new Regex("[ ]{2,}", options);
+
+                search = regex.Replace(search, " ");
+
+                search = search.Replace(" ", "|");
+
+                string query = @"SELECT * FROM ""Book"" Where ""UserID"" = " + userId + @"AND title_tsv @@ to_tsquery('" + search + "') ORDER BY ts_rank(title_tsv, to_tsquery('" + search + "')) desc";
+
+                string sqlDataSource = "Host=ec2-3-214-57-29.compute-1.amazonaws.com:5432;Database=dr8bb7r6ai6bk;Username=pywgupxdwfpxrf;Password=72920fd6643b9123783422128cd07c8ab0381d206608988768d3e1be53fc3441;SSL Mode=Require;Trust Server Certificate=true";
+
+                using (NpgsqlConnection myCon = new NpgsqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (NpgsqlCommand myCommand = new NpgsqlCommand(query, myCon))
+                    {
+                        using (var dataReader = myCommand.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                var values = new object[dataReader.FieldCount];
+                                for (int i = 0; i < dataReader.FieldCount; i++)
+                                {
+                                    values[i] = dataReader[i];
+                                }
+
+                                var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == Int16.Parse(values[1].ToString()));
+                                var category = await _context.Categories.SingleOrDefaultAsync(u => u.Id == Int16.Parse(values[2].ToString()));
+
+                                books.Add(new Book
+                                {
+                                    Id = Int16.Parse(values[0].ToString()),
+                                    UserId = Int16.Parse(values[1].ToString()),
+                                    CategoryId = Int16.Parse(values[2].ToString()),
+                                    Title = values[3].ToString(),
+                                    Description = values[4].ToString(),
+                                    Author = values[5].ToString(),
+                                    Publisher = values[6].ToString(),
+                                    Year = Int16.Parse(values[7].ToString()),
+                                    Language = values[8].ToString(),
+                                    NumberOfPages = Int16.Parse(values[9].ToString()),
+                                    Weight = float.Parse(values[10].ToString()),
+                                    CoverPrice = float.Parse(values[11].ToString()),
+                                    DepositPrice = float.Parse(values[12].ToString()),
+                                    StatusBook = values[13].ToString(),
+                                    Image = values[14].ToString(),
+                                    PostedDate = DateOnly.FromDateTime(DateTime.Parse(values[15].ToString())),
+                                    IsExchange = bool.Parse(values[16].ToString()),
+                                    IsRent = bool.Parse(values[17].ToString()),
+                                    RentFee = float.Parse(values[18].ToString()),
+                                    NumberOfDays = Int16.Parse(values[19].ToString()),
+                                    IsReady = bool.Parse(values[20].ToString()),
+                                    IsTrade = bool.Parse(values[21].ToString()),
+                                    Status = values[22].ToString(),
+                                    User = user,
+                                    Category = category
+                                });
+                            }
+                        }
+                        myCon.Close();
+                    }
+                }
+
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books.Skip(6 * (page - 1)).Take(6),
+                    NumberOfRecords = books.Count
+                };
+            }
+            else
+            {
+                books = await _context.Books.Include(b => b.User).Include(b => b.Category).Where(b => b.UserId == userId).OrderByDescending(b => b.Id).ToListAsync();
+                return new ApiResponse
+                {
+                    Message = Message.GET_SUCCESS.ToString(),
+                    Data = books.Skip(6 * (page - 1)).Take(6),
+                    NumberOfRecords = books.Count
+                };
+            }
+
         }
 
         public async Task<ApiResponse> searchPostAsync(int userId, string search, int page = 1)
