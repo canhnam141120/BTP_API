@@ -27,7 +27,7 @@ namespace BTP_API.Services
         {
             var categories = await _context.Categories.Where(c => c.Flag == true).OrderByDescending(c => c.Id).Skip(10*(page-1)).Take(10).ToListAsync();
             var count = await _context.Categories.Where(c => c.Flag == true).CountAsync();
-            //var result = PaginatedList<Category>.Create(categories, page, 20);
+            
             return new ApiResponse
             {
                 Message = Message.GET_SUCCESS.ToString(),
